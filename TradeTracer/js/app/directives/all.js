@@ -1,0 +1,4 @@
+﻿define([
+    "./everdataChart",
+    "./datetimepicker"
+], function () { });

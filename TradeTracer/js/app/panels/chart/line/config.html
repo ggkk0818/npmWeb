@@ -1,0 +1,217 @@
+﻿<div ng-controller="LineChartConfigController">
+    <div class="tabbable tabs-left" style="width:400px;">
+        <ul id="line_chart_config_tabs_{{$id}}" class="nav nav-tabs">
+            <!--<li><a href="javascript:void(0);" data-toggle="tab" data-target="#line_chart_config_general_{{$id}}">常规</a></li>-->
+            <li class="active"><a href="javascript:void(0);" data-toggle="tab" data-target="#line_chart_config_xaxis_{{$id}}">X 轴</a></li>
+            <li><a href="javascript:void(0);" data-toggle="tab" data-target="#line_chart_config_yaxis_{{$id}}">Y 轴</a></li>
+            <li><a href="javascript:void(0);" data-toggle="tab" data-target="#line_chart_config_legend_{{$id}}">图例</a></li>
+        </ul>
+        <div class="tab-content">
+            <!--<div id="line_chart_config_general_{{$id}}" class="form form-horizontal tab-pane">
+                <div class="control-group">
+                    <label class="control-label">空值</label>
+                    <div class="controls controls-thirdblock">
+                        <div class="btn-group btn-group-radio">
+                            <button class="btn" data-toggle="tooltip" title="间隙" ng-class="{'active':config.general.nullValueMode=='skipped'}" ng-click="config.general.nullValueMode='skipped'">
+                                <i class="icon-missing-value-skipped icon-large"></i>
+                            </button>
+                            <button class="btn" data-toggle="tooltip" title="零" ng-class="{'active':config.general.nullValueMode=='zero'}" ng-click="config.general.nullValueMode='zero'">
+                                <i class="icon-missing-value-zero icon-large"></i>
+                            </button>
+                            <button class="btn" data-toggle="tooltip" title="连接" ng-class="{'active':config.general.nullValueMode=='join'}" ng-click="config.general.nullValueMode='join'">
+                                <i class="icon-missing-value-join icon-large"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">多系列模式</label>
+                    <div class="controls controls-halfblock">
+                        <div class="control btn-group btn-group-radio">
+                            <button class="btn" ng-class="{'active':config.general.splitSeries}" ng-click="config.general.splitSeries=true">是</button>
+                            <button class="btn" ng-class="{'active':!config.general.splitSeries}" ng-click="config.general.splitSeries=false">否</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">钻取</label>
+                    <div class="controls controls-halfblock">
+                        <div class="control btn-group btn-group-radio">
+                            <button class="btn" ng-class="{'active':config.general.drilldown}" ng-click="config.general.drilldown=true">是</button>
+                            <button class="btn" ng-class="{'active':!config.general.drilldown}" ng-click="config.general.drilldown=false">否</button>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+            <div id="line_chart_config_xaxis_{{$id}}" class="form form-horizontal tab-pane active">
+                <div class="control-group">
+                    <label class="control-label">标题</label>
+                    <div class="controls controls-block" ng-class="{'input-group':config.xAxis.title.mode=='custom'}">
+                        <div class="control" ng-class="{'input-group-btn':config.xAxis.title.mode=='custom'}">
+                            <a class="dropdown-toggle btn" href="javascript:void(0);" data-toggle="dropdown">
+                                <span class="link-label"> {{config.xAxis.title.mode=='default'?"默认":config.xAxis.title.mode=='custom'?"自定义":"无"}}</span>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-selectable dropdown-menu-narrow">
+                                <div class="arrow"></div>
+                                <ul>
+                                    <li>
+                                        <a href="javascript:void(0);" ng-click="config.xAxis.title.mode='default';config.xAxis.title.text=config.xAxis.title.defaultValue">
+                                            <i class="icon-check" ng-show="config.xAxis.title.mode=='default'"></i>
+                                            <span class="link-label">默认</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" ng-click="config.xAxis.title.mode='custom';config.xAxis.title.text=config.xAxis.title.text==null?config.xAxis.title.defaultValue:config.xAxis.title.text">
+                                            <i class="icon-check" ng-show="config.xAxis.title.mode=='custom'"></i>
+                                            <span class="link-label">自定义</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" ng-click="config.xAxis.title.mode='none';config.xAxis.title.text=null">
+                                            <i class="icon-check" ng-show="config.xAxis.title.mode=='none'"></i>
+                                            <span class="link-label">无</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control" style="width:100px;" ng-show="config.xAxis.title.mode=='custom'" ng-model="config.xAxis.title.text">
+                    </div>
+                </div>
+            </div>
+            <div id="line_chart_config_yaxis_{{$id}}" class="form form-horizontal tab-pane">
+                <div class="control-group">
+                    <label class="control-label">标题</label>
+                    <div class="controls controls-block" ng-class="{'input-group':config.yAxis.title.mode=='custom'}">
+                        <div class="control" ng-class="{'input-group-btn':config.yAxis.title.mode=='custom'}">
+                            <a class="dropdown-toggle btn" href="javascript:void(0);" data-toggle="dropdown">
+                                <span class="link-label"> {{config.yAxis.title.mode=='default'?"默认":config.yAxis.title.mode=='custom'?"自定义":"无"}}</span>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-selectable dropdown-menu-narrow">
+                                <div class="arrow"></div>
+                                <ul>
+                                    <li>
+                                        <a href="javascript:void(0);" ng-click="config.yAxis.title.mode='default';config.yAxis.title.text=config.yAxis.title.defaultValue">
+                                            <i class="icon-check" ng-show="config.yAxis.title.mode=='default'"></i>
+                                            <span class="link-label">默认</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" ng-click="config.yAxis.title.mode='custom';config.yAxis.title.text=config.yAxis.title.text==null?config.yAxis.title.defaultValue:config.yAxis.title.text">
+                                            <i class="icon-check" ng-show="config.yAxis.title.mode=='custom'"></i>
+                                            <span class="link-label">自定义</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" ng-click="config.yAxis.title.mode='none';config.yAxis.title.text=null">
+                                            <i class="icon-check" ng-show="config.yAxis.title.mode=='none'"></i>
+                                            <span class="link-label">无</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control" style="width:100px;" ng-show="config.yAxis.title.mode=='custom'" ng-model="config.yAxis.title.text">
+                    </div>
+                </div>
+                <div class="scale control-group">
+                    <label class="control-label">刻度</label>
+                    <div class="controls controls-halfblock">
+                        <div class="btn-group btn-group-radio">
+                            <button class="btn" ng-class="{'active':config.yAxis.scale=='linear'}" ng-click="config.yAxis.scale='linear'">线性</button>
+                            <button class="btn" ng-class="{'active':config.yAxis.scale=='log'}" ng-click="config.yAxis.scale='log'">对数</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">间隔</label>
+                    <div class="controls controls-block">
+                        <div class="control">
+                            <input type="text" class="form-control" placeholder="可选" ng-model="config.yAxis.tickInterval" ng-change="config.yAxis.tickInterval=convertInt(config.yAxis.tickInterval)">
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">最小值</label>
+                    <div class="controls controls-block">
+                        <div class="control">
+                            <input type="text" class="form-control" placeholder="可选" ng-model="config.yAxis.min" ng-change="config.yAxis.min=convertInt(config.yAxis.min)">
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">最大值</label>
+                    <div class="controls controls-block">
+                        <div class="control">
+                            <input type="text" class="form-control" placeholder="可选" ng-model="config.yAxis.max" ng-change="config.yAxis.max=convertInt(config.yAxis.max)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="line_chart_config_legend_{{$id}}" class="form form-horizontal tab-pane">
+                <div class="control-group">
+                    <label class="control-label">位置</label>
+                    <div class="controls controls-block">
+                        <div class="control btn-group">
+                            <a class="dropdown-toggle btn" href="javascript:void(0);" data-toggle="dropdown">
+                                <span class="link-label">
+                                     {{config.legend.enabled==false?"无":config.legend.align=='right'&&config.legend.verticalAlign=='middle'?"右":config.legend.align=='center'&&config.legend.verticalAlign=='bottom'?"下":config.legend.align=='left'&&config.legend.verticalAlign=='middle'?"左":"上"}}
+                                </span>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-selectable dropdown-menu-undefined">
+                                <div class="arrow"></div>
+                                <ul>
+                                    <li>
+                                        <a href="javascript:void(0);" ng-click="config.legend.enabled=true;config.legend.align='right';config.legend.verticalAlign='middle';config.legend.layout='vertical'">
+                                            <i class="icon-check" ng-show="config.legend.enabled&&config.legend.align=='right'&&config.legend.verticalAlign=='middle'"></i>
+                                            <span class="link-label">右</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" ng-click="config.legend.enabled=true;config.legend.align='center';config.legend.verticalAlign='bottom';config.legend.layout='horizontal'">
+                                            <i class="icon-check" ng-show="config.legend.enabled&&config.legend.align=='center'&&config.legend.verticalAlign=='bottom'"></i>
+                                            <span class="link-label">下</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" ng-click="config.legend.enabled=true;config.legend.align='left';config.legend.verticalAlign='middle';config.legend.layout='vertical'">
+                                            <i class="icon-check" ng-show="config.legend.enabled&&config.legend.align=='left'&&config.legend.verticalAlign=='middle'"></i>
+                                            <span class="link-label">左</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" ng-click="config.legend.enabled=true;config.legend.align='center';config.legend.verticalAlign='top';config.legend.layout='horizontal'">
+                                            <i class="icon-check" ng-show="config.legend.enabled&&config.legend.align=='center'&&config.legend.verticalAlign=='top'"></i>
+                                            <span class="link-label">上</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" ng-click="config.legend.enabled=false">
+                                            <i class="icon-check" ng-show="!config.legend.enabled"></i>
+                                            <span class="link-label">无</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="control-group">
+                    <label class="control-label">截断</label>
+                    <div class="controls controls-thirdblock">
+                        <div class="btn-group btn-group-radio">
+                            <button title="截断末尾" class="btn" ng-class="{'active':config.legend.overflowMode=='left'}" ng-click="config.legend.overflowMode='left'">A...</button>
+                            <button title="截断中间" class="btn" ng-class="{'active':config.legend.overflowMode=='center'}" ng-click="config.legend.overflowMode='center'">A...Z</button>
+                            <button title="截断开头" class="btn" ng-class="{'active':config.legend.overflowMode=='right'}" ng-click="config.legend.overflowMode='right'">...Z</button>
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+        </div>
+    </div>
+    <a class="btn pull-left" tabindex="0" ng-click="$emit('chartConfigCancel')">取消</a>
+    <a class="btn btn-primary pull-right" tabindex="0" ng-click="saveConfig()"> 应用</a>
+</div>

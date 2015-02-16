@@ -1,0 +1,25 @@
+﻿/*统计Panel*/
+#statisticPanel ul.nav > li > a{
+    border-top: 1px solid transparent;
+    border-radius: 0;
+    padding:8px 15px;
+}
+#statisticPanel ul.nav > li > a:hover{
+}
+#statisticPanel ul.nav > li.active > a{
+    background-color:#ffffff;
+    color:#333;
+    border-bottom:2px solid #fff;
+}
+#statisticPanel ul.nav > li > a > .solid{
+    position:absolute;
+    top:-1px;
+    left:0;
+    width:0%;
+    height:0;
+    border-top:1px solid #337ab7;
+    -moz-transition: width 5s ease-in-out;
+    -o-transition: width 5s ease-in-out;
+    -webkit-transition: width 5s ease-in-out;
+    transition: width 5s ease-in-out;
+}

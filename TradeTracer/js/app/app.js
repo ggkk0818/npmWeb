@@ -25,6 +25,7 @@
     'jquery-elasticsearch',
     'jquery-outerhtml',
     'jquery-easing',
+    'jquery-numberanimate',
     'highcharts',
     'highcharts-nodata',
     'date-format',

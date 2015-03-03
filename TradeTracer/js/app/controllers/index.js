@@ -23,14 +23,14 @@
                         }
                     }
                 }]);
-                //查询图表数据
-                statisticService.show({ groupField: "statisticstime" }, function (data) {
+                //交易量
+                statisticService.show({ groupField: "statisticsTime", orderField: "statisticsTime", maxResult: 10 }, function (data) {
                     if (data && data.data) {
                         var category = [], chartData = [];
                         for (var i = 0; i < data.data.length; i++) {
-                            if (i >= 10)
+                            if (i >= 6)
                                 break;
-                            var time = new Date(data.data[i].groupfield),
+                            var time = new Date(data.data[i].group0),
                                 timeStr = time.Format("hh:mm");
                             if (i + 1 == data.data.length)
                                 timeStr += "<br />" + time.Format("M月d日") + "<br />" + time.Format("yyyy年");
@@ -38,6 +38,27 @@
                             chartData.push(data.data[i].count);
                         }
                         $("#index-chartDiv1").trigger("chartupdate", [[category.reverse(), chartData.reverse()], ["时间", "交易量"]]);
+                    }
+                });
+                //返回码
+                statisticService.show({ groupField: "returnCode", orderField: "count", maxResult: 10 }, function (data) {
+                    if (data && data.data) {
+                        var category = [], countData = [];
+                        for (var i = 0; i < data.data.length; i++) {
+                            if (i >= 6)
+                                break;
+                            category.push(data.data[i].group0);
+                            countData.push(data.data[i].count || 0);
+                        }
+                        if (data.data.length > 6) {
+                            category[5] = "Other";
+                            var otherCount = 0;
+                            for (var i = 5; i < data.data.length; i++) {
+                                otherCount += data.data[i].count || 0;
+                            }
+                            countData[5] = otherCount;
+                        }
+                        $("#index-chartDiv3").trigger("chartupdate", [[category, countData], ["返回码", "返回码"]]);
                     }
                 });
             });
@@ -57,7 +78,7 @@
                                 break;
                             }
                         }
-                        if (newLogCount)
+                        if (typeof newLogCount === "number")
                             $scope.dataPanel_newLogCount = newLogCount;
                     }
                     if ($scope.dataPanel_logList && $scope.dataPanel_newLogCount > 0) {

@@ -31,6 +31,9 @@
     -webkit-transition: width 5s ease-in-out;
     transition: width 5s ease-in-out;
 }
+#statisticPanel .panel-body{
+    overflow:auto;
+}
 #statisticPanel .panel-body .tab-content .tab-pane{
     overflow:hidden;
 }

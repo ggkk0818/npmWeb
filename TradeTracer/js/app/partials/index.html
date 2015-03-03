@@ -23,25 +23,15 @@
                     <div class="col-md-12">
                         <table class="table" style="table-layout:fixed;">
                             <tbody>
-                                <tr>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">18:23:00.001</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">19.234.11.21</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">14.200.200.5</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">银联->防火墙</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">消费</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">成功</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">0.000</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">0.000</td>
-                                </tr>
-                                <tr class="danger">
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">18:23:00.001</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">19.234.11.21</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">14.200.200.5</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">银联->防火墙</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">消费</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; " class="text-danger">失败</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">0.000</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">0.000</td>
+                                <tr ng-repeat="log in dataPanel_logList">
+                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">{{log.starttime}}</td>
+                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">{{log.srcip}}</td>
+                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">{{log.destip}}</td>
+                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">N/A</td>
+                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">{{log.transactionInfo}}</td>
+                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">{{log.rejectcode}}</td>
+                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">N/A</td>
+                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">N/A</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -56,10 +46,21 @@
                 <h3 class="panel-title">告警</h3>
             </div>
             <div class="panel-body" style="padding:0;">
-                <div id="warnPanelBody" style="padding: 10px;overflow:auto;">
-                    <h3 style="margin-top: 5px;"><a href="javascript:void(0);">返回码异常交易</a> <span class="label label-danger" style="position: relative; top: -2px;">325</span></h3>
-                    <h3 style="margin-top: 5px;"><a href="javascript:void(0);">失败交易</a> <span class="label label-warning" style="position: relative; top: -2px;">90</span></h3>
-                    <h3 style="margin-top: 5px;"><a href="javascript:void(0);">高时延交易</a> <span class="label label-default" style="position: relative; top: -2px;">2</span></h3>
+                <div id="warnPanelBody" style="overflow:auto;">
+                    <div class="list-group">
+                        <a class="list-group-item list-group-item-danger" href="javascript:void(0);">
+                            <span class="badge">235</span>
+                            返回码异常交易
+                        </a>
+                        <a class="list-group-item list-group-item-warning" href="javascript:void(0);">
+                            <span class="badge">90</span>
+                            失败交易
+                        </a>
+                        <a class="list-group-item" href="javascript:void(0);">
+                            <span class="badge">2</span>
+                            高时延交易
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -74,9 +75,9 @@
             </div>
             <div class="panel-body">
                 <div class="tab-content">
-                    <div id="index-chartDiv1" role="tabpanel" class="tab-pane" ng-class="{'active':statisticPanel_current.container=='index-chartDiv1'}" data-everdata-chart="bar">...</div>
-                    <div role="tabpanel" class="tab-pane" ng-class="{'active':statisticPanel_current.container=='2'}">...</div>
-                    <div role="tabpanel" class="tab-pane" ng-class="{'active':statisticPanel_current.container=='3'}">...</div>
+                    <div id="index-chartDiv1" role="tabpanel" class="tab-pane" ng-class="{'active':statisticPanel_current.container=='index-chartDiv1'}" data-everdata-chart="area">...</div>
+                    <div id="index-chartDiv2" role="tabpanel" class="tab-pane" ng-class="{'active':statisticPanel_current.container=='index-chartDiv2'}" data-everdata-chart="area">...</div>
+                    <div id="index-chartDiv3" role="tabpanel" class="tab-pane" ng-class="{'active':statisticPanel_current.container=='index-chartDiv3'}" data-everdata-chart="pie">...</div>
                 </div>
             </div>
         </div>

@@ -24,6 +24,7 @@
     'jquery-jscrollpane',
     'jquery-elasticsearch',
     'jquery-outerhtml',
+    'jquery-easing',
     'highcharts',
     'highcharts-nodata',
     'date-format',

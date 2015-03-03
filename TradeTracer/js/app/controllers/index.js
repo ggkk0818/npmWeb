@@ -1,24 +1,20 @@
 ﻿define(['angular', 'lodash', 'jquery', 'services/all', 'css!partials/index.css'], function (angular, _, $) {
     "use strict";
     var module = angular.module('app.controllers');
-    module.controller('IndexCtrl', function ($rootScope, $scope, $route, $interval, $location, $timeout, $window) {
+    module.controller('IndexCtrl', function ($rootScope, $scope, $route, $interval, $location, $timeout, $window, logService, statisticService) {
         $scope.statisticPanel_TYPE = [
-            { name: "类型", container: "index-chartDiv1" },
-            { name: "渠道", container: "2" },
-            { name: "返回码", container: "3" }
+            { name: "交易量", container: "index-chartDiv1" },
+            { name: "渠道", container: "index-chartDiv2" },
+            { name: "返回码", container: "index-chartDiv3" }
         ];
+        $scope.dataPanel_MAX_SIZE = 50;
         $scope.statisticPanel_current = null;
+        $scope.dataPanel_logList = null;
+        $scope.dataPanel_newLogCount = 0;
         //初始化
         $scope.init = function () {
+            $scope.dataPanel_query();
             $timeout(function () {
-                var chartData = [];
-                chartData.push(500);
-                chartData.push(400);
-                chartData.push(600);
-                chartData.push(300);
-                chartData.push(400);
-                chartData.push(500);
-                var categoryTradeType = ["取现", "退货", "消费", "转账", "存款", "None"];
                 $("#index-chartDiv1").trigger("configchange", [{
                     plotOptions: {
                         series: {
@@ -26,7 +22,75 @@
                             marker: { enabled: false }
                         }
                     }
-                }]).trigger("chartupdate", [[categoryTradeType, chartData.sort(function (a, b) { return b - a; })], ["交易类型", "交易类型"]]);
+                }]);
+                //查询图表数据
+                statisticService.show({ groupField: "statisticstime" }, function (data) {
+                    if (data && data.data) {
+                        var category = [], chartData = [];
+                        for (var i = 0; i < data.data.length; i++) {
+                            if (i >= 10)
+                                break;
+                            var time = new Date(data.data[i].groupfield),
+                                timeStr = time.Format("hh:mm");
+                            if (i + 1 == data.data.length)
+                                timeStr += "<br />" + time.Format("M月d日") + "<br />" + time.Format("yyyy年");
+                            category.push(timeStr);
+                            chartData.push(data.data[i].count);
+                        }
+                        $("#index-chartDiv1").trigger("chartupdate", [[category.reverse(), chartData.reverse()], ["时间", "交易量"]]);
+                    }
+                });
+            });
+        };
+        //查询实时数据
+        var dataPanelQueryTimer = null;
+        $scope.dataPanel_query = function () {
+            logService.list({ from: 0, size: 20 }, function (data) {
+                if (data && data.data) {
+                    $scope.dataPanel_newLogCount = data.data.length || 0;
+                    if ($scope.dataPanel_logList && $scope.dataPanel_logList.length) {
+                        var lastId = $scope.dataPanel_logList[0]._id,
+                            newLogCount = null;
+                        for (var i = 0; i < (data.data.length || 0); i++) {
+                            if (data.data[i]._id === lastId) {
+                                newLogCount = i;
+                                break;
+                            }
+                        }
+                        if (newLogCount)
+                            $scope.dataPanel_newLogCount = newLogCount;
+                    }
+                    if ($scope.dataPanel_logList && $scope.dataPanel_newLogCount > 0) {
+                        for(var i = 0; i < $scope.dataPanel_newLogCount; i++){
+                            $scope.dataPanel_logList.splice(i, 0, data.data[i]);
+                        }
+                        if ($scope.dataPanel_logList.length > $scope.dataPanel_MAX_SIZE) {
+                            var c = $scope.dataPanel_logList.length - $scope.dataPanel_MAX_SIZE;
+                            $scope.dataPanel_logList.splice(-c, c);
+                        }
+                        $scope.dataPanel_showNewLog();
+                    } else {
+                        $scope.dataPanel_logList = data.data;
+                    }
+                }
+                dataPanelQueryTimer = $timeout($scope.dataPanel_query, 5000);
+            });
+        };
+        //数据表格滚动效果
+        $scope.dataPanel_showNewLog = function () {
+            $timeout(function () {
+                var $dataTable = $("#dataPanelTable");
+                if ($dataTable.length) {
+                    if ($dataTable.find("tr").length == $scope.dataPanel_logList.length) {
+                        if ($dataTable.find("table").outerHeight() > $dataTable.height()) {
+                            var lineHeight = $dataTable.find("tr").first().outerHeight();
+                            $dataTable.animate({ scrollTop: lineHeight * $scope.dataPanel_newLogCount }, 0).animate({ scrollTop: 0 }, "slow", "easeInOutQuad");
+                        }
+                    }
+                    else {
+                        $scope.dataPanel_showNewLog();
+                    }
+                }
             });
         };
         //统计Panel标签点击
@@ -130,7 +194,10 @@
         //离开该页事件
         $scope.$on("$routeChangeStart", function () {
             $($window).off("resize.index");
+            $timeout.cancel(dataPanelQueryTimer);
+            $timeout.cancel(windowResizeChartTimer);
             $timeout.cancel(statisticPanelTimer);
+            $timeout.cancel(statisticPanelLoadingTimer);
         });
         //执行初始化
         $scope.init();

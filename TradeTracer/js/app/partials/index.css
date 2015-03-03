@@ -1,4 +1,12 @@
-﻿/*统计Panel*/
+﻿/*告警Panel*/
+#warnPanelBody .list-group .list-group-item{
+    border-width:1px 0;
+    border-radius:0;
+}
+#warnPanelBody .list-group .list-group-item:first-child{
+    border-top:none;
+}
+/*统计Panel*/
 #statisticPanel ul.nav > li > a{
     border-top: 1px solid transparent;
     border-radius: 0;
@@ -22,4 +30,7 @@
     -o-transition: width 5s ease-in-out;
     -webkit-transition: width 5s ease-in-out;
     transition: width 5s ease-in-out;
+}
+#statisticPanel .panel-body .tab-content .tab-pane{
+    overflow:hidden;
 }

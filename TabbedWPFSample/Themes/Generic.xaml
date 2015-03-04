@@ -1,0 +1,38 @@
+<!-- *****************************************************************************
+ *    Project   : Awesomium.NET (TabbedWPFSample)
+ *    File      : Generic.xaml
+ *    Version   : 1.7.0.0 
+ *    Date      : 3/5/2013
+ *    Author    : Perikles C. Stephanidis (perikles@awesomium.com)
+ *    Copyright : (C)2013 Awesomium Technologies LLC
+ *    
+ *    This code is provided "AS IS" and for demonstration purposes only,
+ *    without warranty of any kind.
+ *     
+ *********************************************************************************
+ *
+ *    Notes     :
+ *
+ *    Main themes dictionary. Also contains the theme of the MainWindow.
+ *    
+ *    
+ ***************************************************************************** -->
+
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:TabbedWPFSample"
+    xmlns:awe="http://schemas.awesomium.com/winfx"
+    xmlns:shell="clr-namespace:Microsoft.Windows.Shell;assembly=MahApps.Metro">
+    
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/TabbedWPFSample;component/Themes/WebTabControl.xaml"/>
+        <ResourceDictionary Source="/TabbedWPFSample;component/Themes/WebTabControlMenu.xaml"/>
+        <ResourceDictionary Source="/TabbedWPFSample;component/Themes/ContentSpinner.xaml"/>
+        <ResourceDictionary Source="/TabbedWPFSample;component/Themes/CircularProgressBar.xaml"/>
+        <ResourceDictionary Source="/TabbedWPFSample;component/Themes/SplitButton.xaml"/>
+        <ResourceDictionary Source="/TabbedWPFSample;component/Themes/DownloadsControl.xaml"/>
+        <ResourceDictionary Source="/TabbedWPFSample;component/Themes/TabView.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    
+</ResourceDictionary>

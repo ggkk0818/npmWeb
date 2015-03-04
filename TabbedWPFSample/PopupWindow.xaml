@@ -1,0 +1,25 @@
+﻿<ui:MetroWindow 
+    x:Class="TabbedWPFSample.PopupWindow" 
+    x:ClassModifier="internal"
+    x:Name="popupWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:ui="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:local="clr-namespace:TabbedWPFSample"
+    GlowBrush="{DynamicResource AccentColorBrush2}"
+    Background="{DynamicResource GrayBrush10}"
+    ShowInTaskbar="False"
+    ShowMinButton="False"
+    ShowMaxRestoreButton="False"
+    TitlebarHeight="25"
+    TitleCaps="False"
+    TextOptions.TextFormattingMode="Display"
+    RenderOptions.ClearTypeHint="Enabled"
+    Title="{Binding Browser.Title, ElementName=tabView}"
+    Height="300" 
+    Width="300">
+    <local:TabView 
+        x:Name="tabView"
+        NativeView="{Binding NativeView, ElementName=popupWindow}"
+        IsRegularTab="False"/>
+</ui:MetroWindow>

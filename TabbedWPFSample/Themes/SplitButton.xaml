@@ -1,0 +1,298 @@
+﻿<!-- *****************************************************************************
+ *    Project   : Awesomium.NET (TabbedWPFSample)
+ *    File      : SplitButton.xaml
+ *    Version   : 1.7.0.0 
+ *    Date      : 3/11/2013
+ *    Author    : Perikles C. Stephanidis (perikles@awesomium.com)
+ *    Copyright : (C)2013 Awesomium Technologies LLC
+ *    
+ *    This code is provided "AS IS" and for demonstration purposes only,
+ *    without warranty of any kind.
+ *     
+ *********************************************************************************
+ *
+ *    Notes     :
+ *
+ *    
+ *    
+ *    
+ ***************************************************************************** -->
+
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:TabbedWPFSample">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro.Resources;component/Icons.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+
+    <Style x:Key="SquareButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="MinHeight" Value="25" />
+        <Setter Property="FontFamily" Value="{DynamicResource DefaultFont}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Background" Value="{DynamicResource GrayBrush10}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BlackBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+        <Setter Property="Padding" Value="5,6" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="MouseOverBorder">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="1" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                        <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderThickness)" Storyboard.TargetName="MouseOverBorder">
+                                            <EasingThicknessKeyFrame KeyTime="0" Value="2" />
+                                        </ThicknessAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="PressedBorder">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="1" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                        <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderThickness)" Storyboard.TargetName="MouseOverBorder">
+                                            <EasingThicknessKeyFrame KeyTime="0" Value="0" />
+                                        </ThicknessAnimationUsingKeyFrames>
+                                        <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderThickness)" Storyboard.TargetName="PressedBorder">
+                                            <EasingThicknessKeyFrame KeyTime="0" Value="2" />
+                                        </ThicknessAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="DisabledVisualElement">
+                                            <SplineDoubleKeyFrame KeyTime="0" Value="0.7" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="contentPresenter">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="0.3" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused" />
+                                <VisualState x:Name="Unfocused" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="ValidationStates">
+                                <VisualState x:Name="Valid" />
+                                <VisualState x:Name="InvalidFocused" />
+                                <VisualState x:Name="InvalidUnfocused" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border 
+                            x:Name="Background" 
+                            BorderBrush="{DynamicResource BlackBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            Background="{DynamicResource WhiteBrush}"/>
+                        <Rectangle 
+                            x:Name="DisabledVisualElement" 
+                            Fill="{DynamicResource ControlsDisabledBrush}" 
+                            IsHitTestVisible="false" 
+                            Opacity="0"/>
+                        <Border 
+                            x:Name="MouseOverBorder" 
+                            Background="{DynamicResource GrayBrush8}" 
+                            Opacity="0"/>
+                        <Border 
+                            x:Name="PressedBorder" 
+                            Background="{DynamicResource BlackBrush}" 
+                            Opacity="0" 
+                            BorderBrush="{DynamicResource BlackBrush}"/>
+                        <ContentPresenter 
+                            x:Name="contentPresenter" 
+                            ContentTemplate="{TemplateBinding ContentTemplate}" 
+                            Content="{TemplateBinding Content, Converter={StaticResource ToLowerConverter}}" 
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                            Margin="{TemplateBinding Padding}" 
+                            RecognizesAccessKey="True" 
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                            OpacityMask="{x:Null}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SquareToggleButtonStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="MinHeight" Value="25" />
+        <Setter Property="FontFamily" Value="{DynamicResource DefaultFont}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Background" Value="{DynamicResource GrayBrush10}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BlackBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+        <Setter Property="Padding" Value="5,6" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="MouseOverBorder">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="1" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                        <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderThickness)" Storyboard.TargetName="MouseOverBorder">
+                                            <EasingThicknessKeyFrame KeyTime="0" Value="2" />
+                                        </ThicknessAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="PressedBorder">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="1" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                        <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderThickness)" Storyboard.TargetName="MouseOverBorder">
+                                            <EasingThicknessKeyFrame KeyTime="0" Value="0" />
+                                        </ThicknessAnimationUsingKeyFrames>
+                                        <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderThickness)" Storyboard.TargetName="PressedBorder">
+                                            <EasingThicknessKeyFrame KeyTime="0" Value="2" />
+                                        </ThicknessAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="DisabledVisualElement">
+                                            <SplineDoubleKeyFrame KeyTime="0" Value="0.7" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="contentPresenter">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="0.3" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="CheckedRectangle">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="1" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="CheckedInnerRectangle">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="1" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused" />
+                                <VisualState x:Name="Unfocused" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="ValidationStates">
+                                <VisualState x:Name="Valid" />
+                                <VisualState x:Name="InvalidFocused" />
+                                <VisualState x:Name="InvalidUnfocused" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border x:Name="Background" BorderBrush="{DynamicResource BlackBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{DynamicResource WhiteBrush}" />
+                        <Rectangle x:Name="DisabledVisualElement" Fill="{DynamicResource ControlsDisabledBrush}" IsHitTestVisible="false" Opacity="0" />
+                        <Border x:Name="MouseOverBorder" Background="{DynamicResource GrayBrush8}" Opacity="0" />
+                        <Border x:Name="PressedBorder" Background="{DynamicResource BlackBrush}" Opacity="0" BorderBrush="{DynamicResource BlackBrush}" />
+                        <Rectangle x:Name="CheckedRectangle" Stroke="{DynamicResource BlackBrush}" StrokeThickness="{TemplateBinding BorderThickness}" Opacity="0" />
+                        <Rectangle x:Name="CheckedInnerRectangle" Fill="{DynamicResource GrayBrush2}" Margin="{TemplateBinding BorderThickness}" Opacity="0" />
+                        <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content, Converter={StaticResource ToLowerConverter}}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" OpacityMask="{x:Null}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:SplitButton}">
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Padding" Value="3" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:SplitButton}">
+                    <Grid x:Name="MainGrid" SnapsToDevicePixels="True">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Button 
+                                x:Name="PART_ActionButton" 
+                                Margin="0" 
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                ToolTip="{TemplateBinding ButtonToolTip}"
+                                Padding="{TemplateBinding Padding}" 
+                                Style="{StaticResource SquareButtonStyle}" 
+                                BorderThickness="1">
+                                <ContentPresenter 
+                                    Name="ActionButtonContent" 
+                                    Margin="{TemplateBinding Padding}" 
+                                    Content="{TemplateBinding Content}" 
+                                    ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                    RecognizesAccessKey="true"/>
+                            </Button>
+                            <ToggleButton 
+                                x:Name="PART_ToggleButton" 
+                                Grid.Column="1" 
+                                IsTabStop="False" 
+                                IsChecked="{Binding IsOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" 
+                                IsHitTestVisible="True" 
+                                Style="{StaticResource SquareToggleButtonStyle}"
+                                BorderThickness="0,1,1,1">
+                                <Grid x:Name="arrowGlyph" IsHitTestVisible="False" Margin="4,3,4,3">
+                                    <Path 
+                                        x:Name="Arrow" 
+                                        Width="7" 
+                                        Height="4" 
+                                        Data="M 0,1 C0,1 0,0 0,0 0,0 3,0 3,0 3,0 3,1 3,1 3,1 4,1 4,1 4,1 4,0 4,0 4,0 7,0 7,0 7,0 7,1 7,1 7,1 6,1 6,1 6,1 6,2 6,2 6,2 5,2 5,2 5,2 5,3 5,3 5,3 4,3 4,3 4,3 4,4 4,4 4,4 3,4 3,4 3,4 3,3 3,3 3,3 2,3 2,3 2,3 2,2 2,2 2,2 1,2 1,2 1,2 1,1 1,1 1,1 0,1 0,1 z" 
+                                        Fill="{Binding Foreground, ElementName=PART_ToggleButton}"/>
+                                </Grid>
+                            </ToggleButton>
+                        </Grid>
+                        <Popup 
+                            x:Name="PART_Popup" 
+                            HorizontalOffset="1" 
+                            VerticalOffset="1" 
+                            AllowsTransparency="True" 
+                            StaysOpen="False" 
+                            Placement="Bottom" 
+                            Focusable="False" 
+                            IsOpen="{Binding IsChecked, ElementName=PART_ToggleButton, Mode=TwoWay}">
+                            <Border BorderThickness="1">
+                                <ContentPresenter x:Name="PART_ContentPresenter" Content="{TemplateBinding DropDownContent}" />
+                            </Border>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Fill" TargetName="Arrow" Value="#AFAFAF" />
+                        </Trigger>
+                        <Trigger Property="IsOpen" Value="True">
+                            <Setter Property="IsHitTestVisible" TargetName="PART_ToggleButton" Value="False" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+</ResourceDictionary>

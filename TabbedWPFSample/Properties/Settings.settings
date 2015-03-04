@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TabbedWPFSample.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="HomeURL" Type="System.Uri" Scope="User">
+      <Value Profile="(Default)">http://www.awesomium.com/</Value>
+    </Setting>
+    <Setting Name="FullScreenOnMaximize" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="CurrentTheme" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="CurrentAccent" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="WebPreferences" Type="Awesomium.Core.WebPreferences" Scope="User">
+      <Value Profile="(Default)">&lt;WebPreferences&gt;&lt;SmoothScrolling&gt;true&lt;/SmoothScrolling&gt;&lt;/WebPreferences&gt;</Value>
+    </Setting>
+    <Setting Name="CachePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.\Cache</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

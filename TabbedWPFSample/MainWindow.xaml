@@ -1,0 +1,411 @@
+﻿<ui:MetroWindow 
+    x:Class="TabbedWPFSample.MainWindow" 
+    x:ClassModifier="internal"
+    x:Name="AppWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:behaviours="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
+    xmlns:ui="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:dialogs="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+    xmlns:local="clr-namespace:TabbedWPFSample"
+    xmlns:awe="http://schemas.awesomium.com/winfx"
+    xmlns:data="http://schemas.awesomium.com/winfx/data"
+    Icon="Images/awesomium.ico"
+    MinWidth="400"
+    MinHeight="300"
+    ShowTitleBar="False"
+    GlowBrush="{DynamicResource AccentColorBrush2}"
+    Background="{DynamicResource GrayBrush10}"
+    IgnoreTaskbarOnMaximize="{Binding FullScreenOnMaximize, ElementName=AppWindow}"
+    TextOptions.TextFormattingMode="Display"
+    RenderOptions.ClearTypeHint="Enabled">
+    <ui:MetroWindow.Title>
+        <Binding 
+            Path="SelectedView.Browser.Title" 
+            RelativeSource="{RelativeSource Self}" 
+            StringFormat="Awesomium Tabbed WPF Sample - {0}"/>
+    </ui:MetroWindow.Title>
+    <!-- Uncomment the following to solve airspace issues if you want to set 
+         the WebControl's ViewType to Window. You will loose the Window's
+         glowing border and Flyouts will be obscured by the WebControl. -->
+    <!--<i:Interaction.Behaviors>
+        <behaviours:BorderlessWindowBehavior ResizeWithGrip="True" AllowsTransparency="False" />
+    </i:Interaction.Behaviors>-->
+    <ui:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/TabbedWPFSample;component/Themes/SettingsControl.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        </ResourceDictionary>
+    </ui:MetroWindow.Resources>
+    <ui:MetroWindow.WindowCommands>
+        <ui:WindowCommands>
+            <Button x:Name="fgButton" Visibility="Collapsed" />
+            <Menu VerticalAlignment="Stretch" Margin="0,-1,0,-1" Background="Transparent">
+                <local:WebTabControlMenuItem 
+                    VerticalAlignment="Center"
+                    DataContext="{Binding Views, ElementName=AppWindow}" 
+                    ItemsSource="{Binding}"
+                    Background="Transparent"
+                    HeaderForeground="{Binding Foreground, ElementName=fgButton}">
+                    <local:WebTabControlMenuItem.Header>
+                        <TextBlock 
+                            FontFamily="Webdings" 
+                            FontSize="18" 
+                            Text="2" 
+                            Margin="5,7" 
+                            Foreground="{Binding HeaderForeground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:WebTabControlMenuItem}}}"/>
+                    </local:WebTabControlMenuItem.Header>
+                    <local:WebTabControlMenuItem.ItemContainerStyle>
+                        <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MetroMenuItem}">
+                            <Style.Resources>
+                                <Image 
+                                    x:Key="favicon" 
+                                    x:Shared="False" 
+                                    Source="{Binding Favicon}" 
+                                    Width="16" 
+                                    Height="16" 
+                                    VerticalAlignment="Center"/>
+                            </Style.Resources>
+                            <Setter Property="IsCheckable" Value="True" />
+                            <Setter Property="IsChecked" Value="{Binding IsSelected}" />
+                            <Setter Property="MaxWidth" Value="250" />
+                            <Setter Property="Icon" Value="{StaticResource favicon}" />
+                        </Style>
+                    </local:WebTabControlMenuItem.ItemContainerStyle>
+                    <local:WebTabControlMenuItem.ItemTemplate>
+                        <DataTemplate DataType="{x:Type local:TabView}">
+                            <TextBlock 
+                                Margin="3,0,0,0" 
+                                Text="{Binding Browser.Title}" 
+                                TextTrimming="CharacterEllipsis" 
+                                VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </local:WebTabControlMenuItem.ItemTemplate>
+                </local:WebTabControlMenuItem>
+            </Menu>
+            <Button 
+                FontFamily="Webdings" 
+                FontSize="18" 
+                Content="i"
+                ToolTip="About"
+                Command="{x:Static local:MainWindow.ShowSettings}"
+                CommandParameter="4"/>
+        </ui:WindowCommands>
+    </ui:MetroWindow.WindowCommands>
+    <ui:MetroWindow.Flyouts>
+        <ui:FlyoutsControl>
+            <!-- Settings -->
+            <ui:Flyout 
+                x:Name="settingsFlyout"
+                Header="Settings"
+                HeaderTemplate="{StaticResource SettingsHeaderTemplate}"
+                Position="Right"
+                Width="300"
+                Theme="Accent"
+                TextBlock.FontSize="16"
+                IsOpen="{Binding IsFocused, RelativeSource={RelativeSource Self}, Mode=OneWay}">
+                <ListBox 
+                    Background="Transparent" 
+                    Margin="0,15" 
+                    ItemContainerStyle="{StaticResource SettingsItem}">
+                    <ListBoxItem 
+                        Content="Appearance" 
+                        ContentTemplate="{StaticResource SettingsItemTemplate}" 
+                        Tag="1"/>
+                    <ListBoxItem 
+                        Content="Options" 
+                        ContentTemplate="{StaticResource SettingsItemTemplate}" 
+                        Tag="2"/>
+                    <ListBoxItem 
+                        Content="Advanced" 
+                        ContentTemplate="{StaticResource SettingsItemTemplate}" 
+                        Tag="3"/>
+                    <ListBoxItem 
+                        Content="About" 
+                        ContentTemplate="{StaticResource SettingsItemTemplate}" 
+                        Tag="4"/>
+                </ListBox>
+            </ui:Flyout>
+            <!-- Appearance -->
+            <ui:Flyout 
+                Header="Appearance" 
+                Position="Right" 
+                Width="300" 
+                TextBlock.FontSize="16" 
+                CloseCommand="{x:Static local:MainWindow.CloseSettings}"
+                Theme="Inverse">
+                <StackPanel Margin="30" Orientation="Vertical">
+                    <!-- Theme -->
+                    <Label Margin="0,5" Padding="0" Content="Theme:" Target="{Binding ElementName=themeCombo}" />
+                    <ComboBox 
+                        Margin="0,5" 
+                        x:Name="themeCombo" 
+                        SelectedIndex="{Binding CurrentTheme, ElementName=AppWindow}">
+                        <ComboBoxItem FontSize="16">
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="16" Height="16" StrokeThickness="1" Stroke="Black" Fill="White"/>
+                                <TextBlock Text="Light" Margin="5" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem FontSize="16">
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="16" Height="16" StrokeThickness="1" Stroke="White" Fill="Black"/>
+                                <TextBlock Text="Dark" Margin="5" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </ComboBoxItem>
+                    </ComboBox>
+                    <!-- Accent -->
+                    <Label Margin="0,5" Padding="0" Content="Accent:" Target="{Binding ElementName=accentCombo}" />
+                    <ComboBox 
+                        Margin="0,5" 
+                        x:Name="accentCombo"
+                        DataContext="{Binding Accents, ElementName=AppWindow}" 
+                        ItemsSource="{Binding}"
+                        SelectedIndex="{Binding CurrentAccent, ElementName=AppWindow}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type local:AccentColorMenuData}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Ellipse Width="16" Height="16" Fill="{Binding ColorBrush, Mode=OneWay}" />
+                                    <TextBlock Text="{Binding Name}" FontSize="16" Margin="5" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <!-- Full Screen -->
+                    <Label Margin="0,5" Padding="0" Content="Full Screen on Maximize:" Target="{Binding ElementName=fullScreenSwitch}" />
+                    <ui:ToggleSwitch 
+                        Margin="0,5" 
+                        x:Name="fullScreenSwitch" 
+                        Width="150" 
+                        HorizontalAlignment="Left"
+                        IsChecked="{Binding FullScreenOnMaximize, ElementName=AppWindow}"/>
+                </StackPanel>
+            </ui:Flyout>
+            <!-- Options -->
+            <ui:Flyout
+                Header="Options" 
+                Position="Right" 
+                Width="400" 
+                TextBlock.FontSize="16" 
+                CloseCommand="{x:Static local:MainWindow.CloseSettings}"
+                Theme="Inverse">
+                <Grid FocusManager.IsFocusScope="True" FocusManager.FocusedElement="{Binding ElementName=homeUrl}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Margin="30" Orientation="Vertical">
+                        <!-- Home URL -->
+                        <Label Margin="0,5" Padding="0" Content="Home URL:" Target="{Binding ElementName=homeUrl}" />
+                        <TextBox 
+                            Margin="0,5" 
+                            x:Name="homeUrl" 
+                            FontSize="16" 
+                            ui:TextboxHelper.ButtonContent="a" 
+                            ui:TextboxHelper.ButtonCommand="{x:Static local:MainWindow.UpdateHomeURL}" 
+                            Style="{StaticResource ButtonCommandMetroTextBox}" 
+                            Text="{data:SourceBinding AppWindow}"/>
+                        <!-- Plugins -->
+                        <Label Margin="0,5" Padding="0" Content="Plugins:" Target="{Binding ElementName=pluginsSwitch}" />
+                        <ui:ToggleSwitch 
+                            Margin="0,5" 
+                            x:Name="pluginsSwitch" 
+                            Width="150" 
+                            HorizontalAlignment="Left" 
+                            IsChecked="{Binding Plugins, ElementName=AppWindow}"/>
+                        <!-- AllowInsecureContent -->
+                        <Label Margin="0,5" Padding="0" Content="Allow Insecure Content:" Target="{Binding ElementName=insecureContentSwitch}" />
+                        <ui:ToggleSwitch 
+                            Margin="0,5" 
+                            x:Name="insecureContentSwitch" 
+                            Width="150" 
+                            HorizontalAlignment="Left" 
+                            IsChecked="{Binding AllowInsecureContent, ElementName=AppWindow}"/>
+                        <!-- WebSecurity -->
+                        <Label Margin="0,5" Padding="0" Content="Web Security:" Target="{Binding ElementName=webSecuritySwitch}" />
+                        <ui:ToggleSwitch 
+                            Margin="0,5" 
+                            x:Name="webSecuritySwitch" 
+                            Width="150" 
+                            HorizontalAlignment="Left" 
+                            IsChecked="{Binding WebSecurity, ElementName=AppWindow}"/>
+                    </StackPanel>
+                    <Button 
+                        Grid.Row="1" 
+                        Width="100" 
+                        HorizontalAlignment="Right" 
+                        Margin="20" 
+                        Style="{StaticResource AccentedSquareButtonStyle}" 
+                        Command="{x:Static local:MainWindow.RestartApplication}" 
+                        Visibility="{Binding Restart, ElementName=AppWindow, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <TextBlock Text="Restart" />
+                    </Button>
+                </Grid>
+            </ui:Flyout>
+            <!-- Advanced -->
+            <ui:Flyout
+                Header="Advanced" 
+                Position="Right" 
+                Width="400" 
+                TextBlock.FontSize="16" 
+                CloseCommand="{x:Static local:MainWindow.CloseSettings}"
+                Theme="Inverse">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Margin="30" Orientation="Vertical" VerticalAlignment="Stretch">
+                        <!-- Cookies -->
+                        <Label Margin="0,5" Padding="0" Content="Cookies:" />
+                        <RadioButton Margin="0,5" Content="Save Cache &amp; Cookies on disk (recommended)" GroupName="1" IsChecked="{Binding Cookies, ElementName=AppWindow}"/>
+                        <RadioButton Margin="0,5" Content="Save Cache &amp; Cookies until the application is closed" GroupName="1" IsChecked="True"/>
+                        <!-- Images -->
+                        <Label Margin="0,5" Padding="0" Content="Images:" />
+                        <RadioButton Margin="0,5" Content="Show all images (recommended)" GroupName="2" IsChecked="{Binding ShowImages, ElementName=AppWindow}"/>
+                        <RadioButton Margin="0,5" Content="Do not show images" GroupName="2" IsChecked="True"/>
+                        <!-- JavaScript -->
+                        <Label Margin="0,5" Padding="0" Content="JavaScript:" />
+                        <RadioButton Margin="0,5" Content="Allow JavaScript execution (recommended)" GroupName="3" IsChecked="{Binding Javascript, ElementName=AppWindow}"/>
+                        <RadioButton Margin="0,5" Content="Do not allow JavaScript execution" GroupName="3" IsChecked="True"/>
+                        <!-- LocalFiles -->
+                        <Label Margin="0,5" Padding="0" Content="Local Files:" />
+                        <CheckBox Margin="0,5" Content="Allow files access local files" IsChecked="{Binding UniversalAccessFromFileURL, ElementName=AppWindow}"/>
+                        <CheckBox Margin="0,5" Content="Allow local files access other local files" IsChecked="{Binding FileAccessFromFileURL, ElementName=AppWindow}"/>
+                    </StackPanel>
+                    <Button 
+                        Grid.Row="1" 
+                        Width="100" 
+                        HorizontalAlignment="Right" 
+                        Margin="20" 
+                        Style="{StaticResource AccentedSquareButtonStyle}" 
+                        Command="{x:Static local:MainWindow.RestartApplication}" 
+                        Visibility="{Binding Restart, ElementName=AppWindow, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <TextBlock Text="Restart" />
+                    </Button>
+                </Grid>
+            </ui:Flyout>
+            <!-- About -->
+            <ui:Flyout
+                x:Name="aboutFlyout"
+                Header="About"
+                Position="Right"
+                Width="350"
+                Theme="Accent"
+                TextBlock.FontSize="14"
+                TextBlock.Foreground="#FFFFFF">
+                <StackPanel Margin="10" Orientation="Vertical" SnapsToDevicePixels="True">
+                    <!-- Logo -->
+                    <Image Source="Images/OSM-bot_Logo_White_300.png" Stretch="None" HorizontalAlignment="Center" Margin="0,10" />
+                    <TextBlock Text="Awesomium.NET v1.7.5" Margin="15,5" Foreground="White" FontSize="16" FontWeight="Bold" />
+                    <TextBlock Text="Copyright ©2014 Awesomium Technologies LLC" Margin="15,5" Foreground="White" />
+                    <TextBlock Text="Awesomium is a trademark of Awesomium Technologies LLC" Margin="15,2" Foreground="White" TextWrapping="Wrap" />
+                    <!-- Tabbed WPF Sample -->
+                    <TextBlock Text="Tabbed WPF Sample" Margin="15,20" Foreground="White" FontSize="18" />
+                    <TextBlock Margin="15,5" Foreground="White" TextWrapping="Wrap">
+                        <Run>The TabbedWPFSample demonstrates using the Awesomium.NET</Run> 
+                        <Hyperlink 
+                            Command="{x:Static awe:WebControlCommands.LoadURL}" 
+                            CommandParameter="http://docs.awesomium.net/?tc=T_Awesomium_Windows_Controls_WebControl" 
+                            CommandTarget="{Binding SelectedView.Browser, ElementName=AppWindow}" 
+                            Foreground="White" FontStyle="Italic">WebControl</Hyperlink>
+                        <Run>and most of the components and features available through</Run> <Run FontStyle="Italic">Awesomium.Windows.Controls</Run>,
+                        <Run>the WPF assembly of Awesomium.NET.</Run>
+                    </TextBlock>
+                    <!-- Additional Resources -->
+                    <TextBlock Text="Additional Resources" Margin="15,20,15,0" Foreground="White" FontSize="18" />
+                    <FlowDocumentScrollViewer 
+                        Margin="10,0" 
+                        Foreground="White" 
+                        ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <FlowDocument 
+                            FontFamily="{Binding FontFamily, ElementName=aboutFlyout}" 
+                            FontSize="14" 
+                            TextAlignment="Left">
+                            <List Padding="0">
+                                <ListItem>
+                                    <Paragraph>
+                                        <Run>Main Website:</Run>
+                                        <Hyperlink 
+                                            Command="{x:Static awe:WebControlCommands.LoadURL}"
+                                            CommandParameter="http://awesomium.net"
+                                            CommandTarget="{Binding SelectedView.Browser, ElementName=AppWindow}"
+                                            Foreground="White">http://awesomium.net</Hyperlink>
+                                    </Paragraph>
+                                </ListItem>
+                                <ListItem>
+                                    <Paragraph>
+                                        <Run>API Reference: </Run>
+                                        <Hyperlink 
+                                            Command="{x:Static awe:WebControlCommands.LoadURL}"
+                                            CommandParameter="http://docs.awesomium.net"
+                                            CommandTarget="{Binding SelectedView.Browser, ElementName=AppWindow}"
+                                            Foreground="White">http://docs.awesomium.net</Hyperlink>
+                                    </Paragraph>
+                                </ListItem>
+                                <ListItem>
+                                    <Paragraph>
+                                        <Run>Wiki:</Run>
+                                        <Hyperlink 
+                                            Command="{x:Static awe:WebControlCommands.LoadURL}"
+                                            CommandParameter="http://wiki.awesomium.net"
+                                            CommandTarget="{Binding SelectedView.Browser, ElementName=AppWindow}"
+                                            Foreground="White">http://wiki.awesomium.net</Hyperlink>
+                                    </Paragraph>
+                                </ListItem>
+                                <ListItem>
+                                    <Paragraph>
+                                        <Run>Q &amp; A: </Run>
+                                        <Hyperlink 
+                                            Command="{x:Static awe:WebControlCommands.LoadURL}"
+                                            CommandParameter="http://answers.awesomium.com"
+                                            CommandTarget="{Binding SelectedView.Browser, ElementName=AppWindow}"
+                                            Foreground="White">http://answers.awesomium.net</Hyperlink>
+                                    </Paragraph>
+                                </ListItem>
+                            </List>
+                        </FlowDocument>
+                    </FlowDocumentScrollViewer>
+                </StackPanel>
+            </ui:Flyout>
+            <!-- Downloads -->
+            <ui:Flyout 
+                x:Name="downloadsFlyout"
+                Header="Downloads" 
+                Position="Right" 
+                Theme="Adapt" 
+                Width="400" 
+                IsOpen="{Binding DownloadsVisible, ElementName=AppWindow, Mode=OneWay}"
+                IsPinnable="True"
+                ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                <local:DownloadsFlyoutControl 
+                    DataContext="{Binding Downloads, ElementName=AppWindow}"
+                    ItemsSource="{Binding}" />
+            </ui:Flyout>
+        </ui:FlyoutsControl>
+    </ui:MetroWindow.Flyouts>
+    <Grid SnapsToDevicePixels="True" Margin="0,1,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <awe:WebDialogsLayer>
+            <local:WebTabControl 
+                Grid.ZIndex="-100"
+                DataContext="{Binding Views, ElementName=AppWindow}" 
+                ItemsSource="{Binding}" 
+                TabPanelRightPadding="220"/>
+        </awe:WebDialogsLayer>
+        <local:DownloadsControl 
+            Grid.Row="1" 
+            Background="{DynamicResource GrayBrush10}" 
+            MinHeight="50" 
+            Source="{Binding Downloads, ElementName=AppWindow}" 
+            Visibility="{Binding DownloadsVisible, ElementName=AppWindow, Converter={StaticResource BooleanToVisibilityConverter}}" />
+    </Grid>
+</ui:MetroWindow>

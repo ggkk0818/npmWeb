@@ -1,0 +1,622 @@
+﻿<!-- *****************************************************************************
+ *    Project   : Awesomium.NET (TabbedWPFSample)
+ *    File      : DownloadsControl.xaml
+ *    Version   : 1.7.0.0 
+ *    Date      : 3/5/2013
+ *    Author    : Perikles C. Stephanidis (perikles@awesomium.com)
+ *    Copyright : (C)2013 Awesomium Technologies LLC
+ *    
+ *    This code is provided "AS IS" and for demonstration purposes only,
+ *    without warranty of any kind.
+ *     
+ *********************************************************************************
+ *
+ *    Notes     :
+ *
+ *    Theme for the DownloadsControl and its items.
+ *    
+ *    
+ ***************************************************************************** -->
+
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:awe="http://schemas.awesomium.com/winfx"
+    xmlns:local="clr-namespace:TabbedWPFSample"
+    xmlns:ui="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:mwt="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/TabbedWPFSample;component/Themes/LinkButton.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro.Resources;component/Icons.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <awe:FileSizeConverter x:Key="FileSizeConverter" />
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+    <ContextMenu x:Key="DownloadContextMenu" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+        <MenuItem Command="{Binding CancelCommand}" Header="Cancel Download" Visibility="{Binding IsActive, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        <MenuItem Command="{Binding OpenDownloadedFileFolderCommand}" Header="Open Containing Folder" />
+    </ContextMenu>
+
+    <Canvas 
+        x:Key="appbar_close"
+        x:Shared="False"
+        Width="48" 
+        Height="48" 
+        Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0" 
+        UseLayoutRounding="False">
+        <Path 
+            Width="26.5833" 
+            Height="19" 
+            Canvas.Left="13" 
+            Canvas.Top="13" 
+            Stretch="Fill" 
+            Fill="{DynamicResource BlackBrush}"
+            Data="F1 M 17,14L 24,21L 30.9999,14.0001L 33.9999,17.0001L 27,24L 33.9999,31L 31,34L 24,27L 17,34L 14,31L 21,24L 14,17L 17,14 Z "/>
+    </Canvas>
+
+    <Canvas 
+        x:Key="appbar_minus" 
+        x:Shared="False" 
+        Width="48" 
+        Height="48" 
+        Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0" 
+        UseLayoutRounding="False">
+        <Path 
+            Width="38" 
+            Height="6" 
+            Canvas.Left="19" 
+            Canvas.Top="38" 
+            Stretch="Fill" 
+            Fill="#FFFFFF" 
+            Data="F1 M 19,38L 57,38L 57,44L 19,44L 19,38 Z "/>
+    </Canvas>
+
+    <Canvas 
+        x:Key="appbar_control_stop" 
+        x:Shared="False" 
+        Width="48" 
+        Height="48" 
+        Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0" 
+        UseLayoutRounding="False">
+        <Path 
+            Width="38" 
+            Height="6" 
+            Canvas.Left="19" 
+            Canvas.Top="38" 
+            Stretch="Fill" 
+            Fill="{DynamicResource BlackBrush}" 
+            Data="F1 M 19,38L 57,38L 57,44L 19,44L 19,38 Z "/>
+    </Canvas>
+
+    <Canvas 
+        x:Key="appbar_minus_disabled"
+        x:Shared="False"
+        Width="48" 
+        Height="48" 
+        Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0" 
+        UseLayoutRounding="False">
+        <Path 
+            Width="38" 
+            Height="6" 
+            Canvas.Left="19" 
+            Canvas.Top="38" 
+            Stretch="Fill" 
+            Fill="#ADADAD" 
+            Data="F1 M 19,38L 57,38L 57,44L 19,44L 19,38 Z "/>
+    </Canvas>
+    
+
+    <!-- Flyout Styles and Template -->
+
+    <Style x:Key="CancelButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroCircleButtonStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsCanceled}" Value="True">
+                <Setter Property="Content">
+                    <Setter.Value>
+                        <Rectangle Width="16" Height="16">
+                            <Rectangle.Fill>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_minus_disabled}" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="DownloadsFlyoutControlItem" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MetroListBoxItem}">
+        <Setter Property="Foreground" Value="{DynamicResource BlackBrush}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="MinHeight" Value="25"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                    <ControlTemplate.Resources>
+                        <Style TargetType="{x:Type Canvas}">
+                            <Style.Resources>
+                                <Style TargetType="{x:Type Path}">
+                                    <Setter Property="Fill" Value="{DynamicResource BlackBrush}" />
+                                </Style>
+                            </Style.Resources>
+                        </Style>
+                    </ControlTemplate.Resources>
+                    <Border 
+                        x:Name="Border" 
+                        Background="{TemplateBinding Background}" 
+                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                        <ContentPresenter 
+                            Margin="5, 0, 0, 0" 
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource AccentColorBrush3}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource GrayBrush7}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsCanceled}" Value="True">
+                <Setter Property="IsEnabled" Value="False" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <DataTemplate x:Key="DownloadFlyoutItem" DataType="{x:Type awe:DownloadItem}">
+        <DataTemplate.Resources>
+            <Storyboard x:Key="Flash">
+                <DoubleAnimation 
+                    Storyboard.TargetName="fileImage" 
+                    Storyboard.TargetProperty="(UIElement.Opacity)" 
+                    From="1" 
+                    To="0" 
+                    Duration="00:00:00.3" 
+                    AutoReverse="True" 
+                    RepeatBehavior="3x"/>
+            </Storyboard>
+        </DataTemplate.Resources>
+        <Grid Width="400" Margin="-5,0,0,0" SnapsToDevicePixels="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="65" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="65" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Image 
+                x:Name="fileImage" 
+                Width="48" 
+                Height="48" 
+                Stretch="None"
+                SnapsToDevicePixels="True"
+                Source="{Binding FileLargeIcon}" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center" 
+                Visibility="Collapsed" 
+                Opacity="0"/>
+            <ui:ProgressRing 
+                x:Name="progressRing"
+                Width="48" 
+                Height="48" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                IsActive="{Binding IsActive, Mode=OneWay}"/>
+            <TextBlock 
+                x:Name="progressText"
+                Foreground="{DynamicResource AccentColorBrush}"
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center" 
+                FontSize="12"
+                Text="{Binding Progress, StringFormat={}{0}%}"/>
+            <Grid Grid.Column="1" Margin="5" >
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock 
+                    x:Name="fileTextBlock"
+                    Grid.ColumnSpan="4"
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Center" 
+                    TextTrimming="CharacterEllipsis" 
+                    FontSize="14" 
+                    MaxWidth="250" 
+                    Margin="3"
+                    ToolTip="{Binding FileName}" 
+                    Text="{Binding FileName}"/>
+                <Button 
+                    x:Name="openButton" 
+                    Grid.ColumnSpan="4"
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Center" 
+                    FontSize="14" 
+                    MaxWidth="250" 
+                    Margin="3"
+                    Command="{Binding OpenDownloadedFileCommand}" 
+                    ToolTip="Click to Open" 
+                    Content="{Binding FileName}" 
+                    Style="{StaticResource LinkButtonStyle}" 
+                    Visibility="Collapsed"/>
+                <TextBlock 
+                    Grid.Row="1" 
+                    Text="Size: " 
+                    Margin="3,2"
+                    Opacity="0.5"
+                    VerticalAlignment="Center" 
+                    HorizontalAlignment="Left"/>
+                <TextBlock 
+                    Grid.Column="1" 
+                    Grid.Row="1" 
+                    Margin="3,2"
+                    Opacity="0.5"
+                    VerticalAlignment="Center" 
+                    HorizontalAlignment="Left"
+                    Text="{Binding TotalBytes, Converter={StaticResource FileSizeConverter}}" />
+                <TextBlock 
+                    x:Name="speedLabel" 
+                    Grid.Column="2"
+                    Grid.Row="2" 
+                    Text="Speed: " 
+                    Margin="3,2"
+                    Opacity="0.5"
+                    VerticalAlignment="Center" 
+                    HorizontalAlignment="Left"/>
+                <TextBlock 
+                    x:Name="speedBox" 
+                    Grid.Column="3" 
+                    Grid.Row="2" 
+                    Margin="3,2"
+                    Opacity="0.5"
+                    VerticalAlignment="Center" 
+                    HorizontalAlignment="Left"
+                    Text="{Binding CurrentSpeed, Converter={StaticResource FileSizeConverter}, StringFormat={}{0}/s}" />
+            </Grid>
+            <Button 
+                x:Name="openFolderButton"
+                Grid.Column="2" 
+                Margin="5" 
+                Width="35" 
+                Height="35" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center" 
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center"
+                Command="{Binding OpenDownloadedFileFolderCommand}" 
+                Style="{StaticResource MetroCircleButtonStyle}"
+                Visibility="Collapsed">
+                <Rectangle Width="14" Height="14">
+                    <Rectangle.Fill>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_folder_open}" />
+                    </Rectangle.Fill>
+                </Rectangle>
+            </Button>
+            <Button 
+                x:Name="cancelButton"
+                Grid.Column="3" 
+                Margin="5,5,10,5" 
+                Width="35" 
+                Height="35" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center" 
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center"
+                Command="{Binding CancelCommand}" 
+                Style="{StaticResource CancelButtonStyle}">
+                <Rectangle Width="14" Height="14">
+                    <Rectangle.Fill>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_control_stop}" />
+                    </Rectangle.Fill>
+                </Rectangle>
+            </Button>
+            <Button 
+                x:Name="removeButton"
+                Grid.Column="3" 
+                Margin="5,5,10,5" 
+                Width="35" 
+                Height="35" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center" 
+                VerticalContentAlignment="Center"
+                Command="{Binding RemoveCommand}" 
+                Style="{StaticResource MetroCircleButtonStyle}"
+                Background="Red"
+                Visibility="Collapsed">
+                <Rectangle Width="16" Height="4">
+                    <Rectangle.Fill>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_minus}" />
+                    </Rectangle.Fill>
+                </Rectangle>
+            </Button>
+            <ui:MetroProgressBar 
+                x:Name="progressBar" 
+                Grid.Row="1" 
+                Grid.ColumnSpan="4" 
+                Value="{Binding Progress, Mode=OneWay}" 
+                Minimum="0" 
+                Maximum="100" 
+                Background="{Binding Background, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" 
+                Foreground="{DynamicResource AccentColorBrush}"
+                MinHeight="2"/>
+        </Grid>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsActive}" Value="False">
+                <Setter TargetName="progressRing" Property="Visibility" Value="Hidden" />
+                <Setter TargetName="progressText" Property="Visibility" Value="Collapsed" />
+                <Setter TargetName="fileImage" Property="Visibility" Value="Visible" />
+                <Setter TargetName="progressBar" Property="Visibility" Value="Hidden" />
+                <Setter TargetName="speedLabel" Property="Visibility" Value="Hidden" />
+                <Setter TargetName="speedBox" Property="Visibility" Value="Hidden" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsCanceled}" Value="True">
+                <Setter TargetName="fileImage" Property="Opacity" Value="0.5" />
+                <Setter TargetName="cancelButton" Property="Visibility" Value="Collapsed" />
+                <Setter TargetName="removeButton" Property="Visibility" Value="Visible" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsComplete}" Value="True">
+                <Setter TargetName="fileTextBlock" Property="Visibility" Value="Collapsed" />
+                <Setter TargetName="cancelButton" Property="Visibility" Value="Collapsed" />
+                <Setter TargetName="openButton" Property="Visibility" Value="Visible" />
+                <Setter TargetName="openFolderButton" Property="Visibility" Value="Visible" />
+                <Setter TargetName="removeButton" Property="Visibility" Value="Visible" />
+                <DataTrigger.EnterActions>
+                    <BeginStoryboard Storyboard="{StaticResource Flash}" />
+                </DataTrigger.EnterActions>
+            </DataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding IsActive}" Value="True" />
+                    <Condition Binding="{Binding TotalBytes}" Value="0" />
+                </MultiDataTrigger.Conditions>
+                <Setter TargetName="progressBar" Property="IsIndeterminate" Value="True" />
+                <Setter TargetName="progressText" Property="Visibility" Value="Collapsed" />
+            </MultiDataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <Style TargetType="{x:Type local:DownloadsFlyoutControl}" BasedOn="{StaticResource MetroListBox}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
+        <Setter Property="ItemContainerStyle" Value="{StaticResource DownloadsFlyoutControlItem}" />
+        <Setter Property="ItemTemplate" Value="{StaticResource DownloadFlyoutItem}" />
+    </Style>
+
+
+    <!-- Bottom downloads bar Style and Templates -->
+
+    <DataTemplate x:Key="DownloadToolTipTemplate" DataType="{x:Type awe:DownloadItem}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock 
+                Text="Name: " 
+                VerticalAlignment="Center" 
+                HorizontalAlignment="Right"/>
+            <TextBlock 
+                Grid.Column="1" 
+                Text="{Binding FileName}" 
+                Margin="2"/>
+            <TextBlock 
+                Grid.Row="1" 
+                Text="Size: " 
+                VerticalAlignment="Center" 
+                HorizontalAlignment="Right"/>
+            <TextBlock 
+                Grid.Column="1" 
+                Grid.Row="1" 
+                Text="{Binding TotalBytes, Converter={StaticResource FileSizeConverter}}" 
+                Margin="2" />
+            <TextBlock 
+                x:Name="SpeedLabel"
+                Grid.Row="2" 
+                Text="Speed: " 
+                VerticalAlignment="Center" 
+                HorizontalAlignment="Right"/>
+            <TextBlock 
+                x:Name="SpeedBox"
+                Grid.Column="1" 
+                Grid.Row="2" 
+                Text="{Binding CurrentSpeed, Converter={StaticResource FileSizeConverter}, StringFormat={}{0}/s}" 
+                Margin="2" />
+            <TextBlock 
+                Grid.ColumnSpan="2" 
+                Grid.Row="3" 
+                Margin="2,5,2,2" 
+                FontStyle="Italic" 
+                TextWrapping="Wrap" 
+                Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" 
+                Text="Right-Click for more options"/>
+        </Grid>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsActive}" Value="False">
+                <Setter TargetName="SpeedLabel" Property="Visibility" Value="Collapsed" />
+                <Setter TargetName="SpeedBox" Property="Visibility" Value="Collapsed" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DownloadTemplate" DataType="{x:Type awe:DownloadItem}">
+        <DataTemplate.Resources>
+            <Storyboard x:Key="Flash">
+                <DoubleAnimation 
+                    Storyboard.TargetName="fileImage" 
+                    Storyboard.TargetProperty="(UIElement.Opacity)" 
+                    From="1" 
+                    To="0" 
+                    Duration="00:00:00.3" 
+                    AutoReverse="True" 
+                    RepeatBehavior="3x"/>
+            </Storyboard>
+        </DataTemplate.Resources>
+        <local:SplitButton 
+            x:Name="operationButton"
+            ContextMenu="{StaticResource DownloadContextMenu}"
+            Command="{Binding OpenDownloadedFileCommand}" 
+            Visibility="{Binding OpenDownloadedFileAlwaysEnabled, Mode=OneWayToSource, Converter={StaticResource BooleanToVisibilityConverter}}"
+            Margin="3" 
+            Padding="0"
+            Height="42">
+            <local:SplitButton.Effect>
+                <DropShadowEffect BlurRadius="1" ShadowDepth="0.3" />
+            </local:SplitButton.Effect>
+            <local:SplitButton.ButtonToolTip>
+                <ToolTip Content="{Binding}" ContentTemplate="{StaticResource DownloadToolTipTemplate}" />
+            </local:SplitButton.ButtonToolTip>
+            <local:SplitButton.DropDownContent>
+                <Border 
+                    BorderThickness="1" 
+                    Background="{DynamicResource ContextMenuBackgroundBrush}" 
+                    BorderBrush="{DynamicResource ContextMenuBorderBrush}">
+                    <StackPanel 
+                        SnapsToDevicePixels="True" 
+                        RenderOptions.ClearTypeHint="Enabled" 
+                        TextOptions.TextFormattingMode="Ideal">
+                        <StackPanel.Resources>
+                            <Style BasedOn="{StaticResource MetroMenuItem}" TargetType="{x:Type MenuItem}">
+                                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                <Setter Property="FontFamily" Value="{DynamicResource {x:Static SystemFonts.MenuFontFamilyKey}}" />
+                                <Setter Property="FontSize" Value="{DynamicResource ContextMenuFontSize}" />
+                                <Setter Property="FontStyle" Value="{DynamicResource {x:Static SystemFonts.MenuFontStyleKey}}" />
+                                <Setter Property="FontWeight" Value="{DynamicResource {x:Static SystemFonts.MenuFontWeightKey}}" />
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.MenuTextBrushKey}}" />
+                            </Style>
+                        </StackPanel.Resources>
+                        <MenuItem Command="{Binding CancelCommand}" Header="Cancel Download" Visibility="{Binding IsActive, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <MenuItem Command="{Binding OpenDownloadedFileFolderCommand}" Header="Open Containing Folder" />
+                    </StackPanel>
+                </Border>
+            </local:SplitButton.DropDownContent>
+            <Grid Margin="2" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="35" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Image 
+                    x:Name="fileImage" 
+                    Width="32" 
+                    Height="32" 
+                    Source="{Binding FileIcon}" 
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" 
+                    Visibility="Collapsed" 
+                    Opacity="0"/>
+                <local:CircularProgressBar 
+                    x:Name="progressBar" 
+                    Width="33" 
+                    Height="33" 
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" 
+                    Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" 
+                    Value="{Binding Progress, Mode=OneWay}" 
+                    StrokeThickness="5" 
+                    HoleSizeFactor="0.75" 
+                    TextBlock.FontSize="9"/>
+                <TextBlock 
+                    Grid.Column="1" 
+                    Margin="2" 
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Center" 
+                    TextTrimming="CharacterEllipsis" 
+                    MinWidth="100"
+                    MaxWidth="150" 
+                    Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" 
+                    Text="{Binding FileName}"/>
+            </Grid>
+        </local:SplitButton>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsActive}" Value="False">
+                <Setter TargetName="progressBar" Property="Visibility" Value="Collapsed" />
+                <Setter TargetName="fileImage" Property="Visibility" Value="Visible" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsCanceled}" Value="True">
+                <Setter TargetName="fileImage" Property="Opacity" Value="0.5" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsComplete}" Value="True">
+                <DataTrigger.EnterActions>
+                    <BeginStoryboard Storyboard="{StaticResource Flash}" />
+                </DataTrigger.EnterActions>
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <Style TargetType="{x:Type local:DownloadsControl}">
+        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:DownloadsControl}">
+                    <Border 
+                        Background="{TemplateBinding Background}" 
+                        BorderBrush="{TemplateBinding BorderBrush}" 
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ItemsControl 
+                                DataContext="{TemplateBinding Source}" 
+                                ItemsSource="{Binding}"
+                                ItemTemplate="{StaticResource DownloadTemplate}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                            <Button 
+                                Grid.Column="2" 
+                                Margin="3" 
+                                Width="35" 
+                                Height="35" 
+                                HorizontalAlignment="Center" 
+                                VerticalAlignment="Center" 
+                                Command="Close" 
+                                CommandParameter="Downloads" 
+                                CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}" 
+                                Style="{DynamicResource MetroCircleButtonStyle}">
+                                <Rectangle Width="16" Height="16">
+                                    <Rectangle.Fill>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_close}" />
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                            </Button>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

@@ -1,5 +1,6 @@
 ﻿define([
     "./everdataChart",
     "./datetimepicker",
-    "./numberAnimate"
+    "./numberAnimate",
+    "./pagination"
 ], function () { });

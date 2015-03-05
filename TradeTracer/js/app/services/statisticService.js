@@ -9,7 +9,7 @@ function (angular, $, _, config) {
     var module = angular.module('app.services');
     module.service('statisticService', function ($routeParams, $http, $rootScope) {
         //统计数据查询
-        this.show = function (params, callback) {
+        this.list = function (params, callback) {
             $http({
                 method: 'GET',
                 url: 'statistics/show',

@@ -29,7 +29,7 @@
             if (!params)
                 return;
             if (params.pageNum)
-                $scope.pageNum = params.pageNum;
+                $scope.pageNum = parseInt(params.pageNum);
             if (params.keyword) {
                 $scope.keyword = params.keyword;
                 $scope.keywordInput = params.keyword;
@@ -80,15 +80,15 @@
         };
         //搜索日志
         $scope.search = function () {
-            if (typeof $scope.keywordInput == "undefined" || $scope.keywordInput.length == 0)
+            if (typeof $scope.keywordInput == "undefined" || $scope.keywordInput == null || $scope.keywordInput.length == 0)
                 $scope.keyword = null;
             else
                 $scope.keyword = $scope.keywordInput;
-            if (typeof $scope.startTimeInput == "undefined" || $scope.startTimeInput.length == 0)
+            if (typeof $scope.startTimeInput == "undefined" || $scope.startTimeInput == null || $scope.startTimeInput.length == 0)
                 $scope.startTime = null;
             else
                 $scope.startTime = $scope.startTimeInput;
-            if (typeof $scope.endTimeInput == "undefined" || $scope.endTimeInput.length == 0)
+            if (typeof $scope.endTimeInput == "undefined" || $scope.endTimeInput == null || $scope.endTimeInput.length == 0)
                 $scope.endTime = null;
             else
                 $scope.endTime = $scope.endTimeInput;

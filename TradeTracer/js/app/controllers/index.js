@@ -24,7 +24,7 @@
                     }
                 }]);
                 //交易量
-                statisticService.show({ groupField: "statisticsTime", orderField: "statisticsTime", maxResult: 10 }, function (data) {
+                statisticService.list({ groupField: "statisticsTime", orderField: "statisticsTime", maxResult: 10 }, function (data) {
                     if (data && data.data) {
                         var category = [], chartData = [];
                         for (var i = 0; i < data.data.length; i++) {
@@ -41,7 +41,7 @@
                     }
                 });
                 //返回码
-                statisticService.show({ groupField: "returnCode", orderField: "count", maxResult: 10 }, function (data) {
+                statisticService.list({ groupField: "returnCode", orderField: "count", maxResult: 10 }, function (data) {
                     if (data && data.data) {
                         var category = [], countData = [];
                         for (var i = 0; i < data.data.length; i++) {

@@ -1,4 +1,4 @@
-﻿<div class="row">
+﻿<div class="row" ng-if="false">
     <div class="col-md-3">
         <form class="form-horizontal">
             <div class="form-group">
@@ -89,61 +89,50 @@
         </form>
     </div>
 </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="pull-right">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label class="sr-only">响应时间</label>
+                    <input type="text" class="form-control" placeholder="响应时间" ng-model="durationInput">
+                </div>
+                <div class="input-group">
+                    <input type="text" class="form-control date" data-date-format="yyyy-mm-dd hh:ii:ss" data-date-language="zh-CN" placeholder="开始时间" ng-model="startTimeInput">
+                    <span class="input-group-addon" style="border-width:1px 0;">-</span>
+                    <input type="text" class="form-control date" data-date-format="yyyy-mm-dd hh:ii:ss" data-date-language="zh-CN" placeholder="结束时间" ng-model="endTimeInput">
+                </div>
+                <button class="btn btn-default" type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
+                <button class="btn btn-info" type="button"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> 导出</button>
+            </form>
+        </div>
+    </div>
+</div>
 <div class="row" style="margin-top:10px;">
     <div class="col-md-12">
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>序号</th>
-                    <th>发起时间</th>
-                    <th>交易关键字</th>
-                    <th>交易类型</th>
-                    <th>交易渠道</th>
-                    <th>响应时间ms</th>
-                    <th>交易结果</th>
-                    <th>返回码</th>
-                    <th>客户端IP</th>
-                    <th>服务器IP</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>响应时间</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>2013-06-27 18:23:00.001</td>
-                    <td>6225-xxxx-xxxx-2846</td>
-                    <td>消费</td>
-                    <td>None</td>
-                    <td>117.222</td>
-                    <td>失败</td>
-                    <td>91</td>
-                    <td>19.234.11.21</td>
-                    <td>14.200.200.5</td>
+                <tr ng-repeat="record in recordList">
+                    <td>{{record.starttime_prefix + "." + record.starttime_suffix}}</td>
+                    <td>{{record.endtime_prefix + "." + record.endtime_suffix}}</td>
+                    <td>{{record.respmills}}</td>
                 </tr>
             </tbody>
         </table>
         <nav class="text-center" style="position:relative;">
             <div class="pull-left" style="line-height:34px;position:absolute;top:0;left:0;">
-                <span style="padding-right:10px;">匹配的记录 1 笔</span>
-                <span style="padding-right:10px;">第 1 页</span>
-                <span>共 1 页</span>
+                <span style="padding-right:10px;">匹配的记录 {{recordSize||0}} 笔</span>
+                <span style="padding-right:10px;">第 {{pageNum||0}} 页</span>
+                <span>共 {{pageTotal||0}} 页</span>
             </div>
-            <ul class="pagination" style="margin:0 auto;">
-                <li>
-                    <a href="javascript:void(0);" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="active"><a href="javascript:void(0);">1</a></li>
-                <li><a href="javascript:void(0);">2</a></li>
-                <li><a href="javascript:void(0);">3</a></li>
-                <li><a href="javascript:void(0);">4</a></li>
-                <li><a href="javascript:void(0);">5</a></li>
-                <li>
-                    <a href="javascript:void(0);" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
+            <ul class="pagination" style="margin:0 auto;" data-page-click="show"></ul>
         </nav>
     </div>
 </div>

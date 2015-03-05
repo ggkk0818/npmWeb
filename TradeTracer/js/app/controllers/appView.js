@@ -63,7 +63,7 @@
         //查询图表数据
         $scope.query = function () {
             //前四个
-            statisticService.show({ groupField: "statisticsTime", orderField: "statisticsTime", maxResult: 6 }, function (data) {
+            statisticService.list({ groupField: "statisticsTime", orderField: "statisticsTime", maxResult: 6 }, function (data) {
                 if (data && data.data) {
                     var category = [], countData = [],
                         successData = [], durationData = [],
@@ -93,7 +93,7 @@
                 }
             });
             //返回码
-            statisticService.show({ groupField: "returnCode", orderField: "count", maxResult: 10 }, function (data) {
+            statisticService.list({ groupField: "returnCode", orderField: "count", maxResult: 10 }, function (data) {
                 if (data && data.data) {
                     var category = [], countData = [];
                     for (var i = 0; i < data.data.length; i++) {

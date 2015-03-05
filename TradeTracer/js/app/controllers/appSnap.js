@@ -6,7 +6,7 @@
             $scope.query();
         };
         $scope.query = function () {
-            statisticService.show({ groupField: "statisticsTime", orderField: "statisticsTime", maxResult: 1 }, function (data) {
+            statisticService.list({ groupField: "statisticsTime", orderField: "statisticsTime", maxResult: 1 }, function (data) {
                 if (data && data.data && data.data.length) {
                     var row = data.data[0];
                     if (typeof row.count !== "undefine")
@@ -20,7 +20,7 @@
                 }
             });
             //返回码
-            statisticService.show({ groupField: "returnCode", orderField: "count", maxResult: 10 }, function (data) {
+            statisticService.list({ groupField: "returnCode", orderField: "count", maxResult: 10 }, function (data) {
                 if (data && data.data) {
                     var category = [], countData = [];
                     for (var i = 0; i < data.data.length; i++) {

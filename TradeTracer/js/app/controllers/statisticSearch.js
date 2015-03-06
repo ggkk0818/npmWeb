@@ -3,6 +3,10 @@
     var module = angular.module('app.controllers');
     module.controller('StatisticSearchCtrl', function ($rootScope, $scope, $route, $timeout, $location, statisticService) {
         //初始化变量
+        $scope.LOG_TYPE = [
+            { id: "8583", name: "8583" },
+            { id: "20022", name: "20022" }
+        ];
         $scope.pageNum = 1;
         $scope.pageTotal = 1;
         $scope.pageSize = 10;
@@ -10,9 +14,10 @@
         $scope.duration = null;
         $scope.startTime = null;
         $scope.endTime = null;
+        $scope.logType = $scope.LOG_TYPE[0];
         //表单数据
         $scope.durationInput = null;
-
+        //获取查询参数
         $scope.getSearchParams = function () {
             var params = { pageNum: $scope.pageNum };
             if ($scope.duration)
@@ -21,9 +26,11 @@
                 params.startTime = $scope.startTime;
             if ($scope.endTime)
                 params.endTime = $scope.endTime;
+            if ($scope.logType)
+                params.logType = $scope.logType.id;
             return params;
         };
-
+        //从url获取查询参数设置变量
         $scope.setSearchParams = function () {
             var params = $location.search();
             if (!params)
@@ -42,6 +49,12 @@
                 $scope.endTime = params.endTime;
                 $scope.endTimeInput = params.endTime;
             }
+            if (params.logType) {
+                for (var i = 0; i < $scope.LOG_TYPE.length; i++) {
+                    if (params.logType == $scope.LOG_TYPE[i].id)
+                        $scope.logType = $scope.LOG_TYPE[i];
+                }
+            }
         };
         //显示统计信息
         $scope.show = function (pageNum) {
@@ -56,7 +69,7 @@
 
         $scope.doQuery = function () {
             var params = {
-                logType: 8583,
+                logType: $scope.logType.id,
                 start: ($scope.pageNum - 1) * $scope.pageSize,
                 limit: $scope.pageSize
             };
@@ -112,6 +125,12 @@
             else
                 $scope.endTime = $scope.endTimeInput;
             $scope.show(1);
+        };
+        //表单输入框按键事件
+        $scope.formKeypressHandler = function (e) {
+            if (e.keyCode == 13) {
+                $scope.search();
+            }
         };
         //获取url查询参数
         $scope.setSearchParams();

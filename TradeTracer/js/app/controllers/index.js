@@ -1,7 +1,8 @@
 ﻿define(['angular', 'lodash', 'jquery', 'services/all', 'css!partials/index.css'], function (angular, _, $) {
     "use strict";
     var module = angular.module('app.controllers');
-    module.controller('IndexCtrl', function ($rootScope, $scope, $route, $interval, $location, $timeout, $window, logService, statisticService) {
+    module.controller('IndexCtrl', function ($rootScope, $scope, $route, $interval, $location, $timeout, $window, logService, statisticService, warningService) {
+        //变量
         $scope.statisticPanel_TYPE = [
             { name: "交易量", container: "index-chartDiv1" },
             { name: "渠道", container: "index-chartDiv2" },
@@ -11,9 +12,12 @@
         $scope.statisticPanel_current = null;
         $scope.dataPanel_logList = null;
         $scope.dataPanel_newLogCount = 0;
+        $scope.warnPanel_warnList = null;
         //初始化
         $scope.init = function () {
+            //数据表格
             $scope.dataPanel_query();
+            //统计图
             $timeout(function () {
                 $("#index-chartDiv1").trigger("configchange", [{
                     plotOptions: {
@@ -24,7 +28,7 @@
                     }
                 }]);
                 //交易量
-                statisticService.list({ groupField: "statisticsTime", orderField: "statisticsTime", maxResult: 10 }, function (data) {
+                statisticService.list({ groupField: "statisticsTime", orderField: "statisticsTime", start: 0, limit: 10 }, function (data) {
                     if (data && data.data) {
                         var category = [], chartData = [];
                         for (var i = 0; i < data.data.length; i++) {
@@ -41,7 +45,7 @@
                     }
                 });
                 //返回码
-                statisticService.list({ groupField: "returnCode", orderField: "count", maxResult: 10 }, function (data) {
+                statisticService.list({ groupField: "returnCode", orderField: "count", start: 0, limit: 10 }, function (data) {
                     if (data && data.data) {
                         var category = [], countData = [];
                         for (var i = 0; i < data.data.length; i++) {
@@ -61,6 +65,19 @@
                         $("#index-chartDiv3").trigger("chartupdate", [[category, countData], ["返回码", "返回码"]]);
                     }
                 });
+            });
+            //告警
+            if (!warningService.isOpen())
+                warningService.open();
+            warningService.on("indexWarnPanel", function (e) {
+                if (e && e.data) {
+                    var data = null;
+                    try {
+                        data = JSON.parse(e.data);
+                    }
+                    catch (err) { }
+                    $scope.warnPanel_warnList = data;
+                }
             });
         };
         //查询实时数据
@@ -219,6 +236,7 @@
             $timeout.cancel(windowResizeChartTimer);
             $timeout.cancel(statisticPanelTimer);
             $timeout.cancel(statisticPanelLoadingTimer);
+            warningService.off("indexWarnPanel");
         });
         //执行初始化
         $scope.init();

@@ -1,4 +1,5 @@
 ﻿define([
     "./logService",
-    "./statisticService"
+    "./statisticService",
+    "./warningService"
 ], function () { });

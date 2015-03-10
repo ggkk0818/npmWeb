@@ -12,7 +12,7 @@
         $scope.statisticPanel_current = null;
         $scope.dataPanel_logList = null;
         $scope.dataPanel_newLogCount = 0;
-        $scope.warnPanel_warnList = null;
+        $scope.warnPanel_warnList = [];
         //初始化
         $scope.init = function () {
             //数据表格
@@ -25,6 +25,9 @@
                             color: "#f77d22",
                             marker: { enabled: false }
                         }
+                    },
+                    legend: {
+                        enabled: false
                     }
                 }]);
                 //交易量
@@ -69,14 +72,28 @@
             //告警
             if (!warningService.isOpen())
                 warningService.open();
-            warningService.on("indexWarnPanel", function (e) {
+            warningService.on("onmessage.indexWarnPanel", function (e) {
                 if (e && e.data) {
                     var data = null;
                     try {
                         data = JSON.parse(e.data);
                     }
                     catch (err) { }
-                    $scope.warnPanel_warnList = data;
+                    if (data && data.length) {
+                        for (var i = 0; i < data.length; i++) {
+                            var warn = data[i],
+                                exists = false;
+                            for (var j = 0; j < $scope.warnPanel_warnList.length; j++) {
+                                if (warn.type === $scope.warnPanel_warnList[j].type) {
+                                    $scope.warnPanel_warnList[j].count = warn.count;
+                                    exists = true;
+                                    break;
+                                }
+                            }
+                            if (!exists)
+                                $scope.warnPanel_warnList.push(warn);
+                        }
+                    }
                 }
             });
         };
@@ -236,7 +253,7 @@
             $timeout.cancel(windowResizeChartTimer);
             $timeout.cancel(statisticPanelTimer);
             $timeout.cancel(statisticPanelLoadingTimer);
-            warningService.off("indexWarnPanel");
+            warningService.off("onmessage.indexWarnPanel");
         });
         //执行初始化
         $scope.init();

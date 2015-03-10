@@ -8,11 +8,18 @@ function (angular, app, _) {
 
     angular
       .module('app.directives')
-      .directive('numberAnimate', function ($compile, $window) {
+      .directive('numberAnimate', function ($compile, $window, $timeout) {
           return {
               restrict: 'A',
-              link: function ($scope, elem) {
-                  elem.numberAnimate();
+              link: function ($scope, elem, attr) {
+                  $timeout(function () {
+                      elem.numberAnimate();
+                      $scope.$watch(function () {
+                          return attr.numberanimateValue;
+                      }, function () {
+                          elem.numberAnimate("set", attr.numberanimateValue);
+                      });
+                  });
               }
           };
       });

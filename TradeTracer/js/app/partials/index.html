@@ -1,6 +1,6 @@
 ﻿<div class="row">
     <div class="col-md-7">
-        <div id="dataPanel" class="panel panel-primary">
+        <div id="dataPanel" class="panel panel-info">
             <div class="panel-heading">
                 <h3 class="panel-title">实时数据</h3>
             </div>
@@ -41,25 +41,29 @@
         </div>
     </div>
     <div class="col-md-5">
-        <div id="warnPanel" class="panel panel-default">
+        <div id="warnPanel" class="panel panel-default" ng-class="{'panel-success':!warnPanel_warnList || !warnPanel_warnList.length}">
             <div class="panel-heading">
                 <h3 class="panel-title">告警</h3>
             </div>
             <div class="panel-body" style="padding:0;">
                 <div id="warnPanelBody" style="overflow:auto;">
-                    <div class="list-group">
-                        <a class="list-group-item list-group-item-danger" href="javascript:void(0);">
-                            <span class="badge">235</span>
-                            返回码异常交易
+                    <div class="list-group" ng-show="warnPanel_warnList && warnPanel_warnList.length">
+                        <a class="list-group-item" href="javascript:void(0);"
+                           ng-class="{'list-group-item-warning':warn.count>50,'list-group-item-danger':warn.count>100}"
+                           ng-repeat="warn in warnPanel_warnList">
+                            <div class="badge" style="white-space:normal;">
+                                <span data-number-animate data-numberanimate-value="{{warn.count}}">0</span>
+                            </div>
+                            {{warn.type}}
                         </a>
-                        <a class="list-group-item list-group-item-warning" href="javascript:void(0);">
-                            <span class="badge">90</span>
-                            失败交易
-                        </a>
-                        <a class="list-group-item" href="javascript:void(0);">
-                            <span class="badge">2</span>
-                            高时延交易
-                        </a>
+                    </div>
+                    <div class="" style="display:table;width:100%;height:100%;" ng-hide="warnPanel_warnList && warnPanel_warnList.length">
+                        <div style="display:table-cell;vertical-align:middle;">
+                            <h3 class="text-success text-center" style="margin:0;">
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                暂无告警
+                            </h3>
+                        </div>
                     </div>
                 </div>
             </div>

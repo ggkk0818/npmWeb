@@ -94,6 +94,17 @@
         <div class="pull-right">
             <form class="form-inline">
                 <div class="form-group">
+                    <label class="sr-only">交易类型</label>
+                    <div class="form-group btn-group">
+                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                            {{logType.name || "交易类型"}} <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li ng-repeat="t in LOG_TYPE" ng-class="{'active':logType.id==t.id}"><a href="javascript:void(0);" ng-click="$parent.logType=t">{{t.name}}</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="sr-only">响应时间</label>
                     <input type="text" class="form-control" placeholder="响应时间" ng-model="durationInput" ng-keypress="formKeypressHandler($event)">
                 </div>

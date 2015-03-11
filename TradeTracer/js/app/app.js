@@ -95,6 +95,10 @@
                 templateUrl: 'js/app/partials/logSearch.html',
                 controller: 'LogSearchCtrl'
             })
+            .when('/warning', {
+                templateUrl: 'js/app/partials/warningSearch.html',
+                controller: 'WarningSearchCtrl'
+            })
             .otherwise({
                 redirectTo: '/'
             });

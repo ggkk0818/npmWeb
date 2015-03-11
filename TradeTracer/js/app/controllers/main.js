@@ -28,6 +28,10 @@
             name: "单笔追踪",
             href: "#/trace/log"
         });
+        sidebarNav.push({
+            name: "告警",
+            href: "#/warning"
+        });
         $scope.sidebarNav = sidebarNav;
         //其他导航页面信息
         var otherNav = [];

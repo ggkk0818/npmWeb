@@ -5,5 +5,6 @@
     "./appSnap",
     "./statistic",
     "./statisticSearch",
-    "./logSearch"
+    "./logSearch",
+    "./warningSearch"
 ], function () { });

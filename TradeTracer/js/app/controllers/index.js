@@ -70,9 +70,9 @@
                 });
             });
             //告警
-            if (!warningService.isOpen())
-                warningService.open();
-            warningService.on("onmessage.indexWarnPanel", function (e) {
+            if (!warningSocketService.isOpen())
+                warningSocketService.open();
+            warningSocketService.on("onmessage.indexWarnPanel", function (e) {
                 if (e && e.data) {
                     var data = null;
                     try {
@@ -85,17 +85,21 @@
                                 exists = false;
                             for (var j = 0; j < $scope.warnPanel_warnList.length; j++) {
                                 if (warn.type === $scope.warnPanel_warnList[j].type) {
-                                    $scope.warnPanel_warnList[j].count = warn.count;
+                                    if (warn.count)
+                                        $scope.warnPanel_warnList[j].count = warn.count;
+                                    else
+                                        $scope.warnPanel_warnList.slice(j, 1);
                                     exists = true;
                                     break;
                                 }
                             }
-                            if (!exists)
+                            if (!exists && warn.count)
                                 $scope.warnPanel_warnList.push(warn);
                         }
                     }
                 }
             });
+            warningSocketService.query();
         };
         //查询实时数据
         var dataPanelQueryTimer = null;
@@ -130,6 +134,10 @@
                 }
                 dataPanelQueryTimer = $timeout($scope.dataPanel_query, 5000);
             });
+        };
+        //告警点击跳转
+        $scope.warnPanel_query = function (warn) {
+            $location.path("/warning").search({ logType: warn.type });
         };
         //数据表格滚动效果
         $scope.dataPanel_showNewLog = function () {
@@ -253,7 +261,7 @@
             $timeout.cancel(windowResizeChartTimer);
             $timeout.cancel(statisticPanelTimer);
             $timeout.cancel(statisticPanelLoadingTimer);
-            warningService.off("onmessage.indexWarnPanel");
+            warningSocketService.off("onmessage.indexWarnPanel");
         });
         //执行初始化
         $scope.init();

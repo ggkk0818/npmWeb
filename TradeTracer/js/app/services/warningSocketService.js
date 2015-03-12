@@ -7,9 +7,10 @@
 function (angular, $, _, config) {
     'use strict';
     var module = angular.module('app.services');
-    module.service('warningSocketService', function ($routeParams, $http, $rootScope, $timeout) {
+    module.service('warningSocketService', function ($routeParams, $http, $rootScope, $timeout, $window) {
         var socket = null,
             callback = {},
+            messageQueue = [],
             thiz = this;
         var onmessage = function (e) {
             for (var key in callback) {
@@ -41,10 +42,24 @@ function (angular, $, _, config) {
             socket.onopen = function () {
                 socket.onmessage = onmessage;
                 socket.onclose = onclose;
+                //发送之前积累的消息
+                while (messageQueue.length && socket.readyState === WebSocket.OPEN) {
+                    socket.send(messageQueue.shift());
+                }
             };
         };
         this.isOpen = function () {
             return socket && socket.readyState == WebSocket.OPEN ? true : false;
+        };
+        //查询当日所有告警信息
+        this.query = function () {
+            var msg = "{'type':'query'}";
+            if (this.isOpen()) {
+                socket.send(msg);
+            }
+            else {
+                messageQueue.push(msg)
+            }
         };
         //注册监听器
         this.on = function () {
@@ -93,6 +108,9 @@ function (angular, $, _, config) {
                 socket.close();
                 socket = null;
             }
+        };
+        $window.onunload = function () {
+            thiz.destory();
         };
     });
 });

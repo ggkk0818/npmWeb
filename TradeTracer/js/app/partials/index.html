@@ -48,7 +48,7 @@
             <div class="panel-body" style="padding:0;">
                 <div id="warnPanelBody" style="overflow:auto;">
                     <div class="list-group" ng-show="warnPanel_warnList && warnPanel_warnList.length">
-                        <a class="list-group-item" href="javascript:void(0);"
+                        <a class="list-group-item" href="javascript:void(0);" ng-click="warnPanel_query(warn)"
                            ng-class="{'list-group-item-warning':warn.count>50,'list-group-item-danger':warn.count>100}"
                            ng-repeat="warn in warnPanel_warnList">
                             <div class="badge" style="white-space:normal;">

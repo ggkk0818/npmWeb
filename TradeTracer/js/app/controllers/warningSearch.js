@@ -1,7 +1,7 @@
 ﻿define(['angular', 'lodash', 'jquery', 'services/all', 'css!partials/warningSearch.css'], function (angular, _, $) {
     "use strict";
     var module = angular.module('app.controllers');
-    module.controller('WarningSearchCtrl', function ($rootScope, $scope, $route, $timeout, $location, warningService) {
+    module.controller('WarningSearchCtrl', function ($rootScope, $scope, $route, $timeout, $location, warningService, logService) {
         //初始化变量
         $scope.LOG_TYPE = [
             { id: "8583", name: "8583" },
@@ -11,12 +11,15 @@
         $scope.pageTotal = 1;
         $scope.pageSize = 10;
         $scope.recordSize = 0;
+        $scope.recordList = null;
         $scope.keyword = null;
         $scope.startTime = null;
         $scope.endTime = null;
         $scope.logType = $scope.LOG_TYPE[0];
         //表单数据
         $scope.keywordInput = null;
+        $scope.startTimeInput = $scope.startTime = new Date().Format("yyyy-MM-dd 00:00:00");
+        $scope.endTimeInput = $scope.endTime = new Date().Format("yyyy-MM-dd 23:59:59");
         //获取查询参数
         $scope.getSearchParams = function () {
             var params = { pageNum: $scope.pageNum };
@@ -69,25 +72,49 @@
 
         $scope.doQuery = function () {
             var params = {
-                logType: $scope.logType.id,
+                type: $scope.logType.id,
                 start: ($scope.pageNum - 1) * $scope.pageSize,
                 limit: $scope.pageSize
             };
             if ($scope.keyword) {
-                params.keyword = $scope.keyword;
+                params.uid = $scope.keyword;
             }
             if ($scope.startTime) {
-                params.stime = $scope.startTime;
+                params.startWarnTime = $scope.startTime;
             }
             if ($scope.endTime) {
-                params.etime = $scope.endTime;
+                params.endWarnTime = $scope.endTime;
             }
             warningService.list(params, function (data) {
                 $scope.success = data && data.state == 200 ? true : false;
                 $scope.recordList = data && data.data ? data.data : [];
                 $scope.recordSize = data && data.count ? data.count : 0;
                 $scope.pageTotal = Math.floor($scope.recordSize / $scope.pageSize) + ($scope.recordSize % $scope.pageSize > 0 ? 1 : 0);
-                $scope.isLoading = false;
+                if ($scope.recordList && $scope.recordList.length) {
+                    var uidList = [];
+                    for (var i = 0; i < $scope.recordList.length; i++) {
+                        var record = $scope.recordList[i];
+                        uidList.push(record.uid);
+                        if (typeof record.warnTime === "number")
+                            record.warnTime = new Date(record.warnTime).Format("yyyy-MM-dd hh:mm:ss");
+                    }
+                    logService.list({
+                        logType: $scope.logType.id,
+                        aggregateKey: uidList.join(","),
+                        from: 0,
+                        size: $scope.pageSize
+                    }, function (data) {
+                        if (data && data.data) {
+                            for (var i = 0; i < data.data.length; i++) {
+                                var record = data.data[i];
+                                for (var j = 0; j < $scope.recordList.length; j++) {
+                                    if (record.aggregate_key === $scope.recordList[j].uid)
+                                        _.assign($scope.recordList[i], record);
+                                }
+                            }
+                        }
+                    });
+                }
             });
         };
         //搜索告警信息

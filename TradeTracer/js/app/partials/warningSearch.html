@@ -34,14 +34,15 @@
             <thead>
                 <tr>
                     <th>UID</th>
-                    <th>时间</th>
-                    <th>内容</th>
+                    <th>告警时间</th>
+                    <th>响应时间</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="record in recordList">
                     <td>{{record.uid}}</td>
-                    <td>{{record.datetime}}</td>
+                    <td>{{record.warnTime}}</td>
+                    <td>{{record.respmills}}</td>
                     <td style="word-break: break-all;"><p>{{record.text}}</p></td>
                 </tr>
             </tbody>

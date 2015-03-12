@@ -74,7 +74,7 @@
                 size: $scope.pageSize
             };
             if ($scope.keyword)
-                params.uid = $scope.keyword;
+                params.aggregateKey = $scope.keyword;
             if ($scope.startTime) {
                 var time = new Date($scope.startTime);
                 params.stime = time.Format("MM/dd/yyyy-hh:mm:ss");

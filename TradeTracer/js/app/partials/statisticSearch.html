@@ -126,6 +126,7 @@
                 <tr>
                     <th>开始时间</th>
                     <th>结束时间</th>
+                    <th>交易关键字</th>
                     <th>响应时间</th>
                 </tr>
             </thead>
@@ -133,6 +134,7 @@
                 <tr ng-repeat="record in recordList">
                     <td>{{record.starttime_prefix + "." + record.starttime_suffix}}</td>
                     <td>{{record.endtime_prefix + "." + record.endtime_suffix}}</td>
+                    <td>{{record.aggregate_key}}</td>
                     <td>{{record.respmills}}</td>
                 </tr>
             </tbody>

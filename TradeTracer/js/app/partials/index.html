@@ -8,14 +8,10 @@
                 <table class="table" style="table-layout: fixed; margin-bottom: 0;">
                     <thead>
                         <tr>
-                            <th style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">开始时间</th>
-                            <th style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">源地址</th>
-                            <th style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">目标地址</th>
-                            <th style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">请求或响应</th>
-                            <th style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">交易类型</th>
-                            <th style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">返回状态</th>
-                            <th style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">相对时间</th>
-                            <th style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">间隔时间</th>
+                            <th style="width: 25%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">开始时间</th>
+                            <th style="width: 25%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">结束时间</th>
+                            <th style="width: 35%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">交易关键字</th>
+                            <th style="width: 15%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">响应时间</th>
                         </tr>
                     </thead>
                 </table>
@@ -24,14 +20,10 @@
                         <table class="table" style="table-layout:fixed;">
                             <tbody>
                                 <tr ng-repeat="log in dataPanel_logList">
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">{{log.starttime}}</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">{{log.srcip}}</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">{{log.destip}}</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">N/A</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">{{log.transactionInfo}}</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">{{log.rejectcode}}</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">N/A</td>
-                                    <td style="width: 12.5%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">N/A</td>
+                                    <td style="width: 25%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">{{log.starttime_prefix}}</td>
+                                    <td style="width: 25%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">{{log.endtime_prefix}}</td>
+                                    <td style="width: 35%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">{{log.aggregate_key}}</td>
+                                    <td style="width: 15%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">{{log.respmills}}</td>
                                 </tr>
                             </tbody>
                         </table>

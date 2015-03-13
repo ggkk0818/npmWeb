@@ -103,13 +103,13 @@
                         aggregateKey: uidList.join(","),
                         from: 0,
                         size: $scope.pageSize
-                    }, function (data) {
-                        if (data && data.data) {
-                            for (var i = 0; i < data.data.length; i++) {
-                                var record = data.data[i];
+                    }, function (data2) {
+                        if (data2 && data2.data) {
+                            for (var i = 0; i < data2.data.length; i++) {
+                                var record = data2.data[i];
                                 for (var j = 0; j < $scope.recordList.length; j++) {
                                     if (record.aggregate_key === $scope.recordList[j].uid)
-                                        _.assign($scope.recordList[i], record);
+                                        _.assign($scope.recordList[j], record);
                                 }
                             }
                         }

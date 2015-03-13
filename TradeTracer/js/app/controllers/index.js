@@ -104,14 +104,23 @@
         //查询实时数据
         var dataPanelQueryTimer = null;
         $scope.dataPanel_query = function () {
-            logService.list({ from: 0, size: 20 }, function (data) {
+            statisticService.list({ logType: 8583, start: 0, limit: 20 }, function (data) {
                 if (data && data.data) {
+                    //转换日期
+                    for (var i = 0; i < data.data.length; i++) {
+                        var record = data.data[i];
+                        if (typeof record.starttime_prefix === "number")
+                            record.starttime_prefix = new Date(record.starttime_prefix).Format("yyyy-MM-dd hh:mm:ss");
+                        if (typeof record.endtime_prefix === "number")
+                            record.endtime_prefix = new Date(record.endtime_prefix).Format("yyyy-MM-dd hh:mm:ss");
+                    }
+                    //比较数据新旧
                     $scope.dataPanel_newLogCount = data.data.length || 0;
                     if ($scope.dataPanel_logList && $scope.dataPanel_logList.length) {
-                        var lastId = $scope.dataPanel_logList[0]._id,
+                        var lastId = $scope.dataPanel_logList[0].id,
                             newLogCount = null;
                         for (var i = 0; i < (data.data.length || 0); i++) {
-                            if (data.data[i]._id === lastId) {
+                            if (data.data[i].id === lastId) {
                                 newLogCount = i;
                                 break;
                             }

@@ -76,12 +76,10 @@
             if ($scope.keyword)
                 params.aggregateKey = $scope.keyword;
             if ($scope.startTime) {
-                var time = new Date($scope.startTime);
-                params.stime = time.Format("MM/dd/yyyy-hh:mm:ss");
+                params.stime = $scope.startTime;
             }
             if ($scope.endTime) {
-                var time = new Date($scope.endTime);
-                params.etime = time.Format("MM/dd/yyyy-hh:mm:ss");
+                params.etime = $scope.endTime;
             }
             logService.list(params, function (data) {
                 $scope.success = data && data.state == 200 ? true : false;

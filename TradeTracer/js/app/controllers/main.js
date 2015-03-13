@@ -8,18 +8,18 @@
             name: "总体",
             href: "#/"
         });
-        sidebarNav.push({
-            name: "应用层视图",
-            href: "#/app/view"
-        });
-        sidebarNav.push({
-            name: "应用层快照",
-            href: "#/app/snap"
-        });
-        sidebarNav.push({
-            name: "多维统计",
-            href: "#/statistic"
-        });
+        //sidebarNav.push({
+        //    name: "应用层视图",
+        //    href: "#/app/view"
+        //});
+        //sidebarNav.push({
+        //    name: "应用层快照",
+        //    href: "#/app/snap"
+        //});
+        //sidebarNav.push({
+        //    name: "多维统计",
+        //    href: "#/statistic"
+        //});
         sidebarNav.push({
             name: "交易追踪",
             href: "#/trace/statistic"

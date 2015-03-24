@@ -2,5 +2,6 @@
     "./everdataChart",
     "./datetimepicker",
     "./numberAnimate",
-    "./pagination"
+    "./pagination",
+    "./popover"
 ], function () { });

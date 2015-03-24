@@ -6,7 +6,7 @@
     'bootstrap',
     'bootstrap-datetimepicker',
     'bootstrap-datetimepicker-zhcn',
-    'bootstrap-popover',
+    //'bootstrap-popover',
     'angular-sanitize',
     'angular-cookies',
     //'angular-dragdrop',

@@ -1,4 +1,98 @@
-﻿/*告警Panel*/
+﻿/*告警时间线*/
+.warn_timeline .warn_timeline_container{
+    
+}
+.warn_timeline .warn_timeline_container ul{
+    display:table;
+    width:100%;
+    padding:0;
+    margin:0;
+    border-bottom:1px solid #ccc;
+}
+.warn_timeline .warn_timeline_container ul li{
+    display:table-cell;
+    width:3.333%;
+    height:40px;
+    text-align:center;
+    vertical-align:bottom;
+}
+.warn_timeline .warn_timeline_container ul li a {
+    content: ' ';
+    display: block;
+    width: 50%;
+    height: 80%;
+    margin: 0 auto;
+    color: #333;
+    cursor:pointer;
+    background-color: #f5f5f5;
+    border-radius: 8% 8% 0 0;
+    -moz-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    -webkit-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+    -moz-transform-origin: 50% 100%;
+    -o-transform-origin: 50% 100%;
+    -webkit-transform-origin: 50% 100%;
+    transform-origin: 50% 100%;
+}
+.warn_timeline .warn_timeline_container ul li.info a{
+    color: #31708f;
+    background-color: #d9edf7;
+}
+.warn_timeline .warn_timeline_container ul li.warning a{
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+}
+.warn_timeline .warn_timeline_container ul li.danger a{
+    color: #a94442;
+    background-color: #f2dede;
+}
+.warn_timeline .warn_timeline_container ul li:hover a {
+    -moz-transform: scale(1.2,1.2);
+    -o-transform: scale(1.2,1.2);
+    -webkit-transform: scale(1.2,1.2);
+    transform: scale(1.2,1.2);
+}
+.warn_timeline .warn_timeline_label{
+    display:table;
+    width:100%;
+}
+.warn_timeline .warn_timeline_label label{
+    display:table-cell;
+    width:33.3%;
+    color:#999999;
+    font-weight:normal;
+}
+.warn_timeline .warn_timeline_legend{
+    color:#333333;
+}
+.warn_timeline .warn_timeline_legend .title{
+    float:left;
+    width:100px;
+}
+.warn_timeline .warn_timeline_legend .legend{
+    margin-left:100px;
+    text-align:right;
+}
+.warn_timeline .warn_timeline_legend .legend span{
+    padding-left: 10px;
+}
+.warn_timeline .warn_timeline_legend .legend span::before{
+    content: ' ';
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    margin-right: 0.2em;
+    background-color: #f5f5f5;
+}
+.warn_timeline .warn_timeline_legend .legend span.legend-warning::before {
+    background-color: #fcf8e3;
+}
+.warn_timeline .warn_timeline_legend .legend span.legend-error::before {
+    background-color: #f2dede;
+}
+/*告警Panel*/
 #warnPanelBody .list-group .list-group-item{
     border-width:1px 0;
     border-radius:0;

@@ -1,17 +1,91 @@
 ﻿/*告警时间线*/
-.warn_timeline .warn_timeline_container{
+@keyframes orbit { 
+  0%   { transform:rotate(225deg); opacity: 1;
+         animation-timing-function: ease-out; } 
     
+  7%   { transform:rotate(345deg);
+         animation-timing-function: linear; }
+    
+  30%   { transform:rotate(455deg);
+          animation-timing-function: ease-in-out; }
+    
+  39%   { transform:rotate(690deg);
+          animation-timing-function: linear; }
+    
+  70%   { transform:rotate(815deg); opacity: 1;
+         animation-timing-function: ease-out; }
+    
+  75%   { transform:rotate(945deg); 
+         animation-timing-function: ease-out; }
+    
+  76% { transform:rotate(945deg); opacity: 0; }
+  100% { transform:rotate(945deg); opacity: 0; } 
+}
+.warn_timeline{
+    overflow:hidden;
+}
+.warn_timeline .loading{
+    display:none;
+    position: relative;
+    float:left;
+    left:50%;
+    margin:5px 0 6px -15px;
+    width:30px;
+    height:30px;
+}
+.warn_timeline.loading .loading{
+    display:block;
+}
+.warn_timeline .loading .circle{
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    opacity: 0;
+    transform: rotate(225deg);
+    animation-iteration-count: infinite;
+    animation-name: orbit;
+    animation-duration: 5.5s;
+}
+.warn_timeline .loading .circle:after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 4px;
+    background: #000; /* Pick a color */
+}
+.warn_timeline .loading .circle:nth-child(2) {  animation-delay: 240ms; }
+.warn_timeline .loading .circle:nth-child(3) {  animation-delay: 480ms; }
+.warn_timeline .loading .circle:nth-child(4) {  animation-delay: 720ms; }
+.warn_timeline .loading .circle:nth-child(5) {  animation-delay: 960ms; }
+.warn_timeline .warn_timeline_container{
+    width:100%;
+    -moz-transition: all 2s ease-in-out;
+    -o-transition: all 2s ease-in-out;
+    -webkit-transition: all 2s ease-in-out;
+    transition: all 2s ease-in-out;
+    margin-left:0%;
+    /*overflow:hidden;*/
+}
+.warn_timeline.loading .warn_timeline_container{
+    margin-left:100%;
 }
 .warn_timeline .warn_timeline_container ul{
     display:table;
+    table-layout:fixed;
     width:100%;
     padding:0;
     margin:0;
     border-bottom:1px solid #ccc;
+    margin-left: 0%;
+    -moz-transition: margin-left 2s ease-in-out;
+    -o-transition: margin-left 2s ease-in-out;
+    -webkit-transition: margin-left 2s ease-in-out;
+    transition: margin-left 2s ease-in-out;
 }
 .warn_timeline .warn_timeline_container ul li{
     display:table-cell;
-    width:3.333%;
+    /*width:3.333%;*/
     height:40px;
     text-align:center;
     vertical-align:bottom;
@@ -85,6 +159,9 @@
     vertical-align: middle;
     margin-right: 0.2em;
     background-color: #f5f5f5;
+}
+.warn_timeline .warn_timeline_legend .legend span.legend-normal::before {
+    background-color: #d9edf7;
 }
 .warn_timeline .warn_timeline_legend .legend span.legend-warning::before {
     background-color: #fcf8e3;

@@ -1,6 +1,6 @@
 ﻿<div class="row" style="margin-bottom:20px;">
     <div class="col-md-12">
-        <div class="warn_timeline">
+        <div class="warn_timeline loading" ng-class="{'loading':warnTimeLine_loading}">
             <div class="warn_timeline_legend">
                 <div class="title">实时告警</div>
                 <div class="legend">
@@ -9,42 +9,18 @@
                     <span class="legend-error">错误</span>
                 </div>
             </div>
+            <div class="loading">
+                <div class="circle"></div>
+                <div class="circle"></div>
+                <div class="circle"></div>
+                <div class="circle"></div>
+                <div class="circle"></div>
+            </div>
             <div class="warn_timeline_container">
-                <ul>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li class="info"><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li class="warning">
-                        <a href="javascript:void(0);" role="button" tabindex="0"
-                           data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true" title="告警信息"
-                           data-content="15:24 8583业务告警 &lt;br /&gt;15:24 10022业务告警"></a>
+                <ul ng-style="{'width':warnTimeLine_warnList.length*3.333+'%', 'margin-left':-((warnTimeLine_warnList.length-warnTimeLine_minSize)*3.333)+'%'}">
+                    <li class="info" ng-class="{'warning':warn.warnList.length}" ng-repeat="warn in warnTimeLine_warnList">
+                        <a href="javascript:void(0);" role="button" tabindex="0" data-placement="bottom" data-trigger="hover" data-html="true" data-index-warntimeline-popover ng-click="warnTimeLine_query(warn)"></a>
                     </li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li class="danger"><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
-                    <li><a href="javascript:void(0);"></a></li>
                 </ul>
             </div>
             <div class="warn_timeline_label">

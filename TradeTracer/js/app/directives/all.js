@@ -3,5 +3,6 @@
     "./datetimepicker",
     "./numberAnimate",
     "./pagination",
-    "./popover"
+    "./popover",
+    "./indexWarnTimeLinePopover"
 ], function () { });

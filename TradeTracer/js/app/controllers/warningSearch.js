@@ -4,8 +4,10 @@
     module.controller('WarningSearchCtrl', function ($rootScope, $scope, $route, $timeout, $location, warningService, logService) {
         //初始化变量
         $scope.LOG_TYPE = [
-            { id: "8583", name: "8583" },
-            { id: "20022", name: "20022" }
+            { id: "resp8583", name: "8583响应超时告警" },
+            { id: "resp20022", name: "20022响应超时告警" },
+            { id: "proc8583", name: "8583处理超时告警" },
+            { id: "proc20022", name: "20022处理超时告警" }
         ];
         $scope.pageNum = 1;
         $scope.pageTotal = 1;

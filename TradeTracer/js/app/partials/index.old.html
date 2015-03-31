@@ -17,7 +17,7 @@
                 <div class="circle"></div>
             </div>
             <div class="warn_timeline_container">
-                <ul ng-class="{'animate':warnTimeLine_animate}" ng-style="{'width':warnTimeLine_warnList.length*3.3333+'%', 'margin-left':-((warnTimeLine_warnList.length-warnTimeLine_minSize)*3.3333)+'%'}">
+                <ul ng-style="{'width':warnTimeLine_warnList.length*3.3333+'%', 'margin-left':-((warnTimeLine_warnList.length-warnTimeLine_minSize)*3.3333)+'%'}">
                     <li class="info" ng-class="{'warning':warn.warnList.length}" ng-repeat="warn in warnTimeLine_warnList">
                         <a href="javascript:void(0);" role="button" tabindex="0" data-placement="bottom" data-trigger="hover" data-html="true" data-index-warntimeline-popover ng-click="warnTimeLine_query(warn)"></a>
                     </li>

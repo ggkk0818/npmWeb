@@ -16,8 +16,7 @@
         //告警时间线变量
         $scope.warnTimeLine_warnList = [];
         $scope.warnTimeLine_loading = true;
-        $scope.warnTimeLine_animate = true;
-        $scope.warnTimeLine_interval = 5;
+        $scope.warnTimeLine_interval = 20;
         $scope.warnTimeLine_minSize = 30;
         $scope.warnTimeLine_maxSize = 50;
         //初始化
@@ -185,14 +184,10 @@
                 return;
             var now = new Date();
             if (now.getTime() - $scope.warnTimeLine_warnList[$scope.warnTimeLine_warnList.length - 1].time.getTime() > $scope.warnTimeLine_interval * 1000) {
-                $scope.warnTimeLine_animate = true;
                 $scope.warnTimeLine_warnList.push({ warnList: [], time: now });
+                //TODO 将删除多余块代码移到动画完成事件中
                 if ($scope.warnTimeLine_warnList.length > $scope.warnTimeLine_maxSize) {
-                    $timeout(function () {
-                        //删除多余的块
-                        $scope.warnTimeLine_animate = false;
-                        $scope.warnTimeLine_warnList.splice(0, $scope.warnTimeLine_warnList.length - $scope.warnTimeLine_maxSize);
-                    }, 2000);
+                    $scope.warnTimeLine_warnList.splice(0, $scope.warnTimeLine_warnList.length - $scope.warnTimeLine_maxSize);
                 }
             }
         };

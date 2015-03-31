@@ -78,6 +78,8 @@
     margin:0;
     border-bottom:1px solid #ccc;
     margin-left: 0%;
+}
+.warn_timeline .warn_timeline_container ul.animate{
     -moz-transition: margin-left 2s ease-in-out;
     -o-transition: margin-left 2s ease-in-out;
     -webkit-transition: margin-left 2s ease-in-out;

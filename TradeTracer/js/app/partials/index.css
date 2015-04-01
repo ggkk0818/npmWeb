@@ -1,30 +1,51 @@
 ﻿/*告警时间线*/
-@keyframes orbit { 
-  0%   { transform:rotate(225deg); opacity: 1;
-         animation-timing-function: ease-out; } 
-    
-  7%   { transform:rotate(345deg);
-         animation-timing-function: linear; }
-    
-  30%   { transform:rotate(455deg);
-          animation-timing-function: ease-in-out; }
-    
-  39%   { transform:rotate(690deg);
-          animation-timing-function: linear; }
-    
-  70%   { transform:rotate(815deg); opacity: 1;
-         animation-timing-function: ease-out; }
-    
-  75%   { transform:rotate(945deg); 
-         animation-timing-function: ease-out; }
-    
-  76% { transform:rotate(945deg); opacity: 0; }
-  100% { transform:rotate(945deg); opacity: 0; } 
+@keyframes orbit {
+    0% {
+        transform: rotate(225deg);
+        opacity: 1;
+        animation-timing-function: ease-out;
+    }
+
+    7% {
+        transform: rotate(345deg);
+        animation-timing-function: linear;
+    }
+
+    30% {
+        transform: rotate(455deg);
+        animation-timing-function: ease-in-out;
+    }
+
+    39% {
+        transform: rotate(690deg);
+        animation-timing-function: linear;
+    }
+
+    70% {
+        transform: rotate(815deg);
+        opacity: 1;
+        animation-timing-function: ease-out;
+    }
+
+    75% {
+        transform: rotate(945deg);
+        animation-timing-function: ease-out;
+    }
+
+    76% {
+        transform: rotate(945deg);
+        opacity: 0;
+    }
+
+    100% {
+        transform: rotate(945deg);
+        opacity: 0;
+    }
 }
-.warn_timeline{
+.index_warn_timeline{
     overflow:hidden;
 }
-.warn_timeline .loading{
+.index_warn_timeline .loading{
     display:none;
     position: relative;
     float:left;
@@ -33,10 +54,10 @@
     width:30px;
     height:30px;
 }
-.warn_timeline.loading .loading{
+.index_warn_timeline.loading .loading{
     display:block;
 }
-.warn_timeline .loading .circle{
+.index_warn_timeline .loading .circle{
     position: absolute;
     width: 28px;
     height: 28px;
@@ -46,7 +67,7 @@
     animation-name: orbit;
     animation-duration: 5.5s;
 }
-.warn_timeline .loading .circle:after {
+.index_warn_timeline .loading .circle:after {
     content: '';
     position: absolute;
     width: 4px;
@@ -54,11 +75,11 @@
     border-radius: 4px;
     background: #000; /* Pick a color */
 }
-.warn_timeline .loading .circle:nth-child(2) {  animation-delay: 240ms; }
-.warn_timeline .loading .circle:nth-child(3) {  animation-delay: 480ms; }
-.warn_timeline .loading .circle:nth-child(4) {  animation-delay: 720ms; }
-.warn_timeline .loading .circle:nth-child(5) {  animation-delay: 960ms; }
-.warn_timeline .warn_timeline_container{
+.index_warn_timeline .loading .circle:nth-child(2) {  animation-delay: 240ms; }
+.index_warn_timeline .loading .circle:nth-child(3) {  animation-delay: 480ms; }
+.index_warn_timeline .loading .circle:nth-child(4) {  animation-delay: 720ms; }
+.index_warn_timeline .loading .circle:nth-child(5) {  animation-delay: 960ms; }
+.index_warn_timeline .warn_timeline_container{
     width:100%;
     -moz-transition: all 2s ease-in-out;
     -o-transition: all 2s ease-in-out;
@@ -67,10 +88,10 @@
     margin-left:0%;
     /*overflow:hidden;*/
 }
-.warn_timeline.loading .warn_timeline_container{
+.index_warn_timeline.loading .warn_timeline_container{
     margin-left:100%;
 }
-.warn_timeline .warn_timeline_container ul{
+.index_warn_timeline .warn_timeline_container ul{
     display:table;
     table-layout:fixed;
     width:100%;
@@ -79,20 +100,20 @@
     border-bottom:1px solid #ccc;
     margin-left: 0%;
 }
-.warn_timeline .warn_timeline_container ul.animate{
+.index_warn_timeline .warn_timeline_container ul.animate{
     -moz-transition: margin-left 2s ease-in-out;
     -o-transition: margin-left 2s ease-in-out;
     -webkit-transition: margin-left 2s ease-in-out;
     transition: margin-left 2s ease-in-out;
 }
-.warn_timeline .warn_timeline_container ul li{
+.index_warn_timeline .warn_timeline_container ul li{
     display:table-cell;
     /*width:3.333%;*/
     height:40px;
     text-align:center;
     vertical-align:bottom;
 }
-.warn_timeline .warn_timeline_container ul li a {
+.index_warn_timeline .warn_timeline_container ul li a {
     content: ' ';
     display: block;
     width: 50%;
@@ -111,49 +132,49 @@
     -webkit-transform-origin: 50% 100%;
     transform-origin: 50% 100%;
 }
-.warn_timeline .warn_timeline_container ul li.info a{
+.index_warn_timeline .warn_timeline_container ul li.info a{
     color: #31708f;
     background-color: #d9edf7;
 }
-.warn_timeline .warn_timeline_container ul li.warning a{
+.index_warn_timeline .warn_timeline_container ul li.warning a{
     color: #8a6d3b;
     background-color: #fcf8e3;
 }
-.warn_timeline .warn_timeline_container ul li.danger a{
+.index_warn_timeline .warn_timeline_container ul li.danger a{
     color: #a94442;
     background-color: #f2dede;
 }
-.warn_timeline .warn_timeline_container ul li:hover a {
+.index_warn_timeline .warn_timeline_container ul li:hover a {
     -moz-transform: scale(1.2,1.2);
     -o-transform: scale(1.2,1.2);
     -webkit-transform: scale(1.2,1.2);
     transform: scale(1.2,1.2);
 }
-.warn_timeline .warn_timeline_label{
+.index_warn_timeline .warn_timeline_label{
     display:table;
     width:100%;
 }
-.warn_timeline .warn_timeline_label label{
+.index_warn_timeline .warn_timeline_label label{
     display:table-cell;
     width:33.3%;
     color:#999999;
     font-weight:normal;
 }
-.warn_timeline .warn_timeline_legend{
+.index_warn_timeline .warn_timeline_legend{
     color:#333333;
 }
-.warn_timeline .warn_timeline_legend .title{
+.index_warn_timeline .warn_timeline_legend .title{
     float:left;
     width:100px;
 }
-.warn_timeline .warn_timeline_legend .legend{
+.index_warn_timeline .warn_timeline_legend .legend{
     margin-left:100px;
     text-align:right;
 }
-.warn_timeline .warn_timeline_legend .legend span{
+.index_warn_timeline .warn_timeline_legend .legend span{
     padding-left: 10px;
 }
-.warn_timeline .warn_timeline_legend .legend span::before{
+.index_warn_timeline .warn_timeline_legend .legend span::before{
     content: ' ';
     display: inline-block;
     width: 1em;
@@ -162,51 +183,63 @@
     margin-right: 0.2em;
     background-color: #f5f5f5;
 }
-.warn_timeline .warn_timeline_legend .legend span.legend-normal::before {
+.index_warn_timeline .warn_timeline_legend .legend span.legend-normal::before {
     background-color: #d9edf7;
 }
-.warn_timeline .warn_timeline_legend .legend span.legend-warning::before {
+.index_warn_timeline .warn_timeline_legend .legend span.legend-warning::before {
     background-color: #fcf8e3;
 }
-.warn_timeline .warn_timeline_legend .legend span.legend-error::before {
+.index_warn_timeline .warn_timeline_legend .legend span.legend-error::before {
     background-color: #f2dede;
 }
-/*告警Panel*/
-#warnPanelBody .list-group .list-group-item{
-    border-width:1px 0;
-    border-radius:0;
+/*拓扑图*/
+.index_topology{
+    position:relative;
 }
-#warnPanelBody .list-group .list-group-item:first-child{
-    border-top:none;
-}
-/*统计Panel*/
-#statisticPanel ul.nav > li > a{
-    border-top: 1px solid transparent;
-    border-radius: 0;
-    padding:8px 15px;
-}
-#statisticPanel ul.nav > li > a:hover{
-}
-#statisticPanel ul.nav > li.active > a{
-    background-color:#ffffff;
-    color:#333;
-    border-bottom:2px solid #fff;
-}
-#statisticPanel ul.nav > li > a > .solid{
+.index_topology .topology_table{
     position:absolute;
-    top:-1px;
-    left:0;
-    width:0%;
-    height:0;
-    border-top:1px solid #337ab7;
-    -moz-transition: width 5s ease-in-out;
-    -o-transition: width 5s ease-in-out;
-    -webkit-transition: width 5s ease-in-out;
-    transition: width 5s ease-in-out;
+    width:180px;
+    height:140px;
 }
-#statisticPanel .panel-body{
-    overflow:auto;
+.index_topology .topology_table h3{
+    display:block;
+    width:100%;
+    height:30px;
+    margin:0;
+    padding:0;
+    line-height:30px;
+    font-size:22px;
+    font-weight:normal;
+    text-align:center;
+    background-color: #f5f5f5;
+    border:1px solid #ccc;
+    border-bottom:none;
 }
-#statisticPanel .panel-body .tab-content .tab-pane{
-    overflow:hidden;
+.index_topology .topology_table.info h3{
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color:#d9edf7;
+}
+.index_topology .topology_table table{
+    width:100%;
+    height:110px;
+    table-layout:fixed;
+    border:1px solid #ccc;
+}
+.index_topology .topology_table.info table{
+    border-color:#d9edf7;
+}
+.index_topology .topology_table table td{
+    border:1px solid #ccc;
+    width:50%;
+    height:50%;
+    text-align:center;
+}
+.index_topology .topology_table.info table td{
+    border-color:#d9edf7;
+}
+.index_topology .topology_table table td h4{
+    padding:0;
+    margin:5px auto;
+    font-size:20px;
 }

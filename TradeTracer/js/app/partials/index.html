@@ -1,6 +1,6 @@
 ﻿<div class="row" style="margin-bottom:20px;">
     <div class="col-md-12">
-        <div class="warn_timeline loading" ng-class="{'loading':warnTimeLine_loading}">
+        <div class="index_warn_timeline loading" ng-class="{'loading':warnTimeLine_loading}">
             <div class="warn_timeline_legend">
                 <div class="title">实时告警</div>
                 <div class="legend">
@@ -32,81 +32,143 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-7">
-        <div id="dataPanel" class="panel panel-info">
+    <div class="col-md-12">
+        <div id="dataPanel" class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">实时数据</h3>
             </div>
-            <div class="panel-body">
-                <table class="table" style="table-layout: fixed; margin-bottom: 0;">
-                    <thead>
+            <div class="panel-body index_topology">
+                <div class="topology_table info">
+                    <h3>8583</h3>
+                    <table class="table-bordered">
                         <tr>
-                            <th style="width: 25%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">开始时间</th>
-                            <th style="width: 25%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">结束时间</th>
-                            <th style="width: 35%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">交易关键字</th>
-                            <th style="width: 15%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">响应时间</th>
+                            <td>
+                                <div>交易数量</div>
+                                <div class="val">
+                                    <h4 data-number-animate data-numberanimate-value="{{topology_8583_count}}">0</h4>
+                                </div>
+                            </td>
+                            <td>
+                                <div>响应时间<small>ms</small></div>
+                                <div class="val">
+                                    <h4 data-number-animate data-numberanimate-value="{{topology_8583_duration}}">0</h4>
+                                </div>
+                            </td>
                         </tr>
-                    </thead>
-                </table>
-                <div id="dataPanelTable" class="row" style="overflow:hidden;">
-                    <div class="col-md-12">
-                        <table class="table" style="table-layout:fixed;">
-                            <tbody>
-                                <tr ng-repeat="log in dataPanel_logList">
-                                    <td style="width: 25%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">{{log.starttime_prefix}}</td>
-                                    <td style="width: 25%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">{{log.endtime_prefix}}</td>
-                                    <td style="width: 35%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">{{log.aggregate_key}}</td>
-                                    <td style="width: 15%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; ">{{log.respmills}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                        <tr>
+                            <td>
+                                <div>成功比例<small>%</small></div>
+                                <div class="val">
+                                    <h4 data-number-animate data-numberanimate-value="{{topology_8583_successRatio}}">0</h4>
+                                </div>
+                            </td>
+                            <td>
+                                <div>告警事件</div>
+                                <div class="val">
+                                    <h4 data-number-animate data-numberanimate-value="{{topology_8583_warnCount}}">0</h4>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-5">
-        <div id="warnPanel" class="panel panel-default" ng-class="{'panel-success':!warnPanel_warnList || !warnPanel_warnList.length}">
-            <div class="panel-heading">
-                <h3 class="panel-title">今日告警</h3>
-            </div>
-            <div class="panel-body" style="padding:0;">
-                <div id="warnPanelBody" style="overflow:auto;">
-                    <div class="list-group" ng-show="warnPanel_warnList && warnPanel_warnList.length">
-                        <a class="list-group-item" href="javascript:void(0);" ng-click="warnPanel_query(warn)"
-                           ng-class="{'list-group-item-warning':warn.count>50,'list-group-item-danger':warn.count>100}"
-                           ng-repeat="warn in warnPanel_warnList">
-                            <div class="badge" style="white-space:normal;">
-                                <span data-number-animate data-numberanimate-value="{{warn.count}}">0</span>
-                            </div>
-                            {{warn.type}}
-                        </a>
-                    </div>
-                    <div class="" style="display:table;width:100%;height:100%;" ng-hide="warnPanel_warnList && warnPanel_warnList.length">
-                        <div style="display:table-cell;vertical-align:middle;">
-                            <h3 class="text-success text-center" style="margin:0;">
-                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                                暂无告警
-                            </h3>
-                        </div>
-                    </div>
+                <div class="topology_table info" style="left:50%;">
+                    <h3>20022</h3>
+                    <table class="table-bordered">
+                        <tr>
+                            <td>
+                                <div>交易数量</div>
+                                <div class="val">
+                                    <h4 data-number-animate data-numberanimate-value="{{topology_20022_count}}">0</h4>
+                                </div>
+                            </td>
+                            <td>
+                                <div>响应时间<small>ms</small></div>
+                                <div class="val">
+                                    <h4 data-number-animate data-numberanimate-value="{{topology_20022_duration}}">0</h4>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div>成功比例<small>%</small></div>
+                                <div class="val">
+                                    <h4 data-number-animate data-numberanimate-value="{{topology_20022_successRatio}}">0</h4>
+                                </div>
+                            </td>
+                            <td>
+                                <div>告警事件</div>
+                                <div class="val">
+                                    <h4 data-number-animate data-numberanimate-value="{{topology_20022_warnCount}}">0</h4>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
-            </div>
-        </div>
-        <div id="statisticPanel" class="panel panel-default">
-            <div class="panel-heading" style="position:relative;">
-                <h3 class="panel-title">统计</h3>
-                <div style="position:absolute;top:0;right:0;">
-                    <ul class="nav nav-pills">
-                        <li role="presentation" ng-class="{'active':t==statisticPanel_current}" ng-repeat="t in statisticPanel_TYPE"><a href="javascript:void(0);" ng-click="changeStatisticType(t)">{{t.name}}</a></li>
-                    </ul>
+                <div class="topology_table info" style="top:50%;">
+                    <h3>mysql</h3>
+                    <table class="table-bordered">
+                        <tr>
+                            <td>
+                                <div>交易数量</div>
+                                <div class="val">
+                                    <h4 data-number-animate data-numberanimate-value="{{topology_mysql_count}}">0</h4>
+                                </div>
+                            </td>
+                            <td>
+                                <div>响应时间<small>ms</small></div>
+                                <div class="val">
+                                    <h4 data-number-animate data-numberanimate-value="{{topology_mysql_duration}}">0</h4>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div>成功比例<small>%</small></div>
+                                <div class="val">
+                                    <h4 data-number-animate data-numberanimate-value="{{topology_mysql_successRatio}}">0</h4>
+                                </div>
+                            </td>
+                            <td>
+                                <div>告警事件</div>
+                                <div class="val">
+                                    <h4 data-number-animate data-numberanimate-value="{{topology_mysql_warnCount}}">0</h4>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
-            </div>
-            <div class="panel-body">
-                <div class="tab-content">
-                    <div id="index-chartDiv1" role="tabpanel" class="tab-pane" ng-class="{'active':statisticPanel_current.container=='index-chartDiv1'}" data-everdata-chart="area">...</div>
-                    <div id="index-chartDiv2" role="tabpanel" class="tab-pane" ng-class="{'active':statisticPanel_current.container=='index-chartDiv2'}" data-everdata-chart="area">...</div>
-                    <div id="index-chartDiv3" role="tabpanel" class="tab-pane" ng-class="{'active':statisticPanel_current.container=='index-chartDiv3'}" data-everdata-chart="pie">...</div>
+                <div class="topology_table info" style="top:50%;left:50%;">
+                    <h3>http</h3>
+                    <table class="table-bordered">
+                        <tr>
+                            <td>
+                                <div>交易数量</div>
+                                <div class="val">
+                                    <h4 data-number-animate data-numberanimate-value="{{topology_http_count}}">0</h4>
+                                </div>
+                            </td>
+                            <td>
+                                <div>响应时间<small>ms</small></div>
+                                <div class="val">
+                                    <h4 data-number-animate data-numberanimate-value="{{topology_http_duration}}">0</h4>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div>成功比例<small>%</small></div>
+                                <div class="val">
+                                    <h4 data-number-animate data-numberanimate-value="{{topology_http_successRatio}}">0</h4>
+                                </div>
+                            </td>
+                            <td>
+                                <div>告警事件</div>
+                                <div class="val">
+                                    <h4 data-number-animate data-numberanimate-value="{{topology_http_warnCount}}">0</h4>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>

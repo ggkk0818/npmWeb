@@ -5,7 +5,9 @@
         //初始化变量
         $scope.LOG_TYPE = [
             { id: "8583", name: "8583" },
-            { id: "20022", name: "20022" }
+            { id: "20022", name: "20022" },
+            { id: "http", name: "http" },
+            { id: "mysql", name: "mysql" }
         ];
         $scope.pageNum = 1;
         $scope.pageTotal = 1;
@@ -15,6 +17,7 @@
         $scope.startTime = null;
         $scope.endTime = null;
         $scope.logType = $scope.LOG_TYPE[0];
+        $scope.searchType = $scope.logType;
         //表单数据
         $scope.durationInput = null;
         //获取查询参数
@@ -68,8 +71,9 @@
         };
 
         $scope.doQuery = function () {
+            $scope.searchType = $scope.logType;
             var params = {
-                logType: $scope.logType.id,
+                type: $scope.logType.id,
                 start: ($scope.pageNum - 1) * $scope.pageSize,
                 limit: $scope.pageSize
             };
@@ -77,21 +81,21 @@
                 if ($scope.duration.indexOf("-") > -1) {
                     var arr = $scope.duration.split("-");
                     if (arr && arr.length && arr[0].length) {
-                        params.srespmills = arr[0];
+                        params.startRespMills = arr[0];
                     }
                     if (arr && arr.length > 1 && arr[1].length) {
-                        params.erespmills = arr[1];
+                        params.endRespMills = arr[1];
                     }
                 }
                 else {
-                    params.srespmills = params.erespmills = $scope.duration;
+                    params.startRespMills = params.endRespMills = $scope.duration;
                 }
             }
             if ($scope.startTime) {
-                params.stime = $scope.startTime;
+                params.starttime = $scope.startTime;
             }
             if ($scope.endTime) {
-                params.etime = $scope.endTime;
+                params.endtime = $scope.endTime;
             }
             statisticService.list(params, function (data) {
                 $scope.success = data && data.state == 200 ? true : false;
@@ -101,10 +105,18 @@
                 if ($scope.recordList && $scope.recordList.length) {
                     for (var i = 0; i < $scope.recordList.length; i++) {
                         var record = $scope.recordList[i];
-                        if (typeof record.starttime_prefix === "number")
-                            record.starttime_prefix = new Date(record.starttime_prefix).Format("yyyy-MM-dd hh:mm:ss");
-                        if (typeof record.endtime_prefix === "number")
-                            record.endtime_prefix = new Date(record.endtime_prefix).Format("yyyy-MM-dd hh:mm:ss");
+                        if (typeof record.time1 === "number")
+                            record.time1 = new Date(record.time1).Format("yyyy-MM-dd hh:mm:ss");
+                        if (typeof record.time2 === "number")
+                            record.time2 = new Date(record.time2).Format("yyyy-MM-dd hh:mm:ss");
+                        if (typeof record.time3 === "number")
+                            record.time3 = new Date(record.time3).Format("yyyy-MM-dd hh:mm:ss");
+                        if (typeof record.starttime === "number")
+                            record.starttime = new Date(record.starttime).Format("yyyy-MM-dd hh:mm:ss");
+                        if (typeof record.endtime === "number")
+                            record.endtime = new Date(record.endtime).Format("yyyy-MM-dd hh:mm:ss");
+                        if (typeof record.flow === "number")
+                            record.flow = numeral(record.flow).format("0.00b");
                     }
                 }
                 $scope.isLoading = false;

@@ -121,21 +121,127 @@
 </div>
 <div class="row" style="margin-top:10px;">
     <div class="col-md-12">
-        <table class="table table-hover">
+        <table class="table table-hover" ng-if="searchType.id=='8583'||searchType.id=='20022'">
             <thead>
                 <tr>
-                    <th>开始时间</th>
-                    <th>结束时间</th>
                     <th>交易关键字</th>
-                    <th>响应时间</th>
+                    <th>时间1</th>
+                    <th>时间2</th>
+                    <th>时间3</th>
+                    <th>响应时间1</th>
+                    <th>响应时间2</th>
+                    <th>源IP</th>
+                    <th>目的IP</th>
+                    <th>设备名称1</th>
+                    <th>设备名称2</th>
+                    <th>设备名称3</th>
+                    <th>报文类型</th>
+                    <th>响应码</th>
+                    <th>成功</th>
+                    <th>流量</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="record in recordList">
-                    <td>{{record.starttime_prefix + "." + record.starttime_suffix}}</td>
-                    <td>{{record.endtime_prefix + "." + record.endtime_suffix}}</td>
+                <tr ng-class="{'danger':!record.is_complete}" ng-repeat="record in recordList">
                     <td>{{record.aggregate_key}}</td>
-                    <td>{{record.respmills}}</td>
+                    <td>{{record.time1}}</td>
+                    <td>{{record.time2}}</td>
+                    <td>{{record.time3}}</td>
+                    <td>{{record.resp_mills1}}</td>
+                    <td>{{record.resp_mills2}}</td>
+                    <td>{{record.source_ip}}</td>
+                    <td>{{record.dest_ip}}</td>
+                    <td>{{record.device1}}</td>
+                    <td>{{record.device2}}</td>
+                    <td>{{record.device3}}</td>
+                    <td>{{record.mesg_type_code}}</td>
+                    <td>{{record.response_code}}</td>
+                    <td>{{record.is_complete?"成功":"失败"}}</td>
+                    <td>{{record.flow}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <!--http-->
+        <table class="table table-hover" ng-if="searchType.id=='http'">
+            <thead>
+                <tr>
+                    <th>交易关键字</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>响应时间</th>
+                    <th>源IP</th>
+                    <th>目的IP</th>
+                    <th>源设备</th>
+                    <th>目的设备</th>
+                    <th>请求类型</th>
+                    <th>请求域名</th>
+                    <th>请求URI</th>
+                    <th>响应码</th>
+                    <th>响应内容</th>
+                    <th>成功</th>
+                    <th>流量</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-class="{'danger':!record.is_complete}" ng-repeat="record in recordList">
+                    <td>{{record.aggregate_key}}</td>
+                    <td>{{record.starttime}}</td>
+                    <td>{{record.endtime}}</td>
+                    <td>{{record.resp_mills}}</td>
+                    <td>{{record.source_ip}}</td>
+                    <td>{{record.dest_ip}}</td>
+                    <td>{{record.source_device}}</td>
+                    <td>{{record.dest_device}}</td>
+                    <td>{{record.request_method}}</td>
+                    <td>{{record.request_host}}</td>
+                    <td>{{record.request_uri}}</td>
+                    <td>{{record.response_code}}</td>
+                    <td>{{record.content_type}}</td>
+                    <td>{{record.is_complete?"成功":"失败"}}</td>
+                    <td>{{record.flow}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <!--mysql-->
+        <table class="table table-hover" ng-if="searchType.id=='mysql'">
+            <thead>
+                <tr>
+                    <th>交易关键字</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>响应时间</th>
+                    <th>源IP</th>
+                    <th>目的IP</th>
+                    <th>源设备</th>
+                    <th>目的设备</th>
+                    <th>消息类型</th>
+                    <th>查询SQL</th>
+                    <th>返回字段数</th>
+                    <th>作用字段数</th>
+                    <th>错误码</th>
+                    <th>响应报文类型</th>
+                    <th>成功</th>
+                    <th>流量</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-class="{'danger':!record.is_complete}" ng-repeat="record in recordList">
+                    <td>{{record.aggregate_key}}</td>
+                    <td>{{record.starttime}}</td>
+                    <td>{{record.endtime}}</td>
+                    <td>{{record.resp_mills}}</td>
+                    <td>{{record.source_ip}}</td>
+                    <td>{{record.dest_ip}}</td>
+                    <td>{{record.source_device}}</td>
+                    <td>{{record.dest_device}}</td>
+                    <td>{{record.mysql_command}}</td>
+                    <td>{{record.mysql_query}}</td>
+                    <td>{{record.mysql_num_fields}}</td>
+                    <td>{{record.mysql_affected_rows}}</td>
+                    <td>{{record.mysql_error_code}}</td>
+                    <td>{{record.mysql_resp_type}}</td>
+                    <td>{{record.is_complete?"成功":"失败"}}</td>
+                    <td>{{record.flow}}</td>
                 </tr>
             </tbody>
         </table>

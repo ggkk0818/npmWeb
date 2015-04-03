@@ -80,25 +80,23 @@
 .index_warn_timeline .loading .circle:nth-child(4) {  animation-delay: 720ms; }
 .index_warn_timeline .loading .circle:nth-child(5) {  animation-delay: 960ms; }
 .index_warn_timeline .warn_timeline_container{
-    width:100%;
+    float:left;
+    width:90%;
     -moz-transition: all 2s ease-in-out;
     -o-transition: all 2s ease-in-out;
     -webkit-transition: all 2s ease-in-out;
     transition: all 2s ease-in-out;
-    margin-left:0%;
-    /*overflow:hidden;*/
-}
-.index_warn_timeline.loading .warn_timeline_container{
-    margin-left:100%;
+    overflow:hidden;
 }
 .index_warn_timeline .warn_timeline_container ul{
-    display:table;
-    table-layout:fixed;
+    display:block;
+    /*table-layout:fixed;*/
     width:100%;
     padding:0;
     margin:0;
     border-bottom:1px solid #ccc;
-    margin-left: 0%;
+    white-space:nowrap;
+    overflow:hidden;
 }
 .index_warn_timeline .warn_timeline_container ul.animate{
     -moz-transition: margin-left 2s ease-in-out;
@@ -107,22 +105,22 @@
     transition: margin-left 2s ease-in-out;
 }
 .index_warn_timeline .warn_timeline_container ul li{
-    display:table-cell;
-    /*width:3.333%;*/
-    height:40px;
+    /*float:left;*/
+    display:inline-block;
+    width:1.67%;
+    height:30px;
     text-align:center;
     vertical-align:bottom;
+    margin-top:20px;
 }
 .index_warn_timeline .warn_timeline_container ul li a {
-    content: ' ';
     display: block;
-    width: 50%;
-    height: 80%;
+    width: 80%;
+    height: 100%;
     margin: 0 auto;
     color: #333;
     cursor:pointer;
     background-color: #f5f5f5;
-    border-radius: 8% 8% 0 0;
     -moz-transition: all .2s ease-in-out;
     -o-transition: all .2s ease-in-out;
     -webkit-transition: all .2s ease-in-out;
@@ -150,6 +148,19 @@
     -webkit-transform: scale(1.2,1.2);
     transform: scale(1.2,1.2);
 }
+/*时间线左侧文本*/
+.index_warn_timeline .warn_timeline_left{
+    float:left;
+    width:5%;
+    height:40px;
+}
+/*时间线右侧文本*/
+.index_warn_timeline .warn_timeline_right{
+    float:right;
+    width:5%;
+    height:40px;
+}
+/*时间线下方刻度*/
 .index_warn_timeline .warn_timeline_label{
     display:table;
     width:100%;
@@ -160,6 +171,7 @@
     color:#999999;
     font-weight:normal;
 }
+/*时间线上方图例*/
 .index_warn_timeline .warn_timeline_legend{
     color:#333333;
 }
@@ -242,4 +254,27 @@
     padding:0;
     margin:5px auto;
     font-size:20px;
+}
+/*流量框*/
+.index_topology .topology_circle{
+    position:absolute;
+    width:80px;
+    height:80px;
+    border:10px solid #d9edf7;
+    border-radius:50%;
+}
+.index_topology .topology_circle h3{
+    display:block;
+    margin:16.8px 0 0 0;
+    padding:0;
+    font-size:20px;
+    text-align:center;
+    white-space:nowrap;
+}
+.index_topology .topology_circle h3 small{
+    margin-left: -5px;
+    text-transform:uppercase;
+}
+.index_topology .topology_circle h3 *{
+    white-space:normal;
 }

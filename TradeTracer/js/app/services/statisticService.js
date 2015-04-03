@@ -12,7 +12,7 @@ function (angular, $, _, config) {
         this.list = function (params, callback) {
             $http({
                 method: 'GET',
-                url: 'statistics/show',
+                url: 'statistics/detail/show',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {

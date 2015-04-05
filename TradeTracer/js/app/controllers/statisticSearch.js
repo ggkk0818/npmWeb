@@ -1,7 +1,7 @@
 ﻿define(['angular', 'lodash', 'jquery', 'services/all', 'css!partials/statisticSearch.css'], function (angular, _, $) {
     "use strict";
     var module = angular.module('app.controllers');
-    module.controller('StatisticSearchCtrl', function ($rootScope, $scope, $route, $timeout, $location, statisticService) {
+    module.controller('StatisticSearchCtrl', function ($rootScope, $scope, $route, $timeout, $location, statisticService, logService) {
         //初始化变量
         $scope.LOG_TYPE = [
             { id: "8583", name: "8583" },
@@ -103,6 +103,7 @@
                 $scope.recordSize = data && data.count ? data.count : 0;
                 $scope.pageTotal = Math.floor($scope.recordSize / $scope.pageSize) + ($scope.recordSize % $scope.pageSize > 0 ? 1 : 0);
                 if ($scope.recordList && $scope.recordList.length) {
+                    var uidList = [];
                     for (var i = 0; i < $scope.recordList.length; i++) {
                         var record = $scope.recordList[i];
                         if (typeof record.time1 === "number")
@@ -117,6 +118,26 @@
                             record.endtime = new Date(record.endtime).Format("yyyy-MM-dd hh:mm:ss");
                         if (typeof record.flow === "number")
                             record.flow = numeral(record.flow).format("0.00b");
+                        uidList.push(record.aggregate_key);
+                    }
+                    //查询ES信息
+                    if ($scope.searchType.id == "8583" || $scope.searchType.id == "20022") {
+                        logService.list({
+                            logType: $scope.logType.id,
+                            aggregateKey: uidList.join(","),
+                            from: 0,
+                            size: $scope.pageSize
+                        }, function (data2) {
+                            if (data2 && data2.data) {
+                                for (var i = 0; i < data2.data.length; i++) {
+                                    var record = data2.data[i];
+                                    for (var j = 0; j < $scope.recordList.length; j++) {
+                                        if (record.aggregate_key === $scope.recordList[j].uid)
+                                            _.assign($scope.recordList[j], record);
+                                    }
+                                }
+                            }
+                        });
                     }
                 }
                 $scope.isLoading = false;

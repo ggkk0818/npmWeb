@@ -137,12 +137,13 @@
                     <th>设备名称3</th>
                     <th>报文类型</th>
                     <th>响应码</th>
-                    <th>成功</th>
+                    <th>响应</th>
                     <th>流量</th>
+                    <th>详情</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-class="{'danger':!record.is_complete}" ng-repeat="record in recordList">
+                <tr ng-class="{'danger':!record.is_complete}" ng-repeat-start="record in recordList">
                     <td>{{record.aggregate_key}}</td>
                     <td>{{record.time1}}</td>
                     <td>{{record.time2}}</td>
@@ -156,8 +157,14 @@
                     <td>{{record.device3}}</td>
                     <td>{{record.mesg_type_code}}</td>
                     <td>{{record.response_code}}</td>
-                    <td>{{record.is_complete?"成功":"失败"}}</td>
+                    <td>{{record.is_complete?"是":"否"}}</td>
                     <td>{{record.flow}}</td>
+                    <td>
+                        <a class="btn btn-default" href="javascript:void(0);" ng-click="record.showDetail=!record.showDetail" ng-class="{'active':record.showDetail}">详情</a>
+                    </td>
+                </tr>
+                <tr ng-repeat-end ng-show="record.showDetail">
+                    <td colspan="16">{{record.text||"暂无详情"}}</td>
                 </tr>
             </tbody>
         </table>
@@ -178,7 +185,7 @@
                     <th>请求URI</th>
                     <th>响应码</th>
                     <th>响应内容</th>
-                    <th>成功</th>
+                    <th>响应</th>
                     <th>流量</th>
                 </tr>
             </thead>
@@ -197,7 +204,7 @@
                     <td>{{record.request_uri}}</td>
                     <td>{{record.response_code}}</td>
                     <td>{{record.content_type}}</td>
-                    <td>{{record.is_complete?"成功":"失败"}}</td>
+                    <td>{{record.is_complete?"是":"否"}}</td>
                     <td>{{record.flow}}</td>
                 </tr>
             </tbody>
@@ -220,7 +227,7 @@
                     <th>作用字段数</th>
                     <th>错误码</th>
                     <th>响应报文类型</th>
-                    <th>成功</th>
+                    <th>响应</th>
                     <th>流量</th>
                 </tr>
             </thead>
@@ -240,7 +247,7 @@
                     <td>{{record.mysql_affected_rows}}</td>
                     <td>{{record.mysql_error_code}}</td>
                     <td>{{record.mysql_resp_type}}</td>
-                    <td>{{record.is_complete?"成功":"失败"}}</td>
+                    <td>{{record.is_complete?"是":"否"}}</td>
                     <td>{{record.flow}}</td>
                 </tr>
             </tbody>

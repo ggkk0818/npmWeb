@@ -13,16 +13,20 @@
         $scope.pageTotal = 1;
         $scope.pageSize = 10;
         $scope.recordSize = 0;
+        $scope.keyword = null;
         $scope.duration = null;
         $scope.startTime = null;
         $scope.endTime = null;
         $scope.logType = $scope.LOG_TYPE[0];
         $scope.searchType = $scope.logType;
         //表单数据
+        $scope.keywordInput = null;
         $scope.durationInput = null;
         //获取查询参数
         $scope.getSearchParams = function () {
             var params = { pageNum: $scope.pageNum };
+            if ($scope.keyword)
+                params.keyword = $scope.keyword;
             if ($scope.duration)
                 params.duration = $scope.duration;
             if ($scope.startTime)
@@ -40,6 +44,10 @@
                 return;
             if (params.pageNum)
                 $scope.pageNum = parseInt(params.pageNum);
+            if (params.keyword) {
+                $scope.keyword = params.keyword;
+                $scope.keywordInput = params.keyword;
+            }
             if (params.duration) {
                 $scope.duration = params.duration;
                 $scope.durationInput = params.duration;
@@ -77,6 +85,9 @@
                 start: ($scope.pageNum - 1) * $scope.pageSize,
                 limit: $scope.pageSize
             };
+            if ($scope.keyword) {
+                params.aggregateKey = $scope.keyword;
+            }
             if ($scope.duration) {
                 if ($scope.duration.indexOf("-") > -1) {
                     var arr = $scope.duration.split("-");
@@ -149,6 +160,10 @@
                 $scope.duration = null;
             else
                 $scope.duration = $scope.durationInput;
+            if (typeof $scope.keywordInput == "undefined" || $scope.keywordInput == null || $scope.keywordInput.length == 0)
+                $scope.keyword = null;
+            else
+                $scope.keyword = $scope.keywordInput;
             if (typeof $scope.startTimeInput == "undefined" || $scope.startTimeInput == null || $scope.startTimeInput.length == 0)
                 $scope.startTime = null;
             else

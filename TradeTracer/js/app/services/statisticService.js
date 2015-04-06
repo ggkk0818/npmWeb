@@ -12,7 +12,7 @@ function (angular, $, _, config) {
         this.list = function (params, callback) {
             $http({
                 method: 'GET',
-                url: 'statistics/detail/show',
+                url: 'statistics/detail',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {
@@ -24,10 +24,10 @@ function (angular, $, _, config) {
             });
         };
 
-        this.showTopology8583 = function (params, callback) {
+        this.showTopology = function (params, callback) {
             $http({
                 method: 'GET',
-                url: 'statistics/8583/show',
+                url: 'statistics/topology',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {
@@ -39,40 +39,10 @@ function (angular, $, _, config) {
             });
         };
 
-        this.showTopology20022 = function (params, callback) {
+        this.showDevice = function (params, callback) {
             $http({
                 method: 'GET',
-                url: 'statistics/20022/show',
-                params: params,
-                cache: false
-            }).success(function (data, status, headers, config) {
-                if (typeof callback === "function")
-                    callback(data);
-            }).error(function (data, status, headers, config) {
-                if (typeof callback === "function")
-                    callback(null);
-            });
-        };
-
-        this.showTopologyHttp = function (params, callback) {
-            $http({
-                method: 'GET',
-                url: 'statistics/http/show',
-                params: params,
-                cache: false
-            }).success(function (data, status, headers, config) {
-                if (typeof callback === "function")
-                    callback(data);
-            }).error(function (data, status, headers, config) {
-                if (typeof callback === "function")
-                    callback(null);
-            });
-        };
-
-        this.showTopologyMysql = function (params, callback) {
-            $http({
-                method: 'GET',
-                url: 'statistics/mysql/show',
+                url: 'statistics/device',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {

@@ -32,7 +32,9 @@ function (angular, app, _) {
                               if (i > 0)
                                   content += "<br />";
                               var warn = $scope.warn.warnList[i];
-                              content += warn.type + "告警" + warn.count + "条";
+                              var startTime = $scope.warn.time.Format("yyyy-MM-dd hh:mm:ss");
+                              var endTime = new Date($scope.warn.time.getTime() + $scope.$parent.warnTimeLine_interval * 1000).Format("yyyy-MM-dd hh:mm:ss");
+                              content += '<a href="#/warning?type=' + encodeURIComponent(warn.type) + '&startTime=' + encodeURIComponent(startTime) + '&endTime=' + encodeURIComponent(endTime) + '">' + warn.type + "告警" + warn.count + "条</a>";
                           }
                           elem.attr("data-content", content);
                           elem.popover();

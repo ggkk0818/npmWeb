@@ -2,5 +2,8 @@
     font-family:"微软雅黑";
 }
 .navbar {
-   margin-bottom: 20px;
+   margin-bottom: 0px;
 }
+
+.index_topology .topology_table table{height: 100px !important;}
+.index_topology .topology_table{height: auto !important; width: 20% !important;}

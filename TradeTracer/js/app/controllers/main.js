@@ -5,7 +5,7 @@
         //导航信息
         var sidebarNav = [];
         sidebarNav.push({
-            name: "总体",
+            name: "监控",
             href: "#/"
         });
         //sidebarNav.push({
@@ -21,13 +21,17 @@
         //    href: "#/statistic"
         //});
         sidebarNav.push({
+            name: "端对端",
+            href: "#/device/statistic"
+        });
+        sidebarNav.push({
             name: "交易追踪",
             href: "#/trace/statistic"
         });
-        sidebarNav.push({
-            name: "单笔追踪",
-            href: "#/trace/log"
-        });
+        //sidebarNav.push({
+        //    name: "单笔追踪",
+        //    href: "#/trace/log"
+        //});
         sidebarNav.push({
             name: "告警",
             href: "#/warning"

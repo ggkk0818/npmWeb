@@ -113,7 +113,7 @@
     vertical-align:bottom;
     margin-top:20px;
 }
-.index_warn_timeline .warn_timeline_container ul li a {
+.index_warn_timeline .warn_timeline_container ul li > a {
     display: block;
     width: 80%;
     height: 100%;
@@ -130,19 +130,19 @@
     -webkit-transform-origin: 50% 100%;
     transform-origin: 50% 100%;
 }
-.index_warn_timeline .warn_timeline_container ul li.info a{
+.index_warn_timeline .warn_timeline_container ul li.info > a{
     color: #31708f;
     background-color: #d9edf7;
 }
-.index_warn_timeline .warn_timeline_container ul li.warning a{
+.index_warn_timeline .warn_timeline_container ul li.warning > a{
     color: #8a6d3b;
     background-color: #fcf8e3;
 }
-.index_warn_timeline .warn_timeline_container ul li.danger a{
+.index_warn_timeline .warn_timeline_container ul li.danger > a{
     color: #a94442;
     background-color: #f2dede;
 }
-.index_warn_timeline .warn_timeline_container ul li:hover a {
+.index_warn_timeline .warn_timeline_container ul li:hover > a {
     -moz-transform: scale(1.2,1.2);
     -o-transform: scale(1.2,1.2);
     -webkit-transform: scale(1.2,1.2);

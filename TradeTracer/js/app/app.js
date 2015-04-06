@@ -99,6 +99,10 @@
                 templateUrl: 'js/app/partials/warningSearch.html',
                 controller: 'WarningSearchCtrl'
             })
+            .when('/device/statistic', {
+                templateUrl: 'js/app/partials/deviceStatistic.html',
+                controller: 'DeviceStatisticCtrl'
+            })
             .otherwise({
                 redirectTo: '/'
             });

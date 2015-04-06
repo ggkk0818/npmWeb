@@ -1,0 +1,59 @@
+﻿<div class="row">
+    <div class="col-md-12">
+        <div class="pull-right">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label class="sr-only">交易类型</label>
+                    <div class="form-group btn-group">
+                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                            {{logType.name || "交易类型"}} <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li ng-repeat="t in LOG_TYPE" ng-class="{'active':logType.id==t.id}"><a href="javascript:void(0);" ng-click="$parent.logType=t">{{t.name}}</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <input type="text" class="form-control date" data-date-format="yyyy-mm-dd hh:ii:ss" data-date-language="zh-CN" placeholder="开始时间" ng-model="startTimeInput" ng-keypress="formKeypressHandler($event)">
+                <div class="form-group">
+                    <label class="sr-only">时间间隔</label>
+                    <div class="form-group btn-group">
+                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                            {{durationType.name || "时间间隔"}} <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li ng-repeat="t in DURATION_TYPE" ng-class="{'active':durationType.id==t.id}"><a href="javascript:void(0);" ng-click="$parent.durationType=t">{{t.name}}</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <button class="btn btn-default" type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
+                <!--<button class="btn btn-info" type="button"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> 导出</button>-->
+            </form>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:10px;">
+    <div class="col-md-12">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>源IP</th>
+                    <th>目标IP</th>
+                    <th>交易量</th>
+                    <th>响应时长(ms)</th>
+                    <th>流量</th>
+                    <th>响应率(%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="record in recordList">
+                    <td>{{record.srcip}}</td>
+                    <td>{{record.dstip}}</td>
+                    <td>{{record.count}}</td>
+                    <td>{{record.avgDuration}}</td>
+                    <td>{{record.allflow}}</td>
+                    <td>{{record.scount}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

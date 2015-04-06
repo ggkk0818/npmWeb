@@ -6,7 +6,8 @@
         $scope.warnTimeLine_warnList = [];
         $scope.warnTimeLine_loading = true;
         $scope.warnTimeLine_animate = true;
-        $scope.warnTimeLine_interval = 5;
+        $scope.warnTimeLine_interval = 30;
+        $scope.warnTimeLine_animateDuration = 30;
         $scope.warnTimeLine_minSize = 60;
         $scope.warnTimeLine_maxSize = 61;
         //拓扑图变量
@@ -53,8 +54,8 @@
                                 var block = $scope.warnTimeLine_warnList[j];
                                 if (warn.warnTime.getTime() >= block.time.getTime()) {
                                     var exists = false;
-                                    for (var k = 0; k < block.warnList; k++) {
-                                        if (block.warnList[k].type = type) {
+                                    for (var k = 0; k < block.warnList.length; k++) {
+                                        if (block.warnList[k].type == type) {
                                             block.warnList[k].count++;
                                             exists = true;
                                             break;
@@ -142,7 +143,7 @@
                         scrollLeft: ($("#index_warnTimeLine li").length - $scope.warnTimeLine_minSize - 1) * getWarnTimeLineUnitWidth()
                     }, 0).animate({
                         scrollLeft: getWarnTimeLineWidth() - $("#index_warnTimeLine").width()
-                    }, $scope.warnTimeLine_interval * 1000, "linear");
+                    }, $scope.warnTimeLine_animateDuration * 1000, "linear");
                 }
                 else {
                     warnTimeLineAnimate();
@@ -154,7 +155,7 @@
             if ($warnTimeLine.scrollLeft() < ($("#index_warnTimeLine li").length - $scope.warnTimeLine_minSize - 1) * getWarnTimeLineUnitWidth()) {
                 $warnTimeLine.scrollLeft(($("#index_warnTimeLine li").length - $scope.warnTimeLine_minSize - 1) * getWarnTimeLineUnitWidth());
             }
-            $warnTimeLine.animate({ scrollLeft: getWarnTimeLineWidth() - $("#index_warnTimeLine").width() }, $scope.warnTimeLine_interval * 1000, "linear");
+            $warnTimeLine.animate({ scrollLeft: getWarnTimeLineWidth() - $("#index_warnTimeLine").width() }, $scope.warnTimeLine_animateDuration * 1000, "linear");
         };
         //告警时间线点击跳转
         $scope.warnTimeLine_query = function (warn) {
@@ -170,7 +171,7 @@
         //查询拓扑图数据
         var topologyTimer = null;
         $scope.topology_query = function () {
-            statisticService.showTopology8583({ starttime: "2015-04-01 17:06:00", endtime: "2015-04-02 17:06:00" }, function (data) {
+            statisticService.showTopology({ type: "8583", starttime: "2015-04-01 17:06:00", endtime: "2015-04-02 17:06:00" }, function (data) {
                 if (data && data.state == "200") {
                     if (data.data && data.data.length) {
                         var row = data.data[0];
@@ -192,7 +193,7 @@
                 else
                     $scope.topology_8583_warnCount = 0;
             });
-            statisticService.showTopology20022({ starttime: "2015-04-01 17:06:00", endtime: "2015-04-02 17:06:00" }, function (data) {
+            statisticService.showTopology({ type: "20022", starttime: "2015-04-01 17:06:00", endtime: "2015-04-02 17:06:00" }, function (data) {
                 if (data && data.state == "200") {
                     if (data.data && data.data.length) {
                         var row = data.data[0];
@@ -214,7 +215,7 @@
                 else
                     $scope.topology_20022_warnCount = 0;
             });
-            statisticService.showTopologyHttp({ starttime: "2015-04-01 17:06:00", endtime: "2015-04-02 17:06:00" }, function (data) {
+            statisticService.showTopology({ type: "http", starttime: "2015-04-01 17:06:00", endtime: "2015-04-02 17:06:00" }, function (data) {
                 if (data && data.state == "200") {
                     if (data.data && data.data.length) {
                         var row = data.data[0];
@@ -236,7 +237,7 @@
                 else
                     $scope.topology_http_warnCount = 0;
             });
-            statisticService.showTopologyMysql({ starttime: "2015-04-01 17:06:00", endtime: "2015-04-02 17:06:00" }, function (data) {
+            statisticService.showTopology({ type: "mysql", starttime: "2015-04-01 17:06:00", endtime: "2015-04-02 17:06:00" }, function (data) {
                 if (data && data.state == "200") {
                     if (data.data && data.data.length) {
                         var row = data.data[0];

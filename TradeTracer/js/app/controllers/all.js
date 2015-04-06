@@ -6,5 +6,6 @@
     "./statistic",
     "./statisticSearch",
     "./logSearch",
-    "./warningSearch"
+    "./warningSearch",
+    "./deviceStatistic"
 ], function () { });

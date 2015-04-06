@@ -89,10 +89,10 @@
         </form>
     </div>
 </div>
-<div class="row">
+<div class="row" style="padding-top:25px;">
     <div class="col-md-12">
-        <div class="pull-right">
-            <form class="form-inline">
+        <form class="form-inline">
+            <div class="pull-left">
                 <div class="form-group">
                     <label class="sr-only">交易类型</label>
                     <div class="form-group btn-group">
@@ -108,22 +108,32 @@
                     <label class="sr-only">交易关键字</label>
                     <input type="text" class="form-control" placeholder="交易关键字" ng-model="keywordInput" ng-keypress="formKeypressHandler($event)">
                 </div>
+                <div class="form-group">
+                    <label class="sr-only">源IP</label>
+                    <input type="text" class="form-control" placeholder="源IP" ng-model="srcIpInput" ng-keypress="formKeypressHandler($event)">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only">目的IP</label>
+                    <input type="text" class="form-control" placeholder="目的IP" ng-model="dstIpInput" ng-keypress="formKeypressHandler($event)">
+                </div>
                 <div class="input-group">
                     <input type="text" class="form-control date" data-date-format="yyyy-mm-dd hh:ii:ss" data-date-language="zh-CN" placeholder="开始时间" ng-model="startTimeInput" ng-keypress="formKeypressHandler($event)">
                     <span class="input-group-addon" style="border-width:1px 0;">-</span>
                     <input type="text" class="form-control date" data-date-format="yyyy-mm-dd hh:ii:ss" data-date-language="zh-CN" placeholder="结束时间" ng-model="endTimeInput" ng-keypress="formKeypressHandler($event)">
                 </div>
-                <button class="btn btn-default" type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
+                <button class="btn btn-info" type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
                 <!--<button class="btn btn-info" type="button"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> 导出</button>-->
-            </form>
-        </div>
+
+            </div>
+            <div class="pull-right"></div>
+        </form>
     </div>
 </div>
-<div class="row" style="margin-top:10px;">
+<div class="row" style="margin-top:25px;">
     <div class="col-md-12">
-        <table class="table table-hover" ng-if="searchType.id=='8583'||searchType.id=='20022'">
+        <table class="table table-hover" ng-if="searchType.id=='8583'||searchType.id=='20022'" style=" border-top:1px solid #DDD;border-bottom:1px solid #DDD;">
             <thead>
-                <tr>
+                <tr style="background-color: #e6e6e6;  text-shadow: 0 1px 1px rgba(255,255,255,0.75);  background-image: linear-gradient(to bottom,#fff,#e6e6e6);">
                     <th>交易关键字</th>
                     <th>请求时间</th>
                     <th>响应时间</th>
@@ -163,7 +173,7 @@
                         <a class="btn btn-default" href="javascript:void(0);" ng-click="record.showDetail=!record.showDetail" ng-class="{'active':record.showDetail}">详情</a>
                     </td>
                 </tr>
-                <tr ng-repeat-end ng-show="record.showDetail">
+                <tr ng-repeat-end ng-show="record.showDetail" style="background-color:#F1F8FA; border-top:1px solid #bcbcbc; border-bottom:1px solid #bcbcbc; ">
                     <td colspan="16">{{record.text||"暂无详情"}}</td>
                 </tr>
             </tbody>
@@ -253,7 +263,7 @@
             </tbody>
         </table>
         <nav class="text-center" style="position:relative;">
-            <div class="pull-left" style="line-height:34px;position:absolute;top:0;left:0;">
+            <div class="pull-right" style="line-height:34px;position:absolute;top:0;right:0;">
                 <span style="padding-right:10px;">匹配的记录 {{recordSize||0}} 笔</span>
                 <span style="padding-right:10px;">第 {{pageNum||0}} 页</span>
                 <span>共 {{pageTotal||0}} 页</span>

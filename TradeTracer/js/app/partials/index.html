@@ -1,13 +1,8 @@
-﻿<div class="row" style="  background-color:#006aae; padding-top:20px; padding-bottom:70px;">
+﻿<div class="row" style="  background-color:#006aae; padding-bottom:70px;">
     <div class="col-md-12">
         <div class="index_warn_timeline loading" ng-class="{'loading':warnTimeLine_loading}">
             <div class="warn_timeline_legend">
-                <div class="title" style="color:#fff;">实时告警</div>
-               <!--  <div class="legend">
-                   <span class="legend-normal">正常</span>
-                   <span class="legend-warning">警告</span>
-                   <span class="legend-error">错误</span>
-               </div> -->
+                <h3 class="title" style="color:#fff;">实时告警</h3>
             </div>
             <div class="loading">
                 <div class="circle"></div>
@@ -16,18 +11,22 @@
                 <div class="circle"></div>
                 <div class="circle"></div>
             </div>
-            <div class="warn_timeline_left" ng-hide="warnTimeLine_loading">123</div>
+            
             <div class="warn_timeline_container" ng-hide="warnTimeLine_loading">
+                <div style="clear:both;" ng-if="false">
+                    <div class="warn_timeline_left" ng-hide="warnTimeLine_loading">123</div>
+                    <div class="warn_timeline_right" ng-hide="warnTimeLine_loading">234</div>
+                </div>
                 <ul id="index_warnTimeLine" class="clearfix" ng-class="{'animate':warnTimeLine_animate}">
                     <li class="info" ng-class="{'warning':warn.warnList.length}" ng-repeat="warn in warnTimeLine_warnList">
                         <a href="javascript:void(0);" role="button" tabindex="0" data-placement="bottom" data-trigger="focus" data-html="true" data-index-warntimeline-popover></a>
                     </li>
                 </ul>
             </div>
-            <div class="warn_timeline_right" ng-hide="warnTimeLine_loading">234</div>
+            
             <div class="warn_timeline_label">
-                <label class="text-left">90秒前</label>
-                <label class="text-center">45秒前</label>
+                <label class="text-left">30分钟前</label>
+                <label class="text-center">15分钟前</label>
                 <label class="text-right">现在</label>
             </div>
         </div>
@@ -38,25 +37,27 @@
         <div id="dataPanel" class="panel panel-default" style=" margin-top: -50px; ">
             
             <div class="panel-body index_topology">
-                <div><img src="img/ico_1.png" />&nbsp;响应时间(ms)&nbsp;&nbsp;&nbsp;<img src="img/ico_2.png" />&nbsp;交易笔数&nbsp;&nbsp;&nbsp;<img src="img/ico_3.png" />&nbsp;告警条数&nbsp;&nbsp;&nbsp;<img src="img/ico_4.png" />&nbsp;响应率(%)</div>
+                <div><span class="glyphicon glyphicon-time xysj" aria-hidden="true"></span>&nbsp;响应时间(ms)&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-barcode jybs" aria-hidden="true"></span>&nbsp;交易笔数&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-alert gjts" aria-hidden="true"></span>&nbsp;告警条数&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-equalizer xyl" aria-hidden="true"></span>&nbsp;响应率(%)</div>
                 <div style="width:95%; margin:auto;position:relative;">
                     <img src="img/server_1.jpg" style="width:100%;" />
-                     <div style="width:100%; position:absolute; left:0px; top:0px; height:100%; ">
-                        <div class="topology_circle" style="top:44%;left:36%;background-color: #fff;  width: 6%;
-  height: 15%;"><!--http流量-->
+                    <div style="width:100%; position:absolute; left:0px; top:0px; height:100%; ">
+                        <div class="topology_circle" style="top:45%;left:38%;background-color: #fff;  width: 6%;
+  height: 15%;">
+                            <!--http流量-->
                             <h3>
                                 <span data-number-animate data-numberanimate-value="{{topology_http_flow}}">0</span>
                                 <small>{{topology_http_flowSuffix}}</small>
                             </h3>
                         </div>
-                        <div class="topology_circle" style=" top:24%;left:53%;background-color: #fff;  width: 6%;
-  height: 15%;"><!--8583流量-->
+                        <div class="topology_circle" style=" top:29%;left:53%;background-color: #fff;  width: 6%;
+  height: 15%;">
+                            <!--8583流量-->
                             <h3>
                                 <span data-number-animate data-numberanimate-value="{{topology_8583_flow}}">0</span>
                                 <small>{{topology_8583_flowSuffix}}</small>
                             </h3>
                         </div>
-                        <div class="topology_circle" style=" top:58%;left:52%;background-color: #fff;  width: 6%;
+                        <div class="topology_circle" style=" top:58%;left:53%;background-color: #fff;  width: 6%;
   height: 15%;">
                             <h3>
                                 <span data-number-animate data-numberanimate-value="{{topology_20022_flow}}">0</span>
@@ -64,106 +65,159 @@
                             </h3>
                         </div>
 
-                        <div class="topology_table info" style="  top: 13%; left: 65%; background-color: #f0efed;">
-                    <!-- <h3>8583</h3> -->
-                    <table class="table-bordered">
-                        <tr>
-                            <td style="text-align:left;">
-                              
-                                <div class="val">
-                                    <img src="img/ico_2.png" style="vertical:middle; margin:8px 5px auto 5px; width:18% " /><h4 data-number-animate data-numberanimate-value="{{topology_8583_count}}">0</h4>
-                                </div>
-                            </td>
-                            <td style="text-align:left;">
-                              
-                                <div class="val">
-                                    <img src="img/ico_1.png" style="vertical:middle; margin:8px 5px auto 5px; width:18% "/><h4 data-number-animate data-numberanimate-value="{{topology_8583_duration}}">0</h4>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align:left;">
-                                
-                                <div class="val">
-                                    <img src="img/ico_4.png" style="vertical:middle; margin:8px 5px auto 5px; width:18% " /><h4 data-number-animate data-numberanimate-value="{{topology_8583_successRatio}}">0</h4>
-                                </div>
-                            </td>
-                            <td style="text-align:left;">
-                               
-                                <div class="val">
-                                    <img src="img/ico_3.png" style="vertical:middle; margin:8px 5px auto 5px; width:18% " /><h4 data-number-animate data-numberanimate-value="{{topology_8583_warnCount}}">0</h4>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                
-                <div class="topology_table info" style="left:65%;top:65%;background-color: #f0efed;">
-                   <!--  <h3>20022</h3> -->
-                    <table class="table-bordered">
-                        <tr>
-                            <td style="text-align:left;">
-                                
-                                <div class="val">
-                                    <img src="img/ico_2.png" style="vertical:middle; margin:8px 5px auto 5px; width:18% " /><h4 data-number-animate data-numberanimate-value="{{topology_20022_count}}">0</h4>
-                                </div>
-                            </td>
-                            <td style="text-align:left;">
-                                
-                                <div class="val">
-                                    <img src="img/ico_1.png" style="vertical:middle; margin:8px 5px auto 5px; width:18% " /><h4 data-number-animate data-numberanimate-value="{{topology_20022_duration}}">0</h4>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align:left;">
-                                
-                                <div class="val">
-                                    <img src="img/ico_4.png" style="vertical:middle; margin:8px 5px auto 5px; width:18% " /><h4 data-number-animate data-numberanimate-value="{{topology_20022_successRatio}}">0</h4>
-                                </div>
-                            </td>
-                            <td style="text-align:left;">
-                                
-                                <div class="val">
-                                    <img src="img/ico_3.png" style="vertical:middle; margin:8px 5px auto 5px; width:18% " /><h4 data-number-animate data-numberanimate-value="{{topology_20022_warnCount}}">0</h4>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                 <div class="topology_table info" style="top:27%;left:15%; background-color: #f0efed;">
-                   <!--  <h3>http</h3> -->
-                    <table class="table-bordered">
-                        <tr>
-                            <td style="text-align:left;">
-                                
-                                <div class="val">
-                                    <img src="img/ico_2.png" style="vertical:middle; margin:8px 5px auto 5px; width:18% " /><h4 data-number-animate data-numberanimate-value="{{topology_http_count}}">0</h4>
-                                </div>
-                            </td>
-                            <td style="text-align:left;">
-                               
-                                <div class="val">
-                                    <img src="img/ico_1.png" style="vertical:middle; margin:8px 5px auto 5px; width:18% " /><h4 data-number-animate data-numberanimate-value="{{topology_http_duration}}">0</h4>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align:left;">
-                               
-                                <div class="val">
-                                    <img src="img/ico_4.png" style="vertical:middle; margin:8px 5px auto 5px; width:18% " /><h4 data-number-animate data-numberanimate-value="{{topology_http_successRatio}}">0</h4>
-                                </div>
-                            </td>
-                            <td style="text-align:left;">
-                               
-                                <div class="val">
-                                    <img src="img/ico_3.png" style="vertical:middle; margin:8px 5px auto 5px; width:18% " /><h4 data-number-animate data-numberanimate-value="{{topology_http_warnCount}}">0</h4>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                        <div class="topology_table info" style="  top: 13%; left: 65%; background-color: #f0efed;" role="button" tabindex="0" data-placement="bottom" data-trigger="focus" data-html="true" data-type="8583" data-warn-type="resp8583" data-device-list="topology_8583_deviceList" data-index-topology-popover>
+                            <!-- <h3>8583</h3> -->
+                            <table class="table-bordered">
+                                <tr>
+                                    <td style="text-align:left;">
+
+                                        <div class="val">
+                                            <span class="glyphicon glyphicon-barcode" aria-hidden="true" style="color:#ffb300;  font-size: 18px; margin:5px;"></span><h4 data-number-animate data-numberanimate-value="{{topology_8583_count}}">0</h4>
+                                        </div>
+                                    </td>
+                                    <td style="text-align:left;">
+
+                                        <div class="val">
+                                            <span class="glyphicon glyphicon-time" aria-hidden="true" style="color:#186dee;  font-size: 18px; margin:5px;"></span><h4 data-number-animate data-numberanimate-value="{{topology_8583_duration}}">0</h4>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:left;">
+
+                                        <div class="val">
+                                            <span class="glyphicon glyphicon-equalizer" aria-hidden="true" style="color:#009b58;  font-size: 18px; margin:5px;"></span><h4 data-number-animate data-numberanimate-value="{{topology_8583_successRatio}}">0</h4>
+                                        </div>
+                                    </td>
+                                    <td style="text-align:left;">
+
+                                        <div class="val">
+                                            <span class="glyphicon glyphicon-alert" aria-hidden="true" style="color:#d9442f;  font-size: 18px; margin:5px;"></span><h4 data-number-animate data-numberanimate-value="{{topology_8583_warnCount}}">0</h4>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="topology_table info" style="left:65%;bottom:11%;background-color: #f0efed;" role="button" tabindex="0" data-placement="bottom" data-trigger="focus" data-html="true" data-type="20022" data-warn-type="resp20022" data-device-list="topology_20022_deviceList" data-index-topology-popover>
+                            <!--  <h3>20022</h3> -->
+                            <table class="table-bordered">
+                                <tr>
+                                    <td style="text-align:left;">
+
+                                        <div class="val">
+                                            <span class="glyphicon glyphicon-barcode" aria-hidden="true" style="color:#ffb300;  font-size: 18px; margin:5px;"></span><h4 data-number-animate data-numberanimate-value="{{topology_20022_count}}">0</h4>
+                                        </div>
+                                    </td>
+                                    <td style="text-align:left;">
+
+                                        <div class="val">
+                                            <span class="glyphicon glyphicon-time" aria-hidden="true" style="color:#186dee;  font-size: 18px; margin:5px;"></span><h4 data-number-animate data-numberanimate-value="{{topology_20022_duration}}">0</h4>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:left;">
+
+                                        <div class="val">
+                                            <span class="glyphicon glyphicon-equalizer" aria-hidden="true" style="color:#009b58;  font-size: 18px; margin:5px;"></span><h4 data-number-animate data-numberanimate-value="{{topology_20022_successRatio}}">0</h4>
+                                        </div>
+                                    </td>
+                                    <td style="text-align:left;">
+
+                                        <div class="val">
+                                            <span class="glyphicon glyphicon-alert" aria-hidden="true" style="color:#d9442f;  font-size: 18px; margin:5px;"></span><h4 data-number-animate data-numberanimate-value="{{topology_20022_warnCount}}">0</h4>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="topology_table info" style="bottom:50%;left:15%; background-color: #f0efed;" role="button" tabindex="0" data-placement="bottom" data-trigger="focus" data-html="true" data-type="http" data-device-list="topology_http_deviceList" data-index-topology-popover>
+                            <!--  <h3>http</h3> -->
+                            <table class="table-bordered">
+                                <tr>
+                                    <td style="text-align:left;">
+
+                                        <div class="val">
+                                            <span class="glyphicon glyphicon-barcode" aria-hidden="true" style="color:#ffb300;  font-size: 18px; margin:5px;"></span><h4 data-number-animate data-numberanimate-value="{{topology_http_count}}">0</h4>
+                                        </div>
+                                    </td>
+                                    <td style="text-align:left;">
+
+                                        <div class="val">
+                                            <span class="glyphicon glyphicon-time" aria-hidden="true" style="color:#186dee;  font-size: 18px; margin:5px;"></span><h4 data-number-animate data-numberanimate-value="{{topology_http_duration}}">0</h4>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:left;">
+
+                                        <div class="val">
+                                            <span class="glyphicon glyphicon-equalizer" aria-hidden="true" style="color:#009b58;  font-size: 18px; margin:5px;"></span><h4 data-number-animate data-numberanimate-value="{{topology_http_successRatio}}">0</h4>
+                                        </div>
+                                    </td>
+                                    <td style="text-align:left;">
+
+                                        <div class="val">
+                                            <span class="glyphicon glyphicon-alert" aria-hidden="true" style="color:#d9442f;  font-size: 18px; margin:5px;"></span><h4 data-number-animate data-numberanimate-value="{{topology_http_warnCount}}">0</h4>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <!--弹出层 开始-->
+                        <div style="width:500px; border:1px solid #bcbcbc; background-color:#E4F1FA; padding:15px; position:absolute; top:0px; left:0px;" ng-if="false">
+                            <table class="table table-hover  table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>源IP</th>
+                                        <th>流量</th>
+                                        <th><span class="glyphicon glyphicon-barcode jybs" aria-hidden="true"></span></th>
+                                        <th><span class="glyphicon glyphicon-alert gjts" aria-hidden="true"></span></th>
+                                        <th>目标IP</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>192.168.200.3</td>
+                                        <td>10M</td>
+                                        <td>20</td>
+                                        <td>2</td>
+                                        <td>192.168.200.83</td>
+                                    </tr>
+                                    <tr>
+                                        <td>192.168.200.3</td>
+                                        <td>10M</td>
+                                        <td>20</td>
+                                        <td>2</td>
+                                        <td>192.168.200.83</td>
+                                    </tr>
+                                    <tr>
+                                        <td>192.168.200.3</td>
+                                        <td>10M</td>
+                                        <td>20</td>
+                                        <td>2</td>
+                                        <td>192.168.200.83</td>
+                                    </tr>
+                                    <tr>
+                                        <td>192.168.200.3</td>
+                                        <td>10M</td>
+                                        <td>20</td>
+                                        <td>2</td>
+                                        <td>192.168.200.83</td>
+                                    </tr>
+                                    <tr>
+                                        <td>192.168.200.3</td>
+                                        <td>10M</td>
+                                        <td>20</td>
+                                        <td>2</td>
+                                        <td>192.168.200.83</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!--弹出层 结束-->
                     </div>
                 </div>
                 

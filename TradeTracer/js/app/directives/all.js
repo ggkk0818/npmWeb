@@ -4,5 +4,6 @@
     "./numberAnimate",
     "./pagination",
     "./popover",
-    "./indexWarnTimeLinePopover"
+    "./indexWarnTimeLinePopover",
+    "./indexTopologyPopover"
 ], function () { });

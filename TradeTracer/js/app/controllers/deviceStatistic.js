@@ -1,11 +1,11 @@
 ﻿define(['angular', 'lodash', 'jquery', 'services/all', 'css!partials/deviceStatistic.css'], function (angular, _, $) {
     "use strict";
     var module = angular.module('app.controllers');
-    module.controller('DeviceStatisticCtrl', function ($rootScope, $scope, $route, $timeout, $location, statisticService, logService) {
+    module.controller('DeviceStatisticCtrl', function ($rootScope, $scope, $route, $timeout, $location, statisticService, warningService) {
         //初始化变量
         $scope.LOG_TYPE = [
-            { id: "8583", name: "8583" },
-            { id: "20022", name: "20022" },
+            { id: "8583", name: "8583", warnId: "resp8583" },
+            { id: "20022", name: "20022", warnId: "resp20022" },
             { id: "http", name: "http" },
             { id: "mysql", name: "mysql" }
         ];
@@ -70,6 +70,7 @@
         };
 
         $scope.doQuery = function () {
+            var queryType = $scope.logType;
             var params = {
                 type: $scope.logType.id,
                 start: ($scope.pageNum - 1) * $scope.pageSize,
@@ -102,6 +103,22 @@
                             record.scount = Math.round(record.scount * 10000 / record.count) / 100;
                         if (typeof record.allflow === "number")
                             record.allflow = numeral(record.allflow).format("0.00b");
+                    }
+                    if (queryType.warnId) {
+                        //查询告警信息
+                        warningService.showDevice({ type: queryType.warnId, startWarnTime: params.starttime, endWarnTime: params.endtime, start: params.start, limit: params.limit }, function (data2) {
+                            if (data2 &&  data2.data) {
+                                for (var i = 0; i < data2.data.length; i++) {
+                                    var warnRecord = data2.data[i];
+                                    for (var j = 0; j < $scope.recordList.length; j++) {
+                                        var record = $scope.recordList[j];
+                                        if (warnRecord.srcip == record.srcip && warnRecord.dstip == record.dstip) {
+                                            record.warnCount = warnRecord.count;
+                                        }
+                                    }
+                                }
+                            }
+                        });
                     }
                 }
                 $scope.isLoading = false;

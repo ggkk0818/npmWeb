@@ -80,8 +80,8 @@
 .index_warn_timeline .loading .circle:nth-child(4) {  animation-delay: 720ms; }
 .index_warn_timeline .loading .circle:nth-child(5) {  animation-delay: 960ms; }
 .index_warn_timeline .warn_timeline_container{
-    float:left;
-    width:90%;
+   
+    width:100%;
     -moz-transition: all 2s ease-in-out;
     -o-transition: all 2s ease-in-out;
     -webkit-transition: all 2s ease-in-out;
@@ -92,7 +92,7 @@
     display:block;
     /*table-layout:fixed;*/
     width:100%;
-    padding:0;
+    padding:6px 0 0 0;
     margin:0;
     border-bottom:1px solid #ccc;
     white-space:nowrap;
@@ -111,7 +111,7 @@
     height:30px;
     text-align:center;
     vertical-align:bottom;
-    margin-top:20px;
+
 }
 .index_warn_timeline .warn_timeline_container ul li > a {
     display: block;
@@ -152,13 +152,14 @@
 .index_warn_timeline .warn_timeline_left{
     float:left;
     width:5%;
-    height:40px;
+  color: #fff;
 }
 /*时间线右侧文本*/
 .index_warn_timeline .warn_timeline_right{
     float:right;
     width:5%;
-    height:40px;
+    text-align: right;
+    color: #fff;
 }
 /*时间线下方刻度*/
 .index_warn_timeline .warn_timeline_label{
@@ -278,3 +279,11 @@
 .index_topology .topology_circle h3 *{
     white-space:normal;
 }
+.index_topology .popover{
+    max-width:500px;
+}
+
+.jybs{color:#ffb300;  font-size: 18px; vertical-align: middle;}
+.xysj{color:#186dee;  font-size: 18px; vertical-align: middle;}
+.gjts{color:#d9442f;  font-size: 18px; vertical-align: middle;}
+.xyl{color:#009b58;  font-size: 18px; vertical-align: middle;}

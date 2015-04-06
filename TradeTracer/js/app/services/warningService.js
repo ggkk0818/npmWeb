@@ -23,5 +23,20 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
+        //告警按ip分组统计
+        this.showDevice = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'warning/device',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
     });
 });

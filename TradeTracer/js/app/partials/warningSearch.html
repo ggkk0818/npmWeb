@@ -1,7 +1,8 @@
-﻿<div class="row">
+﻿<div class="row" style="padding-top:25px;">
     <div class="col-md-12">
-        <div class="pull-right">
-            <form class="form-inline">
+        <form class="form-inline">
+            <div class="pull-left">
+
                 <div class="form-group">
                     <label class="sr-only">交易类型</label>
                     <div class="form-group btn-group">
@@ -17,39 +18,53 @@
                     <label class="sr-only">交易关键字</label>
                     <input type="text" class="form-control" placeholder="交易关键字" ng-model="keywordInput" ng-keypress="formKeypressHandler($event)">
                 </div>
+                <div class="form-group">
+                    <label class="sr-only">源IP</label>
+                    <input type="text" class="form-control" placeholder="源IP" ng-model="srcIpInput" ng-keypress="formKeypressHandler($event)">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only">目的IP</label>
+                    <input type="text" class="form-control" placeholder="目的IP" ng-model="dstIpInput" ng-keypress="formKeypressHandler($event)">
+                </div>
                 <div class="input-group">
                     <input type="text" class="form-control date" data-date-format="yyyy-mm-dd hh:ii:ss" data-date-language="zh-CN" placeholder="开始时间" ng-model="startTimeInput" ng-keypress="formKeypressHandler($event)">
                     <span class="input-group-addon" style="border-width:1px 0;">-</span>
                     <input type="text" class="form-control date" data-date-format="yyyy-mm-dd hh:ii:ss" data-date-language="zh-CN" placeholder="结束时间" ng-model="endTimeInput" ng-keypress="formKeypressHandler($event)">
                 </div>
-                <button class="btn btn-default" type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
-                <button class="btn btn-info" type="button"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> 导出</button>
-            </form>
-        </div>
+                <button class="btn btn-info " type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
+            </div>
+            <div class="pull-right">
+                <!--<button class="btn btn-primary" type="button"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> 导出</button>-->
+            </div>
+        </form>
     </div>
 </div>
-<div class="row" style="margin-top:10px;">
+<div class="row" style="margin-top:25px;">
     <div class="col-md-12">
-        <table class="table table-hover" style="table-layout:fixed;">
+        <table class="table table-hover  table-striped" style="table-layout:fixed; border-top:1px solid #DDD;border-bottom:1px solid #DDD;">
             <thead>
-                <tr>
-                    <th>UID</th>
-                    <th>告警时间</th>
-                    <th>响应时间</th>
+                <tr style="background-color: #e6e6e6;  text-shadow: 0 1px 1px rgba(255,255,255,0.75);  background-image: linear-gradient(to bottom,#fff,#e6e6e6);">
+                    <th style="width:28%;">UID</th>
+                    <th style="text-align:center;">告警时间</th>
+                    <th style="text-align:center;">响应时间</th>
                     <th>交易信息</th>
+                    <th>源IP</th>
+                    <th>目标IP</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="record in recordList">
                     <td>{{record.uid}}</td>
-                    <td>{{record.warnTime}}</td>
-                    <td>{{record.respmills}}</td>
+                    <td style="text-align:center;">{{record.warnTime}}</td>
+                    <td style="text-align:center;">{{record.respmills}}</td>
                     <td style="word-break: break-all;"><p>{{record.text}}</p></td>
+                    <td></td>
+                    <td></td>
                 </tr>
             </tbody>
         </table>
         <nav class="text-center" style="position:relative;">
-            <div class="pull-left" style="line-height:34px;position:absolute;top:0;left:0;">
+            <div class="pull-right" style="line-height:34px;position:absolute;top:0;right:0;">
                 <span style="padding-right:10px;">匹配的记录 {{recordSize||0}} 笔</span>
                 <span style="padding-right:10px;">第 {{pageNum||0}} 页</span>
                 <span>共 {{pageTotal||0}} 页</span>

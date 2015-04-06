@@ -14,6 +14,8 @@
         $scope.pageSize = 10;
         $scope.recordSize = 0;
         $scope.keyword = null;
+        $scope.srcIp = null;
+        $scope.dstIp = null;
         $scope.duration = null;
         $scope.startTime = null;
         $scope.endTime = null;
@@ -21,12 +23,18 @@
         $scope.searchType = $scope.logType;
         //表单数据
         $scope.keywordInput = null;
+        $scope.srcIpInput = null;
+        $scope.dstIpInput = null;
         $scope.durationInput = null;
         //获取查询参数
         $scope.getSearchParams = function () {
             var params = { pageNum: $scope.pageNum };
             if ($scope.keyword)
                 params.keyword = $scope.keyword;
+            if ($scope.srcIp)
+                params.srcIp = $scope.srcIp;
+            if ($scope.dstIp)
+                params.dstIp = $scope.dstIp;
             if ($scope.duration)
                 params.duration = $scope.duration;
             if ($scope.startTime)
@@ -47,6 +55,14 @@
             if (params.keyword) {
                 $scope.keyword = params.keyword;
                 $scope.keywordInput = params.keyword;
+            }
+            if (params.srcIp) {
+                $scope.srcIp = params.srcIp;
+                $scope.srcIpInput = params.srcIp;
+            }
+            if (params.dstIp) {
+                $scope.dstIp = params.dstIp;
+                $scope.dstIpInput = params.dstIp;
             }
             if (params.duration) {
                 $scope.duration = params.duration;
@@ -87,6 +103,12 @@
             };
             if ($scope.keyword) {
                 params.aggregateKey = $scope.keyword;
+            }
+            if ($scope.srcIp) {
+                params.srcip = $scope.srcIp;
+            }
+            if ($scope.keyword) {
+                params.destip = $scope.dstIp;
             }
             if ($scope.duration) {
                 if ($scope.duration.indexOf("-") > -1) {
@@ -164,6 +186,14 @@
                 $scope.keyword = null;
             else
                 $scope.keyword = $scope.keywordInput;
+            if (typeof $scope.srcIpInput == "undefined" || $scope.srcIpInput == null || $scope.srcIpInput.length == 0)
+                $scope.srcIp = null;
+            else
+                $scope.srcIp = $scope.srcIpInput;
+            if (typeof $scope.dstIpInput == "undefined" || $scope.dstIpInput == null || $scope.dstIpInput.length == 0)
+                $scope.dstIp = null;
+            else
+                $scope.dstIp = $scope.dstIpInput;
             if (typeof $scope.startTimeInput == "undefined" || $scope.startTimeInput == null || $scope.startTimeInput.length == 0)
                 $scope.startTime = null;
             else

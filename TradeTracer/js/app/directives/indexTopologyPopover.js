@@ -35,7 +35,7 @@ function (angular, app, _) {
                               + '<thead>'
                               + '<tr>'
                               + '<th>源IP</th>'
-                              + '<th>流量</th>'
+                              + '<th><span class="glyphicon glyphicon-send ll" aria-hidden="true"></span></th>'
                               + '<th><span class="glyphicon glyphicon-barcode jybs" aria-hidden="true"></span></th>'
                               + '<th><span class="glyphicon glyphicon-alert gjts" aria-hidden="true"></span></th>'
                               + '<th>目标IP</th>'

@@ -131,24 +131,19 @@
 </div>
 <div class="row" style="margin-top:25px;">
     <div class="col-md-12">
-        <table class="table table-hover" ng-if="searchType.id=='8583'||searchType.id=='20022'" style=" border-top:1px solid #DDD;border-bottom:1px solid #DDD;">
+        <table class="table table-hover statisticSearch_table" ng-if="searchType.id=='8583'||searchType.id=='20022'">
             <thead>
-                <tr style="background-color: #e6e6e6;  text-shadow: 0 1px 1px rgba(255,255,255,0.75);  background-image: linear-gradient(to bottom,#fff,#e6e6e6);">
+                <tr>
                     <th>交易关键字</th>
                     <th>请求时间</th>
                     <th>响应时间</th>
-                    <!--<th>时间3</th>-->
-                    <th>响应时长</th>
-                    <!--<th>响应时长2</th>-->
+                    <th><span class="glyphicon glyphicon-time" aria-hidden="true"></span>响应时长</th>
                     <th>源IP</th>
                     <th>目的IP</th>
-                    <!--<th>设备名称1</th>
-                    <th>设备名称2</th>
-                    <th>设备名称3</th>-->
                     <th>报文类型</th>
                     <th>响应码</th>
                     <th>是否响应</th>
-                    <th>流量</th>
+                    <th><span class="glyphicon glyphicon-send" aria-hidden="true"></span>流量</th>
                     <th>详情</th>
                 </tr>
             </thead>
@@ -157,35 +152,30 @@
                     <td>{{record.aggregate_key}}</td>
                     <td>{{record.time1}}</td>
                     <td>{{record.time2}}</td>
-                    <!--<td>{{record.time3}}</td>-->
                     <td>{{record.resp_mills1}}</td>
-                    <!--<td>{{record.resp_mills2}}</td>-->
                     <td>{{record.source_ip}}</td>
                     <td>{{record.dest_ip}}</td>
-                    <!--<td>{{record.device1}}</td>
-                    <td>{{record.device2}}</td>
-                    <td>{{record.device3}}</td>-->
                     <td>{{record.mesg_type_code}}</td>
                     <td>{{record.response_code}}</td>
                     <td>{{record.is_complete?"是":"否"}}</td>
                     <td>{{record.flow}}</td>
                     <td>
-                        <a class="btn btn-default" href="javascript:void(0);" ng-click="record.showDetail=!record.showDetail" ng-class="{'active':record.showDetail}">详情</a>
+                        <a class="btn btn-default" href="javascript:void(0);" ng-click="record.showDetail=!record.showDetail" ng-class="{'active':record.showDetail,'disabled':!record.text}">详情</a>
                     </td>
                 </tr>
                 <tr ng-repeat-end ng-show="record.showDetail" style="background-color:#F1F8FA; border-top:1px solid #bcbcbc; border-bottom:1px solid #bcbcbc; ">
-                    <td colspan="16">{{record.text||"暂无详情"}}</td>
+                    <td colspan="11">{{record.text||"暂无详情"}}</td>
                 </tr>
             </tbody>
         </table>
         <!--http-->
-        <table class="table table-hover" ng-if="searchType.id=='http'">
+        <table class="table table-hover statisticSearch_table" ng-if="searchType.id=='http'">
             <thead>
                 <tr>
                     <th>交易关键字</th>
                     <th>开始时间</th>
                     <th>结束时间</th>
-                    <th>响应时间</th>
+                    <th><span class="glyphicon glyphicon-time" aria-hidden="true"></span>响应时长</th>
                     <th>源IP</th>
                     <th>目的IP</th>
                     <th>源设备</th>
@@ -196,7 +186,7 @@
                     <th>响应码</th>
                     <th>响应内容</th>
                     <th>是否响应</th>
-                    <th>流量</th>
+                    <th><span class="glyphicon glyphicon-send" aria-hidden="true"></span>流量</th>
                 </tr>
             </thead>
             <tbody>
@@ -220,13 +210,13 @@
             </tbody>
         </table>
         <!--mysql-->
-        <table class="table table-hover" ng-if="searchType.id=='mysql'">
+        <table class="table table-hover statisticSearch_table" ng-if="searchType.id=='mysql'">
             <thead>
                 <tr>
                     <th>交易关键字</th>
                     <th>开始时间</th>
                     <th>结束时间</th>
-                    <th>响应时间</th>
+                    <th><span class="glyphicon glyphicon-time" aria-hidden="true"></span>响应时长</th>
                     <th>源IP</th>
                     <th>目的IP</th>
                     <th>源设备</th>
@@ -238,7 +228,7 @@
                     <th>错误码</th>
                     <th>响应报文类型</th>
                     <th>是否响应</th>
-                    <th>流量</th>
+                    <th><span class="glyphicon glyphicon-send" aria-hidden="true"></span>流量</th>
                 </tr>
             </thead>
             <tbody>

@@ -4,10 +4,10 @@
     module.controller('DeviceStatisticCtrl', function ($rootScope, $scope, $route, $timeout, $location, statisticService, warningService) {
         //初始化变量
         $scope.LOG_TYPE = [
-            { id: "8583", name: "8583", warnId: "resp8583" },
-            { id: "20022", name: "20022", warnId: "resp20022" },
-            { id: "http", name: "http" },
-            { id: "mysql", name: "mysql" }
+            { id: "8583", name: "8583", warnId: "iso8583" },
+            { id: "20022", name: "20022", warnId: "iso20022" },
+            { id: "http", name: "http", warnId: "http" },
+            { id: "mysql", name: "mysql", warnId: "mysql" }
         ];
         $scope.DURATION_TYPE = [
             { id: "minute", name: "1分钟" },
@@ -21,6 +21,10 @@
         $scope.startTime = null;
         $scope.logType = $scope.LOG_TYPE[0];
         $scope.durationType = $scope.DURATION_TYPE[0];
+        //当前搜索参数
+        $scope.queryStartTime = null;
+        $scope.queryLogType = null;
+        $scope.queryDurationType = null;
         //表单数据
         $scope.startTimeInput = $scope.startTime = new Date().Format("yyyy-MM-dd hh:mm:00");
         //获取查询参数
@@ -70,7 +74,9 @@
         };
 
         $scope.doQuery = function () {
-            var queryType = $scope.logType;
+            $scope.queryStartTime = $scope.startTime;
+            $scope.queryLogType = $scope.logType;
+            $scope.queryDurationType = $scope.durationType;
             var params = {
                 type: $scope.logType.id,
                 start: ($scope.pageNum - 1) * $scope.pageSize,
@@ -79,7 +85,7 @@
             if ($scope.startTime) {
                 params.starttime = $scope.startTime;
             }
-            if ($scope.durationType) {
+            if ($scope.startTime && $scope.durationType) {
                 var endTime = new Date($scope.startTime.replace(/-/g, "/")),
                     durationId = $scope.durationType.id;
                 if (durationId == "minute") {
@@ -104,9 +110,9 @@
                         if (typeof record.allflow === "number")
                             record.allflow = numeral(record.allflow).format("0.00b");
                     }
-                    if (queryType.warnId) {
+                    if ($scope.queryLogType && $scope.queryLogType.warnId) {
                         //查询告警信息
-                        warningService.showDevice({ type: queryType.warnId, startWarnTime: params.starttime, endWarnTime: params.endtime, start: params.start, limit: params.limit }, function (data2) {
+                        warningService.showDevice({ type: $scope.queryLogType.warnId, startWarnTime: params.starttime, endWarnTime: params.endtime, start: params.start, limit: params.limit }, function (data2) {
                             if (data2 &&  data2.data) {
                                 for (var i = 0; i < data2.data.length; i++) {
                                     var warnRecord = data2.data[i];
@@ -123,6 +129,36 @@
                 }
                 $scope.isLoading = false;
             });
+        };
+        //表格行点击
+        $scope.directToStatisticSearch = function (record) {
+            var params = {};
+            if ($scope.queryLogType)
+                params.logType = $scope.queryLogType.id;
+            if ($scope.queryStartTime) {
+                params.startTime = $scope.queryStartTime;
+            }
+            if ($scope.queryStartTime && $scope.queryDurationType) {
+                var endTime = new Date($scope.queryStartTime.replace(/-/g, "/")),
+                    durationId = $scope.queryDurationType.id;
+                if (durationId == "minute") {
+                    endTime.setMinutes(endTime.getMinutes() + 1);
+                }
+                else if (durationId == "hour") {
+                    endTime.setHours(endTime.getHours() + 1);
+                }
+                else if (durationId == "day") {
+                    endTime.setDate(endTime.getDate() + 1);
+                }
+                params.endtime = endTime.Format("yyyy-MM-dd hh:mm:ss");
+            }
+            if (record.srcip) {
+                params.srcIp = record.srcip;
+            }
+            if (record.dstip) {
+                params.dstIp = record.dstip;
+            }
+            $location.path("/trace/statistic").search(params);
         };
         //搜索统计信息
         $scope.search = function () {

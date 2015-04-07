@@ -47,19 +47,24 @@
                     <th style="width:28%;">UID</th>
                     <th style="text-align:center;">告警时间</th>
                     <th style="text-align:center;">响应时间</th>
-                    <th>交易信息</th>
                     <th>源IP</th>
                     <th>目标IP</th>
+                    <th>详情</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="record in recordList">
-                    <td>{{record.uid}}</td>
+                <tr ng-repeat-start="record in recordList">
+                    <td>{{record.aggregate_key}}</td>
                     <td style="text-align:center;">{{record.warnTime}}</td>
                     <td style="text-align:center;">{{record.respmills}}</td>
-                    <td style="word-break: break-all;"><p>{{record.text}}</p></td>
-                    <td></td>
-                    <td></td>
+                    <td>{{record.src_ip}}</td>
+                    <td>{{record.dest_ip}}</td>
+                    <td>
+                        <a class="btn btn-default" href="javascript:void(0);" ng-click="record.showDetail=!record.showDetail" ng-class="{'active':record.showDetail,'disabled':!record.text}">详情</a>
+                    </td>
+                </tr>
+                <tr ng-repeat-end ng-show="record.showDetail" style="background-color:#F1F8FA; border-top:1px solid #bcbcbc; border-bottom:1px solid #bcbcbc; ">
+                    <td colspan="11">{{record.text||"暂无详情"}}</td>
                 </tr>
             </tbody>
         </table>

@@ -33,27 +33,27 @@
 </div>
 <div class="row" style="margin-top:25px;">
     <div class="col-md-12">
-        <table class="table table-hover table-striped"  style="table-layout:fixed; border-top:1px solid #DDD;border-bottom:1px solid #DDD;">
+        <table class="table table-hover table-striped deviceStatistic_table">
             <thead>
-                <tr style="background-color: #e6e6e6;  text-shadow: 0 1px 1px rgba(255,255,255,0.75);  background-image: linear-gradient(to bottom,#fff,#e6e6e6);">
+                <tr>
                     <th>源IP</th>
                     <th>目标IP</th>
-                    <th>交易量</th>
-                    <th>响应时长(ms)</th>
-                    <th>流量</th>
-                    <th>响应率(%)</th>
-                    <th>告警</th>
+                    <th><span class="glyphicon glyphicon-barcode" aria-hidden="true"></span>交易量</th>
+                    <th><span class="glyphicon glyphicon-time" aria-hidden="true"></span>响应时长(ms)</th>
+                    <th><span class="glyphicon glyphicon-send" aria-hidden="true"></span>流量</th>
+                    <th><span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span>响应率(%)</th>
+                    <th><span class="glyphicon glyphicon-alert" aria-hidden="true"></span>告警</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="record in recordList">
+                <tr ng-repeat="record in recordList" ng-click="directToStatisticSearch(record)">
                     <td>{{record.srcip}}</td>
                     <td>{{record.dstip}}</td>
                     <td>{{record.count}}</td>
                     <td>{{record.avgDuration}}</td>
                     <td>{{record.allflow}}</td>
                     <td>{{record.scount}}</td>
-                    <td>{{record.warnCount}}</td>
+                    <td>{{record.warnCount||0}}</td>
                 </tr>
             </tbody>
         </table>

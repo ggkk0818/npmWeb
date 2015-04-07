@@ -4,8 +4,31 @@
 .navbar {
    margin-bottom: 0px;
 }
-
-.index_topology .topology_table table{height: 100px !important;}
-.index_topology .topology_table{height: auto !important; width: 20% !important;}
-
-.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td{vertical-align: middle;}
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+    vertical-align: middle;
+}
+/*图标-响应时间*/
+.glyphicon.glyphicon-time{
+    color:#186dee;
+}
+/*图标-交易笔数*/
+.glyphicon.glyphicon-barcode{
+    color: #ffb300;
+}
+/*图标-告警*/
+.glyphicon.glyphicon-alert{
+    color: #d9442f;
+}
+/*图标-响应率*/
+.glyphicon.glyphicon-equalizer{
+    color: #00834a;
+}
+/*图标-流量*/
+.glyphicon.glyphicon-send{
+    color: #01b703;
+}

@@ -1,5 +1,5 @@
 ﻿.statisticSearch_table{
-    table-layout:fixed; 
+    /*table-layout:fixed;*/ 
     border-top:1px solid #DDD;
     border-bottom:1px solid #DDD;
 }
@@ -11,4 +11,7 @@
 .statisticSearch_table thead tr .glyphicon{
     font-size: 14px; 
     margin-right:5px;
+}
+.statisticSearch_table tbody tr td{
+    word-break:break-all;
 }

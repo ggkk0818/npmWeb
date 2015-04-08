@@ -100,7 +100,7 @@
             if ($scope.srcIp) {
                 params.srcip = $scope.srcIp;
             }
-            if ($scope.keyword) {
+            if ($scope.dstIp) {
                 params.destip = $scope.dstIp;
             }
             if ($scope.startTime) {

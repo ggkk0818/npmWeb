@@ -137,18 +137,20 @@
                     <th>交易关键字</th>
                     <th>请求时间</th>
                     <th>响应时间</th>
-                    <th><span class="glyphicon glyphicon-time" aria-hidden="true"></span>响应时长</th>
+                    <th><span class="glyphicon glyphicon-time" aria-hidden="true"></span>响应时长(ms)</th>
                     <th>源IP</th>
                     <th>目的IP</th>
                     <th>报文类型</th>
                     <th>响应码</th>
                     <th>是否响应</th>
+                    <th>是否准时</th>
+                    <th>是否成功</th>
                     <th><span class="glyphicon glyphicon-send" aria-hidden="true"></span>流量</th>
                     <th>详情</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-class="{'danger':!record.is_complete}" ng-repeat-start="record in recordList">
+                <tr ng-class="{'danger':!record.status[2]}" ng-repeat-start="record in recordList">
                     <td>{{record.aggregate_key}}</td>
                     <td>{{record.time1}}</td>
                     <td>{{record.time2}}</td>
@@ -157,14 +159,16 @@
                     <td>{{record.dest_ip}}</td>
                     <td>{{record.mesg_type_code}}</td>
                     <td>{{record.response_code}}</td>
-                    <td>{{record.is_complete?"是":"否"}}</td>
+                    <td>{{record.status[0]?"是":"否"}}</td>
+                    <td>{{record.status[1]?"是":"否"}}</td>
+                    <td>{{record.status[2]?"是":"否"}}</td>
                     <td>{{record.flow}}</td>
                     <td>
                         <a class="btn btn-default" href="javascript:void(0);" ng-click="record.showDetail=!record.showDetail" ng-class="{'active':record.showDetail,'disabled':!record.text}">详情</a>
                     </td>
                 </tr>
                 <tr ng-repeat-end ng-show="record.showDetail" style="background-color:#F1F8FA; border-top:1px solid #bcbcbc; border-bottom:1px solid #bcbcbc; ">
-                    <td colspan="11">{{record.text||"暂无详情"}}</td>
+                    <td colspan="13">{{record.text||"暂无详情"}}</td>
                 </tr>
             </tbody>
         </table>
@@ -175,7 +179,7 @@
                     <th>交易关键字</th>
                     <th>开始时间</th>
                     <th>结束时间</th>
-                    <th><span class="glyphicon glyphicon-time" aria-hidden="true"></span>响应时长</th>
+                    <th><span class="glyphicon glyphicon-time" aria-hidden="true"></span>响应时长(ms)</th>
                     <th>源IP</th>
                     <th>目的IP</th>
                     <th>源设备</th>
@@ -186,11 +190,13 @@
                     <th>响应码</th>
                     <th>响应内容</th>
                     <th>是否响应</th>
+                    <th>是否准时</th>
+                    <th>是否成功</th>
                     <th><span class="glyphicon glyphicon-send" aria-hidden="true"></span>流量</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-class="{'danger':!record.is_complete}" ng-repeat="record in recordList">
+                <tr ng-class="{'danger':!record.status[2]}" ng-repeat="record in recordList">
                     <td>{{record.aggregate_key}}</td>
                     <td>{{record.starttime}}</td>
                     <td>{{record.endtime}}</td>
@@ -204,7 +210,9 @@
                     <td>{{record.request_uri}}</td>
                     <td>{{record.response_code}}</td>
                     <td>{{record.content_type}}</td>
-                    <td>{{record.is_complete?"是":"否"}}</td>
+                    <td>{{record.status[0]?"是":"否"}}</td>
+                    <td>{{record.status[1]?"是":"否"}}</td>
+                    <td>{{record.status[2]?"是":"否"}}</td>
                     <td>{{record.flow}}</td>
                 </tr>
             </tbody>
@@ -216,7 +224,7 @@
                     <th>交易关键字</th>
                     <th>开始时间</th>
                     <th>结束时间</th>
-                    <th><span class="glyphicon glyphicon-time" aria-hidden="true"></span>响应时长</th>
+                    <th><span class="glyphicon glyphicon-time" aria-hidden="true"></span>响应时长(ms)</th>
                     <th>源IP</th>
                     <th>目的IP</th>
                     <th>源设备</th>
@@ -228,11 +236,13 @@
                     <th>错误码</th>
                     <th>响应报文类型</th>
                     <th>是否响应</th>
+                    <th>是否准时</th>
+                    <th>是否成功</th>
                     <th><span class="glyphicon glyphicon-send" aria-hidden="true"></span>流量</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-class="{'danger':!record.is_complete}" ng-repeat="record in recordList">
+                <tr ng-class="{'danger':!record.status[2]}" ng-repeat="record in recordList">
                     <td>{{record.aggregate_key}}</td>
                     <td>{{record.starttime}}</td>
                     <td>{{record.endtime}}</td>
@@ -247,7 +257,9 @@
                     <td>{{record.mysql_affected_rows}}</td>
                     <td>{{record.mysql_error_code}}</td>
                     <td>{{record.mysql_resp_type}}</td>
-                    <td>{{record.is_complete?"是":"否"}}</td>
+                    <td>{{record.status[0]?"是":"否"}}</td>
+                    <td>{{record.status[1]?"是":"否"}}</td>
+                    <td>{{record.status[2]?"是":"否"}}</td>
                     <td>{{record.flow}}</td>
                 </tr>
             </tbody>

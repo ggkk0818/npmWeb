@@ -107,7 +107,7 @@
             if ($scope.srcIp) {
                 params.srcip = $scope.srcIp;
             }
-            if ($scope.keyword) {
+            if ($scope.dstIp) {
                 params.destip = $scope.dstIp;
             }
             if ($scope.duration) {
@@ -151,6 +151,13 @@
                             record.endtime = new Date(record.endtime).Format("yyyy-MM-dd hh:mm:ss");
                         if (typeof record.flow === "number")
                             record.flow = numeral(record.flow).format("0.00b");
+                        if (typeof record.status === "number") {
+                            record.status = [
+                                (record.status & 4) == 0,
+                                (record.status & 2) == 0,
+                                (record.status & 1) == 0
+                            ];
+                        }
                         uidList.push(record.aggregate_key);
                     }
                     //查询ES信息

@@ -1,5 +1,5 @@
 ﻿.deviceStatistic_table{
-    table-layout:fixed; 
+    /*table-layout:fixed;*/ 
     border-top:1px solid #DDD;
     border-bottom:1px solid #DDD;
 }
@@ -14,4 +14,7 @@
 }
 .deviceStatistic_table tbody tr{
     cursor:pointer;
+}
+.deviceStatistic_table tbody tr td{
+    word-break:break-all;
 }

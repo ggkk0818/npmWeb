@@ -126,8 +126,8 @@
             warnTimeLineTimer = $interval(warnTimeLineTimerTick, 1000);
             warnTimeLineAnimate();
             //拓扑图查询
-            //$scope.topology_query();
-            //topologyTimer = $interval($scope.topology_query, 60000);
+            $scope.topology_query();
+            topologyTimer = $interval($scope.topology_query, 60000);
         };
         //告警时间线增加块
         var warnTimeLineTimer = null;
@@ -186,15 +186,22 @@
         //查询拓扑图数据
         var topologyTimer = null;
         $scope.topology_query = function () {
-            $scope.topology_startTime = "2015-04-01 17:06:00";
-            $scope.topology_endTime = "2015-04-02 17:06:00";
-            statisticService.showTopology({ type: "8583", starttime: $scope.topology_startTime, endtime: $scope.topology_endTime }, function (data) {
+            $scope.topology_startTime = "2015-03-31 12:00:00";
+            $scope.topology_endTime = "2015-03-31 13:00:00";
+            var sortFunc = function (a, b) {
+                var val1 = a.count || 0;
+                var val2 = b.count || 0;
+                return val1 > val2 ? -1 : val1 < val2 ? 1 : 0;
+            };
+            var startTime8583 = "2015-02-09 11:00:00";
+            var endTime8583 = "2015-02-09 12:00:00";
+            statisticService.showTopology({ type: "8583", starttime: startTime8583, endtime: endTime8583 }, function (data) {
                 if (data && data.state == "200") {
                     if (data.data && data.data.length) {
                         var row = data.data[0];
-                        $scope.topology_8583_count = row.count;
-                        $scope.topology_8583_duration = row.avgDuration;
-                        $scope.topology_8583_successRatio = row.scount * 100 / row.count;
+                        $scope.topology_8583_count = row.count || 0;
+                        $scope.topology_8583_duration = row.maxDuration || 0;
+                        $scope.topology_8583_successRatio = row.count > 0 ? Math.round(row.scount * 10000 / row.count) / 100 : 0;
                         if (typeof row.allflow === "number") {
                             var flow = numeral(row.allflow).format("0b");
                             $scope.topology_8583_flow = /\d+/.exec(flow)[0];
@@ -203,8 +210,11 @@
                     }
                 }
             });
-            statisticService.showDevice({ type: "8583", starttime: $scope.topology_startTime, endtime: $scope.topology_endTime }, function (data) {
+            statisticService.showDevice({ type: "8583", starttime: startTime8583, endtime: endTime8583 }, function (data) {
                 if (data && data.state == "200") {
+                    data.data = data.data.sort(sortFunc);
+                    if (data.data.length > 5)
+                        data.data.splice(5);
                     $scope.topology_8583_deviceList = data.data;
                     for (var i = 0; i < $scope.topology_8583_deviceList.length; i++) {
                         var record = $scope.topology_8583_deviceList[i];
@@ -213,7 +223,7 @@
                         }
                     }
                     //查询告警信息
-                    warningService.showDevice({ type: "iso8583", startWarnTime: $scope.topology_startTime, endWarnTime: $scope.topology_endTime, start: 0, limit: 0 }, function (data2) {
+                    warningService.showDevice({ type: "iso8583", startWarnTime: startTime8583, endWarnTime: endTime8583, start: 0, limit: 0 }, function (data2) {
                         if (data2 && data2.data) {
                             for (var i = 0; i < data2.data.length; i++) {
                                 var warnRecord = data2.data[i];
@@ -228,67 +238,69 @@
                     });
                 }
             });
-            warningService.list({ type: "iso8583", startWarnTime: $scope.topology_startTime, endWarnTime: $scope.topology_endTime, start: 0, limit: 1 }, function (data) {
+            warningService.list({ type: "iso8583", startWarnTime: startTime8583, endWarnTime: endTime8583, start: 0, limit: 1 }, function (data) {
                 if (data && data.count) {
                     $scope.topology_8583_warnCount = data.count;
                 }
                 else
                     $scope.topology_8583_warnCount = 0;
             });
-            statisticService.showTopology({ type: "20022", starttime: $scope.topology_startTime, endtime: $scope.topology_endTime }, function (data) {
-                if (data && data.state == "200") {
-                    if (data.data && data.data.length) {
-                        var row = data.data[0];
-                        $scope.topology_20022_count = row.count;
-                        $scope.topology_20022_duration = row.avgDuration;
-                        $scope.topology_20022_successRatio = row.scount * 100 / row.count;
-                        if (typeof row.allflow === "number") {
-                            var flow = numeral(row.allflow).format("0b");
-                            $scope.topology_20022_flow = /\d+/.exec(flow)[0];
-                            $scope.topology_20022_flowSuffix = /[a-zA-Z]+/.exec(flow)[0];
-                        }
-                    }
-                }
-            });
-            statisticService.showDevice({ type: "20022", starttime: $scope.topology_startTime, endtime: $scope.topology_endTime }, function (data) {
-                if (data && data.state == "200") {
-                    $scope.topology_20022_deviceList = data.data;
-                    for (var i = 0; i < $scope.topology_20022_deviceList.length; i++) {
-                        var record = $scope.topology_20022_deviceList[i];
-                        if (typeof record.allflow === "number") {
-                            record.allflow = numeral(record.allflow).format("0b");
-                        }
-                    }
-                    //查询告警信息
-                    warningService.showDevice({ type: "iso20022", startWarnTime: $scope.topology_startTime, endWarnTime: $scope.topology_endTime, start: 0, limit: 0 }, function (data2) {
-                        if (data2 && data2.data) {
-                            for (var i = 0; i < data2.data.length; i++) {
-                                var warnRecord = data2.data[i];
-                                for (var j = 0; j < $scope.topology_20022_deviceList.length; j++) {
-                                    var record = $scope.topology_20022_deviceList[j];
-                                    if (warnRecord.srcip == record.srcip && warnRecord.dstip == record.dstip) {
-                                        record.warnCount = warnRecord.count;
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-            warningService.list({ type: "iso20022", startWarnTime: $scope.topology_startTime, endWarnTime: $scope.topology_endTime, start: 0, limit: 1 }, function (data) {
-                if (data && data.count) {
-                    $scope.topology_20022_warnCount = data.count;
-                }
-                else
-                    $scope.topology_20022_warnCount = 0;
-            });
+            //statisticService.showTopology({ type: "20022", starttime: $scope.topology_startTime, endtime: $scope.topology_endTime }, function (data) {
+            //    if (data && data.state == "200") {
+            //        if (data.data && data.data.length) {
+            //            var row = data.data[0];
+            //            $scope.topology_20022_count = row.count || 0;
+            //            $scope.topology_20022_duration = row.maxDuration || 0;
+            //            $scope.topology_20022_successRatio = row.count > 0 ? Math.round(row.scount * 10000 / row.count) / 100 : 0;
+            //            if (typeof row.allflow === "number") {
+            //                var flow = numeral(row.allflow).format("0b");
+            //                $scope.topology_20022_flow = /\d+/.exec(flow)[0];
+            //                $scope.topology_20022_flowSuffix = /[a-zA-Z]+/.exec(flow)[0];
+            //            }
+            //        }
+            //    }
+            //});
+            //statisticService.showDevice({ type: "20022", starttime: $scope.topology_startTime, endtime: $scope.topology_endTime }, function (data) {
+            //    if (data && data.state == "200") {
+            //        $scope.topology_20022_deviceList = data.data;
+            //        for (var i = 0; i < $scope.topology_20022_deviceList.length; i++) {
+            //            var record = $scope.topology_20022_deviceList[i];
+            //            if (typeof record.allflow === "number") {
+            //                record.allflow = numeral(record.allflow).format("0b");
+            //            }
+            //        }
+            //        //查询告警信息
+            //        warningService.showDevice({ type: "iso20022", startWarnTime: $scope.topology_startTime, endWarnTime: $scope.topology_endTime, start: 0, limit: 0 }, function (data2) {
+            //            if (data2 && data2.data) {
+            //                for (var i = 0; i < data2.data.length; i++) {
+            //                    var warnRecord = data2.data[i];
+            //                    for (var j = 0; j < $scope.topology_20022_deviceList.length; j++) {
+            //                        var record = $scope.topology_20022_deviceList[j];
+            //                        if (warnRecord.srcip == record.srcip && warnRecord.dstip == record.dstip) {
+            //                            record.warnCount = warnRecord.count;
+            //                        }
+            //                    }
+            //                }
+            //            }
+            //        });
+            //    }
+            //});
+            //warningService.list({ type: "iso20022", startWarnTime: $scope.topology_startTime, endWarnTime: $scope.topology_endTime, start: 0, limit: 1 }, function (data) {
+            //    if (data && data.count) {
+            //        $scope.topology_20022_warnCount = data.count;
+            //    }
+            //    else
+            //        $scope.topology_20022_warnCount = 0;
+            //});
+            $scope.topology_startTime = "2015-03-30 18:00:00";
+            $scope.topology_endTime = "2015-03-30 19:00:00";
             statisticService.showTopology({ type: "http", starttime: $scope.topology_startTime, endtime: $scope.topology_endTime }, function (data) {
                 if (data && data.state == "200") {
                     if (data.data && data.data.length) {
                         var row = data.data[0];
-                        $scope.topology_http_count = row.count;
-                        $scope.topology_http_duration = row.avgDuration;
-                        $scope.topology_http_successRatio = row.scount * 100 / row.count;
+                        $scope.topology_http_count = row.count || 0;
+                        $scope.topology_http_duration = row.maxDuration || 0;
+                        $scope.topology_http_successRatio = row.count > 0 ? Math.round(row.scount * 10000 / row.count) / 100 : 0;
                         if (typeof row.allflow === "number") {
                             var flow = numeral(row.allflow).format("0b");
                             $scope.topology_http_flow = /\d+/.exec(flow)[0];
@@ -299,6 +311,9 @@
             });
             statisticService.showDevice({ type: "http", starttime: $scope.topology_startTime, endtime: $scope.topology_endTime }, function (data) {
                 if (data && data.state == "200") {
+                    data.data = data.data.sort(sortFunc);
+                    if(data.data.length > 5)
+                    data.data.splice(5);
                     $scope.topology_http_deviceList = data.data;
                     for (var i = 0; i < $scope.topology_http_deviceList.length; i++) {
                         var record = $scope.topology_http_deviceList[i];
@@ -329,53 +344,55 @@
                 else
                     $scope.topology_http_warnCount = 0;
             });
-            statisticService.showTopology({ type: "mysql", starttime: $scope.topology_startTime, endtime: $scope.topology_endTime }, function (data) {
-                if (data && data.state == "200") {
-                    if (data.data && data.data.length) {
-                        var row = data.data[0];
-                        $scope.topology_mysql_count = row.count;
-                        $scope.topology_mysql_duration = row.avgDuration;
-                        $scope.topology_mysql_successRatio = row.scount * 100 / row.count;
-                        if (typeof row.allflow === "number") {
-                            var flow = numeral(row.allflow).format("0b");
-                            $scope.topology_mysql_flow = /\d+/.exec(flow)[0];
-                            $scope.topology_mysql_flowSuffix = /[a-zA-Z]+/.exec(flow)[0];
-                        }
-                    }
-                }
-            });
-            statisticService.showDevice({ type: "mysql", starttime: $scope.topology_startTime, endtime: $scope.topology_endTime }, function (data) {
-                if (data && data.state == "200") {
-                    $scope.topology_mysql_deviceList = data.data;
-                    for (var i = 0; i < $scope.topology_mysql_deviceList.length; i++) {
-                        var record = $scope.topology_mysql_deviceList[i];
-                        if (typeof record.allflow === "number") {
-                            record.allflow = numeral(record.allflow).format("0b");
-                        }
-                    }
-                    //查询告警信息
-                    warningService.showDevice({ type: "mysql", startWarnTime: $scope.topology_startTime, endWarnTime: $scope.topology_endTime, start: 0, limit: 0 }, function (data2) {
-                        if (data2 && data2.data) {
-                            for (var i = 0; i < data2.data.length; i++) {
-                                var warnRecord = data2.data[i];
-                                for (var j = 0; j < $scope.topology_mysql_deviceList.length; j++) {
-                                    var record = $scope.topology_mysql_deviceList[j];
-                                    if (warnRecord.srcip == record.srcip && warnRecord.dstip == record.dstip) {
-                                        record.warnCount = warnRecord.count;
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-            warningService.list({ type: "mysql", startWarnTime: $scope.topology_startTime, endWarnTime: $scope.topology_endTime, start: 0, limit: 1 }, function (data) {
-                if (data && data.count) {
-                    $scope.topology_mysql_warnCount = data.count;
-                }
-                else
-                    $scope.topology_mysql_warnCount = 0;
-            });
+            //$scope.topology_startTime = "2015-03-31 12:00:00";
+            //$scope.topology_endTime = "2015-03-31 13:00:00";
+            //statisticService.showTopology({ type: "mysql", starttime: $scope.topology_startTime, endtime: $scope.topology_endTime }, function (data) {
+            //    if (data && data.state == "200") {
+            //        if (data.data && data.data.length) {
+            //            var row = data.data[0];
+            //            $scope.topology_mysql_count = row.count || 0;
+            //            $scope.topology_mysql_duration = row.maxDuration || 0;
+            //            $scope.topology_mysql_successRatio = row.count > 0 ? Math.round(row.scount * 10000 / row.count) / 100 : 0;
+            //            if (typeof row.allflow === "number") {
+            //                var flow = numeral(row.allflow).format("0b");
+            //                $scope.topology_mysql_flow = /\d+/.exec(flow)[0];
+            //                $scope.topology_mysql_flowSuffix = /[a-zA-Z]+/.exec(flow)[0];
+            //            }
+            //        }
+            //    }
+            //});
+            //statisticService.showDevice({ type: "mysql", starttime: $scope.topology_startTime, endtime: $scope.topology_endTime }, function (data) {
+            //    if (data && data.state == "200") {
+            //        $scope.topology_mysql_deviceList = data.data;
+            //        for (var i = 0; i < $scope.topology_mysql_deviceList.length; i++) {
+            //            var record = $scope.topology_mysql_deviceList[i];
+            //            if (typeof record.allflow === "number") {
+            //                record.allflow = numeral(record.allflow).format("0b");
+            //            }
+            //        }
+            //        //查询告警信息
+            //        warningService.showDevice({ type: "mysql", startWarnTime: $scope.topology_startTime, endWarnTime: $scope.topology_endTime, start: 0, limit: 0 }, function (data2) {
+            //            if (data2 && data2.data) {
+            //                for (var i = 0; i < data2.data.length; i++) {
+            //                    var warnRecord = data2.data[i];
+            //                    for (var j = 0; j < $scope.topology_mysql_deviceList.length; j++) {
+            //                        var record = $scope.topology_mysql_deviceList[j];
+            //                        if (warnRecord.srcip == record.srcip && warnRecord.dstip == record.dstip) {
+            //                            record.warnCount = warnRecord.count;
+            //                        }
+            //                    }
+            //                }
+            //            }
+            //        });
+            //    }
+            //});
+            //warningService.list({ type: "mysql", startWarnTime: $scope.topology_startTime, endWarnTime: $scope.topology_endTime, start: 0, limit: 1 }, function (data) {
+            //    if (data && data.count) {
+            //        $scope.topology_mysql_warnCount = data.count;
+            //    }
+            //    else
+            //        $scope.topology_mysql_warnCount = 0;
+            //});
         };
         //窗口调整时更新各Panel高度
         var windowResize = function () {

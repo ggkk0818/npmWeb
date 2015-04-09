@@ -42,6 +42,7 @@
                     <th><span class="glyphicon glyphicon-time" aria-hidden="true"></span>响应时长(ms)</th>
                     <th><span class="glyphicon glyphicon-send" aria-hidden="true"></span>流量</th>
                     <th><span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span>响应率(%)</th>
+                    <th><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>成功率(%)</th>
                     <th><span class="glyphicon glyphicon-alert" aria-hidden="true"></span>告警</th>
                 </tr>
             </thead>
@@ -53,6 +54,7 @@
                     <td>{{record.avgDuration}}</td>
                     <td>{{record.allflow}}</td>
                     <td>{{record.scount}}</td>
+                    <td>{{record.rcount}}</td>
                     <td>{{record.warnCount||0}}</td>
                 </tr>
             </tbody>

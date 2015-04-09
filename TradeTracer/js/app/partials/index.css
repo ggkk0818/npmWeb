@@ -135,6 +135,7 @@
 .index_topology .legend .glyphicon{
     font-size: 18px; 
     vertical-align: middle;
+    margin:0 5px 0 10px;
 }
 .index_topology .topology_table{
     position:absolute;
@@ -173,8 +174,10 @@
     background-color: #fff; 
 }
 .index_topology .topology_circle h3{
+    position:relative;
+    top:50%;
     display:block;
-    margin:16.8px 0 0 0;
+    margin:-11px 0 0 0;
     padding:0;
     font-size:20px;
     text-align:center;

@@ -31,11 +31,12 @@
             <!--首页拓扑图-->
             <div class="panel-body index_topology">
                 <div class="legend">
-                    <span class="glyphicon glyphicon-time" aria-hidden="true"></span>&nbsp;响应时间(ms)&nbsp;&nbsp;&nbsp;
-                    <span class="glyphicon glyphicon-barcode" aria-hidden="true"></span>&nbsp;交易笔数&nbsp;&nbsp;&nbsp;
-                    <span class="glyphicon glyphicon-alert" aria-hidden="true"></span>&nbsp;告警条数&nbsp;&nbsp;&nbsp;
-                    <span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span>&nbsp;响应率(%)&nbsp;&nbsp;&nbsp;
-                    <span class="glyphicon glyphicon-send" aria-hidden="true"></span>&nbsp;流量
+                    <span class="glyphicon glyphicon-time" aria-hidden="true"></span>响应时间(ms)
+                    <span class="glyphicon glyphicon-barcode" aria-hidden="true"></span>交易笔数
+                    <span class="glyphicon glyphicon-alert" aria-hidden="true"></span>告警条数
+                    <span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span>响应率(%)
+                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>成功率
+                    <span class="glyphicon glyphicon-send" aria-hidden="true"></span>流量
                 </div>
                 <div style="width:95%; margin:auto;position:relative;">
                     <img src="img/server_1.jpg" style="width:100%;" />
@@ -82,7 +83,7 @@
                                     <td>
                                         <div class="val">
                                             <span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span>
-                                            <h4 data-number-animate data-numberanimate-value="{{topology_8583_successRatio}}">0</h4>
+                                            <h4 data-number-animate data-numberanimate-value="{{topology_8583_responseRatio}}">0</h4>
                                         </div>
                                     </td>
                                     <td>
@@ -90,6 +91,16 @@
                                             <span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
                                             <h4 data-number-animate data-numberanimate-value="{{topology_8583_warnCount}}">0</h4>
                                         </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="val">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                            <h4 data-number-animate data-numberanimate-value="{{topology_8583_successRatio}}">0</h4>
+                                        </div>
+                                    </td>
+                                    <td>
                                     </td>
                                 </tr>
                             </table>
@@ -115,7 +126,7 @@
                                     <td>
                                         <div class="val">
                                             <span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span>
-                                            <h4 data-number-animate data-numberanimate-value="{{topology_20022_successRatio}}">0</h4>
+                                            <h4 data-number-animate data-numberanimate-value="{{topology_20022_responseRatio}}">0</h4>
                                         </div>
                                     </td>
                                     <td>
@@ -124,6 +135,15 @@
                                             <h4 data-number-animate data-numberanimate-value="{{topology_20022_warnCount}}">0</h4>
                                         </div>
                                     </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="val">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                            <h4 data-number-animate data-numberanimate-value="{{topology_20022_successRatio}}">0</h4>
+                                        </div>
+                                    </td>
+                                    <td></td>
                                 </tr>
                             </table>
                         </div>
@@ -148,7 +168,7 @@
                                     <td>
                                         <div class="val">
                                             <span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span>
-                                            <h4 data-number-animate data-numberanimate-value="{{topology_http_successRatio}}">0</h4>
+                                            <h4 data-number-animate data-numberanimate-value="{{topology_http_responseRatio}}">0</h4>
                                         </div>
                                     </td>
                                     <td>
@@ -157,6 +177,15 @@
                                             <h4 data-number-animate data-numberanimate-value="{{topology_http_warnCount}}">0</h4>
                                         </div>
                                     </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="val">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                            <h4 data-number-animate data-numberanimate-value="{{topology_http_successRatio}}">0</h4>
+                                        </div>
+                                    </td>
+                                    <td></td>
                                 </tr>
                             </table>
                         </div>

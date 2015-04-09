@@ -107,6 +107,8 @@
                         var record = $scope.recordList[i];
                         if (typeof record.count === "number" && typeof record.scount === "number")
                             record.scount = Math.round(record.scount * 10000 / record.count) / 100;
+                        if (typeof record.count === "number" && typeof record.rcount === "number")
+                            record.rcount = Math.round(record.rcount * 10000 / record.count) / 100;
                         if (typeof record.allflow === "number")
                             record.allflow = numeral(record.allflow).format("0.00b");
                     }

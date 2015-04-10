@@ -134,7 +134,7 @@
         <table class="table table-hover statisticSearch_table" ng-if="searchType.id=='8583'||searchType.id=='20022'">
             <thead>
                 <tr>
-                    <th>交易关键字</th>
+                    <!--<th>交易关键字</th>-->
                     <th>请求时间</th>
                     <th>响应时间</th>
                     <th><span class="glyphicon glyphicon-time" aria-hidden="true"></span>响应时长(ms)</th>
@@ -151,7 +151,7 @@
             </thead>
             <tbody>
                 <tr ng-class="{'danger':!record.status[2]}" ng-repeat-start="record in recordList">
-                    <td>{{record.aggregate_key}}</td>
+                    <!--<td>{{record.aggregate_key}}</td>-->
                     <td>{{record.time1}}</td>
                     <td>{{record.time2}}</td>
                     <td>{{record.resp_mills1}}</td>
@@ -168,7 +168,7 @@
                     </td>
                 </tr>
                 <tr ng-repeat-end ng-show="record.showDetail" style="background-color:#F1F8FA; border-top:1px solid #bcbcbc; border-bottom:1px solid #bcbcbc; ">
-                    <td colspan="13">{{record.text||"暂无详情"}}</td>
+                    <td colspan="12">{{record.text||"暂无详情"}}</td>
                 </tr>
             </tbody>
         </table>
@@ -176,7 +176,7 @@
         <table class="table table-hover statisticSearch_table" ng-if="searchType.id=='http'">
             <thead>
                 <tr>
-                    <th>交易关键字</th>
+                    <!--<th>交易关键字</th>-->
                     <th>开始时间</th>
                     <th>结束时间</th>
                     <th><span class="glyphicon glyphicon-time" aria-hidden="true"></span>响应时长(ms)</th>
@@ -197,7 +197,7 @@
             </thead>
             <tbody>
                 <tr ng-class="{'danger':!record.status[2]}" ng-repeat="record in recordList">
-                    <td>{{record.aggregate_key}}</td>
+                    <!--<td>{{record.aggregate_key}}</td>-->
                     <td>{{record.starttime}}</td>
                     <td>{{record.endtime}}</td>
                     <td>{{record.resp_mills}}</td>
@@ -221,7 +221,7 @@
         <table class="table table-hover statisticSearch_table" ng-if="searchType.id=='mysql'">
             <thead>
                 <tr>
-                    <th>交易关键字</th>
+                    <!--<th>交易关键字</th>-->
                     <th>开始时间</th>
                     <th>结束时间</th>
                     <th><span class="glyphicon glyphicon-time" aria-hidden="true"></span>响应时长(ms)</th>
@@ -243,7 +243,7 @@
             </thead>
             <tbody>
                 <tr ng-class="{'danger':!record.status[2]}" ng-repeat="record in recordList">
-                    <td>{{record.aggregate_key}}</td>
+                    <!--<td>{{record.aggregate_key}}</td>-->
                     <td>{{record.starttime}}</td>
                     <td>{{record.endtime}}</td>
                     <td>{{record.resp_mills}}</td>

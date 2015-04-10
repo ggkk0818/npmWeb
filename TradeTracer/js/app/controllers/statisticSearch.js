@@ -158,6 +158,10 @@
                                 (record.status & 1) == 0
                             ];
                         }
+                        if (typeof record.source_device === "string" && record.source_device.indexOf('_') > -1)
+                            record.source_device = record.source_device.substring(0, record.source_device.indexOf('_'));
+                        if (typeof record.dest_device === "string" && record.dest_device.indexOf('_') > -1)
+                            record.dest_device = record.dest_device.substring(0, record.dest_device.indexOf('_'));
                         uidList.push(record.aggregate_key);
                     }
                     //查询ES信息

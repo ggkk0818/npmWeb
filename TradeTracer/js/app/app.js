@@ -31,7 +31,8 @@
     'date-format',
     'numeral',
     'numeral-cn',
-    'json-format'
+    'json-format',
+    'echarts'
 ], function (angular, $, _, appLevelRequire) {
     "use strict";
     var app = angular.module('app', []),

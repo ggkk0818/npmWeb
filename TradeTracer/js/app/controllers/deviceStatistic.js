@@ -176,6 +176,29 @@
                 $scope.search();
             }
         };
+        //canvas
+        $scope.draw = function (list) {
+            var sys = arbor.ParticleSystem(1000, 600, 0.5) // create the system with sensible repulsion/stiffness/friction
+            sys.parameters({ gravity: true }) // use center-gravity to make the graph settle nicely (ymmv)
+            sys.renderer = arborService.getRender()("#deviceStatistic_topology") // our newly created renderer will have its .init() method called shortly by sys...
+
+            if (list && list.length) {
+                var nodes = {}, edges = {};
+                for (var i = 0; i < list.length; i++) {
+                    var record = list[i];
+                    if (!nodes[record.srcip]) {
+                        nodes[record.srcip] = { borders: Math.round(Math.random() * 10), length: record.allflow, label: record.srcip };
+                        edges[record.srcip] = { };
+                    }
+                    else {
+                        nodes[record.srcip].length += record.allflow;
+                    }
+                    edges[record.srcip][record.dstip] = { border: record.allflow };
+                    //sys.addEdge(record.srcip, record.dstip);
+                }
+                sys.merge({ nodes: nodes, edges: edges });
+            }
+        };
         //获取url查询参数
         $scope.setSearchParams();
         $scope.doQuery();

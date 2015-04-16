@@ -38,7 +38,8 @@ require.config({
         highcharts: '../vendor/highcharts/highcharts.src',
         'highcharts-nodata': '../vendor/highcharts/modules/no-data-to-display',
         'date-format': '../vendor/Date.Format',
-        'json-format': '../vendor/JSONFormat'
+        'json-format': '../vendor/JSONFormat',
+        'echarts': '../vendor/echarts/echarts-all'
     },
     shim: {
         angular: {
@@ -75,7 +76,7 @@ require.config({
         'highcharts-nodata': ['highcharts'],
         'bootstrap-datetimepicker': ['bootstrap', 'jquery'],
         'bootstrap-datetimepicker-zhcn': ['bootstrap-datetimepicker'],
-        'numeral-cn': ['numeral'],
+        'numeral-cn': ['numeral']
     },
     waitSeconds: 60
 });

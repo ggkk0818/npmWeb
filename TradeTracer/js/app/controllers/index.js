@@ -298,8 +298,8 @@
             //    else
             //        $scope.topology_20022_warnCount = 0;
             //});
-            $scope.topology_startTime = "2015-03-30 18:00:00";
-            $scope.topology_endTime = "2015-03-30 19:00:00";
+            $scope.topology_startTime = "2015-04-08 02:00:00";
+            $scope.topology_endTime = "2015-04-08 03:00:00";
             statisticService.showTopology({ type: "http", starttime: $scope.topology_startTime, endtime: $scope.topology_endTime }, function (data) {
                 if (data && data.state == "200") {
                     if (data.data && data.data.length) {

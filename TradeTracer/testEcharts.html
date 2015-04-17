@@ -7,29 +7,93 @@
 </head>
 <body>
     <div id="chart" style="height:400px;"></div>
+    <button id="btn_add">addData</button>
     <script type="text/javascript">
-        var chart = echarts.init(document.getElementById("chart"));
-        chart.setOption({
+        var chart = echarts.init(document.getElementById("chart")),
+            chartData = [],
+            now = new Date();
+        for (var i = 0; i < 100; i++) {
+            chartData.push([
+                new Date(now.getTime() - Math.round((100 - i) * 2000)),
+                (Math.random() * 30).toFixed(2) - 0,
+                (Math.random() * 100).toFixed(2) - 0
+            ]);
+        }
+        var series = {
+            name: '随机数据',
+            type: 'scatter',
+            symbolSize: function (value) {
+                return Math.round(value[2] / 4);
+            },
+            data: chartData
+        };
+        var option = {
+            animation: true,
+            title: {
+                text: '动态数据',
+                subtext: '纯属虚构'
+            },
             tooltip: {
-                show: true
+                trigger: 'axis'
             },
             legend: {
-                data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+                data: ['随机数据']
             },
-            series: [
-                {
-                    "name": "销量",
-                    "type": "pie",
-                    "data": [
-                        { value: 5, name: "衬衫" },
-                        { value: 20, name: "羊毛衫" },
-                        { value: 5, name: "雪纺衫" },
-                        { value: 10, name: "裤子" },
-                        { value: 5, name: "高跟鞋" },
-                        { value: 5, name: "袜子" }
-                    ]
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: true },
+                    dataView: { show: true, readOnly: false },
+                    restore: { show: true },
+                    saveAsImage: { show: true }
                 }
-            ]
+            },
+            xAxis: [
+                {
+                    type: 'time'
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    splitNumber: 5,
+                    scale: true
+                }
+            ],
+            series: [ series ]
+        };
+        chart.setOption(option);
+
+        var addData = function () {
+            // 动态数据接口 addData
+            //chart.addData(
+            //    [
+            //        0,        // 系列索引
+            //        [
+            //            new Date(),
+            //            (Math.random() * 30).toFixed(2) - 0,
+            //            (Math.random() * 100).toFixed(2) - 0
+            //        ], // 新增数据
+            //        false,    // 新增数据是否从队列头部插入
+            //        true,    // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
+            //    ]
+            //);
+            chartData.push([
+                new Date(),
+                '-',
+                '-',
+                //(Math.random() * 30).toFixed(2) - 0,
+                //(Math.random() * 100).toFixed(2) - 0
+            ]);
+            chartData.splice(0, 1);
+            //chart.clear();
+            //chart.setSeries(series, true);
+            chart.setOption(option, true);
+            //chart.refresh();
+        };
+        setInterval(addData, 2000);
+        document.getElementById("btn_add").addEventListener("click", function (e) {
+            addData();
         });
     </script>
 </body>

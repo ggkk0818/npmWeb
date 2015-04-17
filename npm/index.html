@@ -1,0 +1,46 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+    <title ng-bind-template="{{currentPage.name}} | KnowOps">KnowOps</title>
+    <link href="js/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="css/style.css" rel="stylesheet"/>
+    <script src="js/vendor/require/require.js"></script>
+    <script src="js/app/require.config.js"></script>
+    <script>require(['app'], function () { })</script>
+</head>
+<body>
+	<nav class="navbar navbar-default t_nav">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#/">
+					<img src="img/knowopslogo.png" style=" display: inline-block;  height: 50px; margin: -15px 5px 0 0;" />
+				</a>
+			</div>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="#/settings"><span class="glyphicon glyphicon-cog"></span></a></li>
+		        <li class="dropdown">
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">admin <span class="caret"></span></a>
+		          <ul class="dropdown-menu" role="menu">
+		            <li><a href="javascript:void(0);">个人中心</a></li>
+		            <li><a href="javascript:void(0);">退出</a></li>
+		          </ul>
+		        </li>
+		      </ul>
+		</div>
+	</nav>
+	<div class="t_line"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-2 t_leftline">
+                <ul class="nav nav-pills nav-stacked" ng-repeat="nav in sidebarNav">
+                    <li class="t_lihead">{{nav.name}}</li>
+                    <li ng-repeat="subNav in nav.children" ng-class="{'active':$parent.$parent.currentPage.href==subNav.href}"><a ng-href="{{subNav.href}}"><span class="glyphicon" ng-class="subNav.icon"></span>{{subNav.name}}</a></li>
+                </ul>
+			</div>
+            <div class="col-md-10" ng-view>
+            </div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+@charset "utf-8";
+body{font-family: Arial,"微软雅黑";}
+/* 设置滚动条的样式 */
+::-webkit-scrollbar {
+    width: 12px;
+}
+::-moz-scrollbar {
+    width: 12px;
+}
+/* 滚动槽 */
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px #b2d4e8;
+	background:#b2d4e8;
+	border-radius: 10px;
+}
+::-moz-scrollbar-track {
+    -moz-box-shadow: inset 0 0 6px #b2d4e8;
+	background:#b2d4e8;
+	border-radius: 10px;
+}
+
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background:#398cc3;
+}
+::-moz-scrollbar-thumb {
+    border-radius: 10px;
+    background:#398cc3;
+}
+/*********首页开始**********************/
+	.t_line{width: 100%;height: 2px;  background: -webkit-gradient(linear,10% 10%,100% 100%,color-stop(0.14,#2d85ca ),color-stop(0.5,#8aca8c),color-stop(1,#2ec7c9)); margin-bottom: 30px;}
+	.t_nav{margin-bottom: 0px;}
+	.t_leftline{border-right:1px solid #afcde7;}
+	.t_leftline ul li a span{margin-right: 10px;}
+	.t_leftline ul{margin-bottom: 20px;}
+	.t_lihead{border-bottom: 1px solid #cce0f5; padding-bottom: 10px; padding-left: 15px; color: #828282;}
+	.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover{background-color: #2d85ca;}
+	.t_data{position:absolute;width:29%; height:200px; bottom:0px; right:20px; padding-top: 20px;}
+	.t_data p{padding: 10px;}
+	.t_relative{position:relative;}
+	.httpname{border-bottom: 1px solid #4488bb;}
+
+/*********首页结束**********************/
+
+/*********设置开始**********************/
+.t_set{ padding: 30px;}
+.set_tit h4{  color: #1b809e;}
+.set_tit a{margin-top: 8px;}
+.t_set table th{}
+#yanshi,#yinlian,#renhang{padding-top: 20px;}
+/*********设置结束**********************/
+
+

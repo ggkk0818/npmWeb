@@ -9,28 +9,28 @@
             href: null,
             children: [
                 { name: "实时监控", href: "#/", icon: "glyphicon-eye-open" },
-                { name: "总体拓扑", href: "#/", icon: "glyphicon-equalizer" },
+                { name: "总体拓扑", href: "#/topology", icon: "glyphicon-equalizer" },
             ]
         });
         sidebarNav.push({
             name: "按协议查看",
             href: null,
             children: [
-                { name: "HTTP", href: "#/", icon: "glyphicon-screenshot" },
-                { name: "8583", href: "#/", icon: "glyphicon-th" },
-                { name: "20022", href: "#/", icon: "glyphicon-list-alt" },
-                { name: "SOAP-XML", href: "#/", icon: "glyphicon-globe" },
-                { name: "TUXEDO", href: "#/", icon: "glyphicon-road" },
-                { name: "MQ", href: "#/", icon: "glyphicon-tasks" },
-                { name: "DB2", href: "#/", icon: "glyphicon-modal-window" },
-                { name: "ORACLE", href: "#/", icon: "glyphicon-credit-card" },
+                { name: "HTTP", href: "#/http", icon: "glyphicon-screenshot" },
+                { name: "8583", href: "#/8583", icon: "glyphicon-th" },
+                { name: "20022", href: "#/20022", icon: "glyphicon-list-alt" },
+                { name: "SOAP-XML", href: "#/soap", icon: "glyphicon-globe" },
+                { name: "TUXEDO", href: "#/tuxedo", icon: "glyphicon-road" },
+                { name: "MQ", href: "#/mq", icon: "glyphicon-tasks" },
+                { name: "DB2", href: "#/db2", icon: "glyphicon-modal-window" },
+                { name: "ORACLE", href: "#/oracle", icon: "glyphicon-credit-card" },
             ]
         });
         sidebarNav.push({
             name: "统计分析",
             href: null,
             children: [
-                { name: "历史回放", href: "#/", icon: "glyphicon-facetime-video" },
+                { name: "历史回放", href: "#/history", icon: "glyphicon-facetime-video" },
             ]
         });
         $scope.sidebarNav = sidebarNav;

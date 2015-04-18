@@ -5,11 +5,8 @@
         //告警时间线变量
         $scope.warnTimeLine_warnList = [];
         $scope.warnTimeLine_loading = true;
-        $scope.warnTimeLine_animate = true;
-        $scope.warnTimeLine_interval = 30;
-        $scope.warnTimeLine_animateDuration = 30;
-        $scope.warnTimeLine_minSize = 60;
-        $scope.warnTimeLine_maxSize = 61;
+        $scope.warnTimeLine_interval = 2;
+        $scope.warnTimeLine_size = 600;
         //拓扑图变量
         $scope.topology_startTime = null;
         $scope.topology_endTime = null;
@@ -57,35 +54,22 @@
         //初始化
         $scope.init = function () {
             //告警时间线
-            for (var i = 0; i <= $scope.warnTimeLine_minSize; i++) {
-                var block = { warnList: [] };
-                block.time = new Date(new Date().getTime() - ($scope.warnTimeLine_minSize - i) * $scope.warnTimeLine_interval * 1000);
-                $scope.warnTimeLine_warnList.push(block);
+            var now = new Date();
+            for (var i = $scope.warnTimeLine_size; i >= 0; i--) {
+                var time = new Date(now.getTime() - $scope.warnTimeLine_interval * i * 1000);
+                var data = { warnTime: time, value: [time, "-", "-"] };
+                $scope.warnTimeLine_warnList.push(data);
             }
-            var warnQueryStartTime = new Date(new Date().getTime() - $scope.warnTimeLine_minSize * $scope.warnTimeLine_interval * 1000).Format("yyyy-MM-dd 00:00:00");
+            var warnQueryStartTime = new Date(now.getTime() - $scope.warnTimeLine_size * $scope.warnTimeLine_interval * 1000).Format("yyyy-MM-dd 00:00:00");
             var warnQueryDone = function (data, type) {
                 if (data && data.state == 200 && data.data) {
                     for (var i = 0; i < data.data.length; i++) {
                         var warn = data.data[i];
                         if (typeof warn.warnTime === "number") {
                             warn.warnTime = new Date(warn.warnTime);
-                            for (var j = $scope.warnTimeLine_warnList.length - 1; j >= 0; j--) {
-                                var block = $scope.warnTimeLine_warnList[j];
-                                if (warn.warnTime.getTime() >= block.time.getTime()) {
-                                    var exists = false;
-                                    for (var k = 0; k < block.warnList.length; k++) {
-                                        if (block.warnList[k].type == type) {
-                                            block.warnList[k].count++;
-                                            exists = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!exists) {
-                                        block.warnList.push({ type: type, count: 1 });
-                                    }
-                                    break;
-                                }
-                            }
+                            warn.value = [warn.warnTime, warn.respmills];
+                            warn.type = type;
+                            $scope.warnTimeLine_warnList.push(warn);
                         }
                     }
                 }
@@ -108,73 +92,48 @@
                         return;
                     else if (socketData && socketData.warn && socketData.warn.length) {
                         for (var i = 0; i < socketData.warn.length; i++) {
-                            var warn = socketData.warn[i],
-                                block = $scope.warnTimeLine_warnList[$scope.warnTimeLine_warnList.length - 1],
-                                exists = false;
-                            if (block.warnList) {
-                                for (var j = 0; j < block.warnList.length; j++) {
-                                    if (warn.type === block.warnList[j].type) {
-                                        if (warn.count)
-                                            block.warnList[j].count++;
-                                        exists = true;
-                                        break;
-                                    }
-                                }
+                            var warn = socketData.warn[i];
+                            if (typeof warn.warnTime === "number") {
+                                warn.warnTime = new Date(warn.warnTime);
+                                warn.value = [warn.warnTime, warn.respmills];
+                                $scope.warnTimeLine_warnList.push(warn);
                             }
-                            if (!exists && warn.count)
-                                block.warnList.push({ type: warn.type, count: 1 });
                         }
                     }
                 }
             });
-            warnTimeLineTimer = $interval(warnTimeLineTimerTick, 1000);
-            warnTimeLineAnimate();
+            warnTimeLineTimer = $interval(warnTimeLineTimerTick, $scope.warnTimeLine_interval * 1000);
             //拓扑图查询
             $scope.topology_query();
             topologyTimer = $interval($scope.topology_query, 60000);
+            //初始化图表
+            $timeout(function () {
+                chart_warn = echarts.init($("#index_chart_warn")[0]);
+                chart_warn.setOption(chart_warn_options);
+                chart_http = echarts.init($("#index_chart_http")[0]);
+                chart_http.setOption(chart_http_options);
+                chart_8583 = echarts.init($("#index_chart_8583")[0]);
+                chart_8583.setOption(chart_8583_options);
+                chart_20022 = echarts.init($("#index_chart_20022")[0]);
+                chart_20022.setOption(chart_20022_options);
+                chart_mysql = echarts.init($("#index_chart_mysql")[0]);
+                chart_mysql.setOption(chart_mysql_options);
+            });
         };
         //告警时间线增加块
         var warnTimeLineTimer = null;
         var warnTimeLineTimerTick = function () {
-            if (!$scope.warnTimeLine_warnList || !$scope.warnTimeLine_warnList.length)
+            if (!$scope.warnTimeLine_warnList)
                 return;
             var now = new Date();
-            if (now.getTime() - $scope.warnTimeLine_warnList[$scope.warnTimeLine_warnList.length - 1].time.getTime() > $scope.warnTimeLine_interval * 1000) {
-                $scope.warnTimeLine_warnList.push({ warnList: [], time: now });
-                warnTimeLineAnimate();
-                if ($scope.warnTimeLine_warnList.length > $scope.warnTimeLine_maxSize) {
-                    //删除多余的块
-                    $scope.warnTimeLine_warnList.splice(0, $scope.warnTimeLine_warnList.length - $scope.warnTimeLine_maxSize);
+            for (var i = 0; i < $scope.warnTimeLine_warnList.length; i++) {
+                var warn = $scope.warnTimeLine_warnList[i];
+                if (warn.warnTime && now.getTime() - warn.warnTime.getTime() > $scope.warnTimeLine_size * $scope.warnTimeLine_interval * 1000) {
+                    $scope.warnTimeLine_warnList.splice(i, 1);
+                    i--;
                 }
             }
-        };
-        //告警时间线动画
-        var getWarnTimeLineUnitWidth = function () {
-            return $("#index_warnTimeLine").width() / $scope.warnTimeLine_minSize;
-        };
-        var getWarnTimeLineWidth = function () {
-            return getWarnTimeLineUnitWidth() * $("#index_warnTimeLine li").length;
-        };
-        var warnTimeLineAnimate = function () {
-            $timeout(function () {
-                if ($("#index_warnTimeLine li").length == $scope.warnTimeLine_warnList.length) {
-                    $("#index_warnTimeLine").stop(false, false).animate({
-                        scrollLeft: ($("#index_warnTimeLine li").length - $scope.warnTimeLine_minSize - 1) * getWarnTimeLineUnitWidth()
-                    }, 0).animate({
-                        scrollLeft: getWarnTimeLineWidth() - $("#index_warnTimeLine").width()
-                    }, $scope.warnTimeLine_animateDuration * 1000, "linear");
-                }
-                else {
-                    warnTimeLineAnimate();
-                }
-            });
-        };
-        var warnTimeLineWindowResizeHandler = function () {
-            var $warnTimeLine = $("#index_warnTimeLine").stop(false, false);
-            if ($warnTimeLine.scrollLeft() < ($("#index_warnTimeLine li").length - $scope.warnTimeLine_minSize - 1) * getWarnTimeLineUnitWidth()) {
-                $warnTimeLine.scrollLeft(($("#index_warnTimeLine li").length - $scope.warnTimeLine_minSize - 1) * getWarnTimeLineUnitWidth());
-            }
-            $warnTimeLine.animate({ scrollLeft: getWarnTimeLineWidth() - $("#index_warnTimeLine").width() }, $scope.warnTimeLine_animateDuration * 1000, "linear");
+            $scope.warnTimeLine_warnList.push({ warnTime: now, value: [now, "-", "-"] });
         };
         //告警时间线点击跳转
         $scope.warnTimeLine_query = function (warn) {
@@ -401,21 +360,450 @@
             //        $scope.topology_mysql_warnCount = 0;
             //});
         };
-        //窗口调整时更新各Panel高度
+        //图表
+        var chart_warn = null;
+        var chart_warn_options = {
+            animation: true,
+            title: {
+                text: '告警',
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['随机数据']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: true },
+                    dataView: { show: true, readOnly: false },
+                    restore: { show: true },
+                    saveAsImage: { show: true }
+                }
+            },
+            xAxis: [
+                {
+                    type: 'time'
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    splitNumber: 5,
+                    scale: true
+                }
+            ],
+            series: [{
+                name: '随机数据',
+                type: 'scatter',
+                symbolSize: function (value) {
+                    return Math.round(value[2] / 4);
+                },
+                data: $scope.warnTimeLine_warnList
+            }]
+        };
+        var chart_http = null;
+        var chart_http_options = {
+            tooltip: {
+                formatter: "{a} <br/>{c} {b}"
+            },
+            toolbox: {
+                show: true,
+            },
+            series: [
+                {
+                    name: '响应率',
+                    type: 'gauge',
+                    min: 0,
+                    max: 100,
+                    splitNumber: 10,
+                    axisLine: {            // 坐标轴线
+                        lineStyle: {       // 属性lineStyle控制线条样式
+                            width: 10
+                        }
+                    },
+                    axisTick: {            // 坐标轴小标记
+                        length: 15,        // 属性length控制线长
+                        lineStyle: {       // 属性lineStyle控制线条样式
+                            color: 'auto'
+                        }
+                    },
+                    splitLine: {           // 分隔线
+                        length: 20,         // 属性length控制线长
+                        lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                            color: 'auto'
+                        }
+                    },
+                    title: {
+                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                            fontWeight: 'bolder',
+                            fontSize: 20,
+                            fontStyle: 'italic'
+                        }
+                    },
+                    detail: {
+                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                            fontWeight: 'bolder'
+                        }
+                    },
+                    data: [{ value: 0, name: '' }]
+                },
+                {
+                    name: '成功率',
+                    type: 'gauge',
+                    center: ['25%', '55%'],    // 默认全局居中
+                    radius: '80%',
+                    min: 0,
+                    max: 100,
+                    endAngle: 45,
+                    splitNumber: 10,
+                    axisLine: {            // 坐标轴线
+                        lineStyle: {       // 属性lineStyle控制线条样式
+                            width: 8
+                        }
+                    },
+                    axisTick: {            // 坐标轴小标记
+                        length: 12,        // 属性length控制线长
+                        lineStyle: {       // 属性lineStyle控制线条样式
+                            color: 'auto'
+                        }
+                    },
+                    splitLine: {           // 分隔线
+                        length: 20,         // 属性length控制线长
+                        lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                            color: 'auto'
+                        }
+                    },
+                    pointer: {
+                        width: 5
+                    },
+                    title: {
+                        offsetCenter: [0, '-30%'],       // x, y，单位px
+                    },
+                    detail: {
+                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                            fontWeight: 'bolder'
+                        }
+                    },
+                    data: [{ value: 0, name: '' }]
+                },
+            ]
+        };
+        var chart_8583 = null;
+        var chart_8583_options = {
+            tooltip: {
+                formatter: "{a} <br/>{c} {b}"
+            },
+            toolbox: {
+                show: true,
+            },
+            series: [
+                {
+                    name: '响应率',
+                    type: 'gauge',
+                    min: 0,
+                    max: 100,
+                    splitNumber: 10,
+                    axisLine: {            // 坐标轴线
+                        lineStyle: {       // 属性lineStyle控制线条样式
+                            width: 10
+                        }
+                    },
+                    axisTick: {            // 坐标轴小标记
+                        length: 15,        // 属性length控制线长
+                        lineStyle: {       // 属性lineStyle控制线条样式
+                            color: 'auto'
+                        }
+                    },
+                    splitLine: {           // 分隔线
+                        length: 20,         // 属性length控制线长
+                        lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                            color: 'auto'
+                        }
+                    },
+                    title: {
+                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                            fontWeight: 'bolder',
+                            fontSize: 20,
+                            fontStyle: 'italic'
+                        }
+                    },
+                    detail: {
+                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                            fontWeight: 'bolder'
+                        }
+                    },
+                    data: [{ value: 0, name: '' }]
+                },
+                {
+                    name: '成功率',
+                    type: 'gauge',
+                    center: ['25%', '55%'],    // 默认全局居中
+                    radius: '80%',
+                    min: 0,
+                    max: 100,
+                    endAngle: 45,
+                    splitNumber: 10,
+                    axisLine: {            // 坐标轴线
+                        lineStyle: {       // 属性lineStyle控制线条样式
+                            width: 8
+                        }
+                    },
+                    axisTick: {            // 坐标轴小标记
+                        length: 12,        // 属性length控制线长
+                        lineStyle: {       // 属性lineStyle控制线条样式
+                            color: 'auto'
+                        }
+                    },
+                    splitLine: {           // 分隔线
+                        length: 20,         // 属性length控制线长
+                        lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                            color: 'auto'
+                        }
+                    },
+                    pointer: {
+                        width: 5
+                    },
+                    title: {
+                        offsetCenter: [0, '-30%'],       // x, y，单位px
+                    },
+                    detail: {
+                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                            fontWeight: 'bolder'
+                        }
+                    },
+                    data: [{ value: 0, name: '' }]
+                },
+            ]
+        };
+        var chart_20022 = null;
+        var chart_20022_options = {
+            tooltip: {
+                formatter: "{a} <br/>{c} {b}"
+            },
+            toolbox: {
+                show: true,
+            },
+            series: [
+                {
+                    name: '响应率',
+                    type: 'gauge',
+                    min: 0,
+                    max: 100,
+                    splitNumber: 10,
+                    axisLine: {            // 坐标轴线
+                        lineStyle: {       // 属性lineStyle控制线条样式
+                            width: 10
+                        }
+                    },
+                    axisTick: {            // 坐标轴小标记
+                        length: 15,        // 属性length控制线长
+                        lineStyle: {       // 属性lineStyle控制线条样式
+                            color: 'auto'
+                        }
+                    },
+                    splitLine: {           // 分隔线
+                        length: 20,         // 属性length控制线长
+                        lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                            color: 'auto'
+                        }
+                    },
+                    title: {
+                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                            fontWeight: 'bolder',
+                            fontSize: 20,
+                            fontStyle: 'italic'
+                        }
+                    },
+                    detail: {
+                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                            fontWeight: 'bolder'
+                        }
+                    },
+                    data: [{ value: 0, name: '' }]
+                },
+                {
+                    name: '成功率',
+                    type: 'gauge',
+                    center: ['25%', '55%'],    // 默认全局居中
+                    radius: '80%',
+                    min: 0,
+                    max: 100,
+                    endAngle: 45,
+                    splitNumber: 10,
+                    axisLine: {            // 坐标轴线
+                        lineStyle: {       // 属性lineStyle控制线条样式
+                            width: 8
+                        }
+                    },
+                    axisTick: {            // 坐标轴小标记
+                        length: 12,        // 属性length控制线长
+                        lineStyle: {       // 属性lineStyle控制线条样式
+                            color: 'auto'
+                        }
+                    },
+                    splitLine: {           // 分隔线
+                        length: 20,         // 属性length控制线长
+                        lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                            color: 'auto'
+                        }
+                    },
+                    pointer: {
+                        width: 5
+                    },
+                    title: {
+                        offsetCenter: [0, '-30%'],       // x, y，单位px
+                    },
+                    detail: {
+                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                            fontWeight: 'bolder'
+                        }
+                    },
+                    data: [{ value: 0, name: '' }]
+                },
+            ]
+        };
+        var chart_mysql = null;
+        var chart_mysql_options = {
+            tooltip: {
+                formatter: "{a} <br/>{c} {b}"
+            },
+            toolbox: {
+                show: true,
+            },
+            series: [
+                {
+                    name: '响应率',
+                    type: 'gauge',
+                    min: 0,
+                    max: 100,
+                    splitNumber: 10,
+                    axisLine: {            // 坐标轴线
+                        lineStyle: {       // 属性lineStyle控制线条样式
+                            width: 10
+                        }
+                    },
+                    axisTick: {            // 坐标轴小标记
+                        length: 15,        // 属性length控制线长
+                        lineStyle: {       // 属性lineStyle控制线条样式
+                            color: 'auto'
+                        }
+                    },
+                    splitLine: {           // 分隔线
+                        length: 20,         // 属性length控制线长
+                        lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                            color: 'auto'
+                        }
+                    },
+                    title: {
+                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                            fontWeight: 'bolder',
+                            fontSize: 20,
+                            fontStyle: 'italic'
+                        }
+                    },
+                    detail: {
+                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                            fontWeight: 'bolder'
+                        }
+                    },
+                    data: [{ value: 0, name: '' }]
+                },
+                {
+                    name: '成功率',
+                    type: 'gauge',
+                    center: ['25%', '55%'],    // 默认全局居中
+                    radius: '80%',
+                    min: 0,
+                    max: 100,
+                    endAngle: 45,
+                    splitNumber: 10,
+                    axisLine: {            // 坐标轴线
+                        lineStyle: {       // 属性lineStyle控制线条样式
+                            width: 8
+                        }
+                    },
+                    axisTick: {            // 坐标轴小标记
+                        length: 12,        // 属性length控制线长
+                        lineStyle: {       // 属性lineStyle控制线条样式
+                            color: 'auto'
+                        }
+                    },
+                    splitLine: {           // 分隔线
+                        length: 20,         // 属性length控制线长
+                        lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                            color: 'auto'
+                        }
+                    },
+                    pointer: {
+                        width: 5
+                    },
+                    title: {
+                        offsetCenter: [0, '-30%'],       // x, y，单位px
+                    },
+                    detail: {
+                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                            fontWeight: 'bolder'
+                        }
+                    },
+                    data: [{ value: 0, name: '' }]
+                },
+            ]
+        };
+        $scope.$watch(function () {
+            var r = "";
+            if ($scope.warnTimeLine_warnList && $scope.warnTimeLine_warnList.length) {
+                _.forEach($scope.warnTimeLine_warnList, function (warn) {
+                    r += warn.warnTime.getTime();
+                });
+            }
+            return r;
+        }, function () {
+            if (chart_warn)
+                chart_warn.setOption(chart_warn_options, true);
+        });
+        $scope.$watch(function () {
+            return $scope.topology_http_successRatio + "" + $scope.topology_http_responseRatio;
+        }, function () {
+            chart_http_options.series[0].data[0].value = $scope.topology_http_responseRatio;
+            chart_http_options.series[1].data[0].value = $scope.topology_http_successRatio;
+            if (chart_http)
+                chart_http.setOption(chart_http_options, true);
+        });
+        $scope.$watch(function () {
+            return $scope.topology_8583_successRatio + "" + $scope.topology_8583_responseRatio;
+        }, function () {
+            chart_8583_options.series[0].data[0].value = $scope.topology_8583_responseRatio;
+            chart_8583_options.series[1].data[0].value = $scope.topology_8583_successRatio;
+            if (chart_8583)
+                chart_8583.setOption(chart_8583_options, true);
+        });
+        $scope.$watch(function () {
+            return $scope.topology_20022_successRatio + "" + $scope.topology_20022_responseRatio;
+        }, function () {
+            chart_20022_options.series[0].data[0].value = $scope.topology_20022_responseRatio;
+            chart_20022_options.series[1].data[0].value = $scope.topology_20022_successRatio;
+            if (chart_20022)
+                chart_20022.setOption(chart_20022_options, true);
+        });
+        $scope.$watch(function () {
+            return $scope.topology_mysql_successRatio + "" + $scope.topology_mysql_responseRatio;
+        }, function () {
+            chart_mysql_options.series[0].data[0].value = $scope.topology_mysql_responseRatio;
+            chart_mysql_options.series[1].data[0].value = $scope.topology_mysql_successRatio;
+            if (chart_mysql)
+                chart_mysql.setOption(chart_mysql_options, true);
+        });
+        //窗口调整时更新图表大小
         var windowResize = function () {
-            var $dataPanel = $("#dataPanel"),
-                offsetTop = $dataPanel.parent().offset().top,
-                margin = 20;
-            //$dataPanel.outerHeight($($window).height() - offsetTop - margin);
-            //计算内容div高度
-            var $indexTopology = $("#dataPanel .index_topology");
-            //$indexTopology.outerHeight($dataPanel.height() - ($indexTopology.offset().top - offsetTop));
+            if (chart_warn)
+                chart_warn.resize();
         };
         $($window).off("resize.index").on("resize.index", windowResize).trigger("resize.index");
-        $($window).off("resize.indexWarnTimeLine").on("resize.indexWarnTimeLine", warnTimeLineWindowResizeHandler);
         //离开该页事件
         $scope.$on("$routeChangeStart", function () {
-            $($window).off("resize.index resize.indexWarnTimeLine");
+            $($window).off("resize.index");
             warningSocketService.off("onmessage.indexWarnTimeLine");
             $interval.cancel(warnTimeLineTimer);
             $interval.cancel(topologyTimer);

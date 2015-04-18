@@ -1,48 +1,48 @@
 ﻿<div class="">
     <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-    <div id="main" style="height:400px"></div>
+    <div id="index_chart_warn" style="height:400px"></div>
 </div>
 <div class="row" style="margin-top:30px;">
     <div class="col-md-6 t_relative" style="">
         <h4 class="httpname">HTTP</h4>
         <div class="t_data">
 
-            <p class="bg-info">响应时间</p>
-            <p class="bg-success">交易笔数</p>
-            <p class="bg-danger">告警条数</p>
+            <p class="bg-info">响应时间{{topology_http_duration}}ms</p>
+            <p class="bg-success">交易笔数{{topology_http_count}}</p>
+            <p class="bg-danger">告警条数{{topology_http_warnCount}}</p>
         </div>
-        <div id="http" style="height:200px; "></div>
+        <div id="index_chart_http" style="height:200px; "></div>
     </div>
     <div class="col-md-6">
-        <h4 class="httpname">8083</h4>
+        <h4 class="httpname">8583</h4>
         <div class="t_data">
 
-            <p class="bg-info">响应时间</p>
-            <p class="bg-success">交易笔数</p>
-            <p class="bg-danger">告警条数</p>
+            <p class="bg-info">响应时间{{topology_8583_duration}}ms</p>
+            <p class="bg-success">交易笔数{{topology_8583_count}}</p>
+            <p class="bg-danger">告警条数{{topology_8583_warnCount}}</p>
         </div>
-        <div id="8083" style="height:200px;"></div>
+        <div id="index_chart_8583" style="height:200px;"></div>
     </div>
 </div>
 <div class="row" style="margin-top:30px;">
     <div class="col-md-6 t_relative">
-        <h4 class="httpname">8333</h4>
+        <h4 class="httpname">20022</h4>
         <div class="t_data">
 
-            <p class="bg-info">响应时间</p>
-            <p class="bg-success">交易笔数</p>
-            <p class="bg-danger">告警条数</p>
+            <p class="bg-info">响应时间{{topology_20022_duration}}ms</p>
+            <p class="bg-success">交易笔数{{topology_20022_count}}</p>
+            <p class="bg-danger">告警条数{{topology_20022_warnCount}}</p>
         </div>
-        <div id="8333" style="height:200px;"></div>
+        <div id="index_chart_20022" style="height:200px;"></div>
     </div>
     <div class="col-md-6 t_relative">
-        <h4 class="httpname">8666</h4>
+        <h4 class="httpname">MYSQL</h4>
         <div class="t_data">
 
-            <p class="bg-info">响应时间</p>
-            <p class="bg-success">交易笔数</p>
-            <p class="bg-danger">告警条数</p>
+            <p class="bg-info">响应时间{{topology_mysql_duration}}ms</p>
+            <p class="bg-success">交易笔数{{topology_mysql_count}}</p>
+            <p class="bg-danger">告警条数{{topology_mysql_warnCount}}</p>
         </div>
-        <div id="8666" style="height:200px; "></div>
+        <div id="index_chart_mysql" style="height:200px; "></div>
     </div>
 </div>

@@ -18,38 +18,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>http</td>
-                        <td>10</td>
-                        <td><a href="#" data-toggle="modal" data-target="#myModal">编辑</a></td>
-                    </tr>
-                    <tr>
-                        <td>8583</td>
-                        <td>100</td>
-                        <td><a href="#">编辑</a></td>
+                    <tr ng-repeat="record in recordList_warnThreshold">
+                        <td>{{record.protocol}}</td>
+                        <td>{{record.respmills}}</td>
+                        <td><a href="javascript:void(0);" ng-click="showWarnThresholdModal(record)">编辑</a></td>
                     </tr>
                 </tbody>
             </table>
             <!-- Modal -->
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal fade" id="warnThresholdModal" tabindex="-1" role="dialog" aria-labelledby="warnThresholdModal" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">延时报警</h4>
+                            <h4 class="modal-title">延时报警</h4>
                         </div>
                         <div class="modal-body">
-                            <form class="form-horizontal">
-                                <div class="form-group form-group-sm">
-                                    <label class="col-sm-2 control-label" for="formGroupInputSmall">http</label>
+                            <form class="form-horizontal" name="warnThresholdForm">
+                                <div class="form-group form-group-sm" ng-class="{'has-error':warnThresholdForm.recordValue.$error.pattern}">
+                                    <label class="col-sm-2 control-label">{{recordName}}</label>
                                     <div class="col-sm-10">
-                                        <input class="form-control" type="text" id="formGroupInputSmall">
+                                        <input name="recordValue" class="form-control" type="text" ng-model="recordValue" ng-pattern="/^\d+$/" />
                                     </div>
                                 </div>
                             </form>
+                            <p class="bg-warning" style="padding: 15px;" ng-show="msg!=null" ng-bind-html="msg"></p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary">保存</button>
+                            <button type="button" class="btn btn-primary" ng-click="saveWarnThreshold()">保存</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                         </div>
                     </div>
@@ -72,7 +68,7 @@
                         <td>192.168.200.3</td>
                         <td>北京工商银行</td>
                         <td></td>
-                        <td><a href="#">编辑</a></td>
+                        <td><a href="javascript:void(0);">编辑</a></td>
                     </tr>
                 </tbody>
             </table>
@@ -88,14 +84,53 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>192.168.200.85</td>
-                        <td>北京工商银行</td>
-                        <td></td>
-                        <td><a href="#">编辑</a></td>
+                    <tr ng-repeat="record in recordList_peopleBank">
+                        <td>{{record.ip}}</td>
+                        <td>{{record.name}}</td>
+                        <td>{{record.descript}}</td>
+                        <td><a href="javascript:void(0);" ng-click="showPeopleBankModal(record)">编辑</a></td>
                     </tr>
                 </tbody>
             </table>
+            <!-- Modal -->
+            <div class="modal fade" id="peopleBankModal" tabindex="-1" role="dialog" aria-labelledby="peopleBankModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">人行IP地址</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" name="peopleBankForm">
+                                <div class="form-group form-group-sm">
+                                    <label class="col-sm-2 control-label">名称</label>
+                                    <div class="col-sm-10">
+                                        <input name="recordValue" class="form-control" type="text" ng-model="recordName" />
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <label class="col-sm-2 control-label">IP</label>
+                                    <div class="col-sm-10">
+                                        <input name="recordValue" class="form-control" type="text" ng-model="recordValue" />
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <label class="col-sm-2 control-label">备注</label>
+                                    <div class="col-sm-10">
+                                        <input name="recordValue" class="form-control" type="text" ng-model="recordDescription" />
+                                    </div>
+                                </div>
+                            </form>
+                            <p class="bg-warning" style="padding: 15px;" ng-show="msg!=null" ng-bind-html="msg"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" ng-click="saveWarnThreshold()">保存</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal end-->
         </div>
     </div>
 

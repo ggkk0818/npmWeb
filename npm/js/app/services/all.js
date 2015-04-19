@@ -2,5 +2,6 @@
     "./logService",
     "./statisticService",
     "./warningService",
-    "./warningSocketService"
+    "./warningSocketService",
+    "./settingsService"
 ], function () { });

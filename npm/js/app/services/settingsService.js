@@ -12,7 +12,7 @@ function (angular, $, _, config) {
         this.thresholdList = function (params, callback) {
             $http({
                 method: 'GET',
-                url: 'warning/threshold/list',
+                url: 'warning/threshold',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {
@@ -25,8 +25,8 @@ function (angular, $, _, config) {
         };
         this.thresholdSave = function (params, callback) {
             $http({
-                method: 'GET',
-                url: 'warning/threshold/add',
+                method: 'POST',
+                url: 'warning/threshold',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {
@@ -39,8 +39,8 @@ function (angular, $, _, config) {
         };
         this.thresholdUpdate = function (params, callback) {
             $http({
-                method: 'GET',
-                url: 'warning/threshold/update',
+                method: 'PUT',
+                url: 'warning/threshold',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {
@@ -66,8 +66,8 @@ function (angular, $, _, config) {
                 }
             }
             $http({
-                method: 'GET',
-                url: 'warning/threshold/delete',
+                method: 'DELETE',
+                url: 'warning/threshold',
                 params: { id: _(idArr).join(",") }
             }).success(function (data, status, headers, config) {
                 if (typeof callback === "function")
@@ -81,7 +81,7 @@ function (angular, $, _, config) {
         this.peoplebankList = function (params, callback) {
             $http({
                 method: 'GET',
-                url: 'setting/peoplebank/list',
+                url: 'setting/peoplebank',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {
@@ -94,8 +94,8 @@ function (angular, $, _, config) {
         };
         this.peoplebankSave = function (params, callback) {
             $http({
-                method: 'GET',
-                url: 'setting/peoplebank/add',
+                method: 'POST',
+                url: 'setting/peoplebank',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {
@@ -108,8 +108,8 @@ function (angular, $, _, config) {
         };
         this.peoplebankUpdate = function (params, callback) {
             $http({
-                method: 'GET',
-                url: 'setting/peoplebank/update',
+                method: 'PUT',
+                url: 'setting/peoplebank',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {
@@ -135,8 +135,8 @@ function (angular, $, _, config) {
                 }
             }
             $http({
-                method: 'GET',
-                url: 'setting/peoplebank/delete',
+                method: 'DELETE',
+                url: 'setting/peoplebank',
                 params: { id: _(idArr).join(",") }
             }).success(function (data, status, headers, config) {
                 if (typeof callback === "function")
@@ -150,7 +150,7 @@ function (angular, $, _, config) {
         this.unionpayList = function (params, callback) {
             $http({
                 method: 'GET',
-                url: 'setting/unionpay/list',
+                url: 'setting/unionpay',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {
@@ -163,8 +163,8 @@ function (angular, $, _, config) {
         };
         this.unionpaySave = function (params, callback) {
             $http({
-                method: 'GET',
-                url: 'setting/unionpay/add',
+                method: 'POST',
+                url: 'setting/unionpay',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {
@@ -177,8 +177,8 @@ function (angular, $, _, config) {
         };
         this.unionpayUpdate = function (params, callback) {
             $http({
-                method: 'GET',
-                url: 'setting/unionpay/update',
+                method: 'PUT',
+                url: 'setting/unionpay',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {
@@ -204,8 +204,8 @@ function (angular, $, _, config) {
                 }
             }
             $http({
-                method: 'GET',
-                url: 'setting/unionpay/delete',
+                method: 'DELETE',
+                url: 'setting/unionpay',
                 params: { id: _(idArr).join(",") }
             }).success(function (data, status, headers, config) {
                 if (typeof callback === "function")

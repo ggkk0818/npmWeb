@@ -1,0 +1,17 @@
+﻿.wagningSearch_table{
+    /*table-layout:fixed;*/ 
+    border-top:1px solid #DDD;
+    border-bottom:1px solid #DDD;
+}
+.wagningSearch_table thead tr{
+    background-color: #e6e6e6;  
+    text-shadow: 0 1px 1px rgba(255,255,255,0.75);  
+    background-image: linear-gradient(to bottom,#fff,#e6e6e6);
+}
+.wagningSearch_table thead tr .glyphicon{
+    font-size: 14px; 
+    margin-right:5px;
+}
+.wagningSearch_table tbody tr td{
+    word-break:break-all;
+}

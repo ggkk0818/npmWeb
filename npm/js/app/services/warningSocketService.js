@@ -37,7 +37,7 @@ function (angular, $, _, config) {
             }, 3000);
         };
         this.open = function () {
-            socket = new WebSocket("ws://" + window.location.hostname + ":8080/npm/warnSocket");
+            socket = new WebSocket("ws://" + window.location.hostname + ":8080/upm/warnSocket");
             socket.onerror = onerror;
             socket.onopen = function () {
                 socket.onmessage = onmessage;

@@ -1,5 +1,8 @@
 ﻿define([
     "./main",
     "./index",
-    "./settings"
+    "./settings",
+    "./deviceStatistic",
+    "./statisticSearch",
+    "./warningSearch"
 ], function () { });

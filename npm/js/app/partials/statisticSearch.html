@@ -1,0 +1,276 @@
+﻿<div class="row" ng-if="false">
+    <div class="col-md-3">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-4 control-label" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="交易类型">交易类型</label>
+                <div class="col-sm-8">
+                    <input type="email" class="form-control" placeholder="交易类型">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="交易关键字">交易关键字</label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" placeholder="交易关键字">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="每页显示">每页显示</label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" placeholder="10">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-3">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-4 control-label" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="交易渠道">交易渠道</label>
+                <div class="col-sm-8">
+                    <input type="email" class="form-control" placeholder="交易渠道">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="响应时间">响应时间</label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" placeholder="响应时间">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="开始时间">开始时间</label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" placeholder="开始时间">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-3">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-4 control-label" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="交易结果">交易结果</label>
+                <div class="col-sm-8">
+                    <input type="email" class="form-control" placeholder="交易结果">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="客户端IP">客户端IP</label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" placeholder="客户端IP">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="结束时间">结束时间</label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" placeholder="结束时间">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-3">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-4 control-label" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="交易返回码">交易返回码</label>
+                <div class="col-sm-8">
+                    <input type="email" class="form-control" placeholder="交易返回码">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="服务器IP">服务器IP</label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control" placeholder="服务器IP">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">&nbsp;</label>
+                <div class="col-sm-8">
+                    <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
+                    <button class="btn btn-info" type="button"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> 导出</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row" style="padding-top:25px;">
+    <div class="col-md-12">
+        <form class="form-inline">
+            <div class="pull-left">
+                <div class="form-group">
+                    <label class="sr-only">交易类型</label>
+                    <div class="form-group btn-group">
+                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                            {{logType.name || "交易类型"}} <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li ng-repeat="t in LOG_TYPE" ng-class="{'active':logType.id==t.id}"><a href="javascript:void(0);" ng-click="$parent.logType=t">{{t.name}}</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="sr-only">交易关键字</label>
+                    <input type="text" class="form-control" placeholder="交易关键字" ng-model="keywordInput" ng-keypress="formKeypressHandler($event)">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only">源IP</label>
+                    <input type="text" class="form-control" placeholder="源IP" ng-model="srcIpInput" ng-keypress="formKeypressHandler($event)">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only">目的IP</label>
+                    <input type="text" class="form-control" placeholder="目的IP" ng-model="dstIpInput" ng-keypress="formKeypressHandler($event)">
+                </div>
+                <div class="input-group">
+                    <input type="text" class="form-control date" data-date-format="yyyy-mm-dd hh:ii:ss" data-date-language="zh-CN" placeholder="开始时间" ng-model="startTimeInput" ng-keypress="formKeypressHandler($event)">
+                    <span class="input-group-addon" style="border-width:1px 0;">-</span>
+                    <input type="text" class="form-control date" data-date-format="yyyy-mm-dd hh:ii:ss" data-date-language="zh-CN" placeholder="结束时间" ng-model="endTimeInput" ng-keypress="formKeypressHandler($event)">
+                </div>
+                <button class="btn btn-info" type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
+                <!--<button class="btn btn-info" type="button"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> 导出</button>-->
+
+            </div>
+            <div class="pull-right"></div>
+        </form>
+    </div>
+</div>
+<div class="row" style="margin-top:25px;">
+    <div class="col-md-12">
+        <table class="table table-hover statisticSearch_table" ng-if="searchType.id=='8583'||searchType.id=='20022'">
+            <thead>
+                <tr>
+                    <!--<th>交易关键字</th>-->
+                    <th>请求时间</th>
+                    <th>响应时间</th>
+                    <th><span class="glyphicon glyphicon-time" aria-hidden="true"></span>响应时长(ms)</th>
+                    <th>源IP</th>
+                    <th>目的IP</th>
+                    <th>报文类型</th>
+                    <th>响应码</th>
+                    <th>是否响应</th>
+                    <th>是否准时</th>
+                    <th>是否成功</th>
+                    <th><span class="glyphicon glyphicon-send" aria-hidden="true"></span>流量</th>
+                    <th>详情</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-class="{'danger':!record.status[2]}" ng-repeat-start="record in recordList">
+                    <!--<td>{{record.aggregate_key}}</td>-->
+                    <td>{{record.time1}}</td>
+                    <td>{{record.time2}}</td>
+                    <td>{{record.resp_mills1}}</td>
+                    <td>{{record.source_ip}}</td>
+                    <td>{{record.dest_ip}}</td>
+                    <td>{{record.mesg_type_code}}</td>
+                    <td>{{record.response_code}}</td>
+                    <td>{{record.status[0]?"是":"否"}}</td>
+                    <td>{{record.status[1]?"是":"否"}}</td>
+                    <td>{{record.status[2]?"是":"否"}}</td>
+                    <td>{{record.flow}}</td>
+                    <td>
+                        <a class="btn btn-default" href="javascript:void(0);" ng-click="record.showDetail=!record.showDetail" ng-class="{'active':record.showDetail,'disabled':!record.text}">详情</a>
+                    </td>
+                </tr>
+                <tr ng-repeat-end ng-show="record.showDetail" style="background-color:#F1F8FA; border-top:1px solid #bcbcbc; border-bottom:1px solid #bcbcbc; ">
+                    <td colspan="12">{{record.text||"暂无详情"}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <!--http-->
+        <table class="table table-hover statisticSearch_table" ng-if="searchType.id=='http'">
+            <thead>
+                <tr>
+                    <!--<th>交易关键字</th>-->
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th><span class="glyphicon glyphicon-time" aria-hidden="true"></span>响应时长(ms)</th>
+                    <th>源IP</th>
+                    <th>目的IP</th>
+                    <th>源设备</th>
+                    <th>目的设备</th>
+                    <th>请求类型</th>
+                    <th>请求域名</th>
+                    <th>请求URI</th>
+                    <th>响应码</th>
+                    <th>响应内容</th>
+                    <th>是否响应</th>
+                    <th>是否准时</th>
+                    <th>是否成功</th>
+                    <th><span class="glyphicon glyphicon-send" aria-hidden="true"></span>流量</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-class="{'danger':!record.status[2]}" ng-repeat="record in recordList">
+                    <!--<td>{{record.aggregate_key}}</td>-->
+                    <td>{{record.starttime}}</td>
+                    <td>{{record.endtime}}</td>
+                    <td>{{record.resp_mills}}</td>
+                    <td>{{record.source_ip}}</td>
+                    <td>{{record.dest_ip}}</td>
+                    <td>{{record.source_device}}</td>
+                    <td>{{record.dest_device}}</td>
+                    <td>{{record.request_method}}</td>
+                    <td>{{record.request_host}}</td>
+                    <td>{{record.request_uri}}</td>
+                    <td>{{record.response_code}}</td>
+                    <td>{{record.content_type}}</td>
+                    <td>{{record.status[0]?"是":"否"}}</td>
+                    <td>{{record.status[1]?"是":"否"}}</td>
+                    <td>{{record.status[2]?"是":"否"}}</td>
+                    <td>{{record.flow}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <!--mysql-->
+        <table class="table table-hover statisticSearch_table" ng-if="searchType.id=='mysql'">
+            <thead>
+                <tr>
+                    <!--<th>交易关键字</th>-->
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th><span class="glyphicon glyphicon-time" aria-hidden="true"></span>响应时长(ms)</th>
+                    <th>源IP</th>
+                    <th>目的IP</th>
+                    <th>源设备</th>
+                    <th>目的设备</th>
+                    <th>消息类型</th>
+                    <th>查询SQL</th>
+                    <th>返回字段数</th>
+                    <th>作用字段数</th>
+                    <th>错误码</th>
+                    <th>响应报文类型</th>
+                    <th>是否响应</th>
+                    <th>是否准时</th>
+                    <th>是否成功</th>
+                    <th><span class="glyphicon glyphicon-send" aria-hidden="true"></span>流量</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-class="{'danger':!record.status[2]}" ng-repeat="record in recordList">
+                    <!--<td>{{record.aggregate_key}}</td>-->
+                    <td>{{record.starttime}}</td>
+                    <td>{{record.endtime}}</td>
+                    <td>{{record.resp_mills}}</td>
+                    <td>{{record.source_ip}}</td>
+                    <td>{{record.dest_ip}}</td>
+                    <td>{{record.source_device}}</td>
+                    <td>{{record.dest_device}}</td>
+                    <td>{{record.mysql_command}}</td>
+                    <td>{{record.mysql_query}}</td>
+                    <td>{{record.mysql_num_fields}}</td>
+                    <td>{{record.mysql_affected_rows}}</td>
+                    <td>{{record.mysql_error_code}}</td>
+                    <td>{{record.mysql_resp_type}}</td>
+                    <td>{{record.status[0]?"是":"否"}}</td>
+                    <td>{{record.status[1]?"是":"否"}}</td>
+                    <td>{{record.status[2]?"是":"否"}}</td>
+                    <td>{{record.flow}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <nav class="text-center" style="position:relative;">
+            <div class="pull-right" style="line-height:34px;position:absolute;top:0;right:0;">
+                <span style="padding-right:10px;">匹配的记录 {{recordSize||0}} 笔</span>
+                <span style="padding-right:10px;">第 {{pageNum||0}} 页</span>
+                <span>共 {{pageTotal||0}} 页</span>
+            </div>
+            <ul class="pagination" style="margin:0 auto;" data-page-click="show"></ul>
+        </nav>
+    </div>
+</div>

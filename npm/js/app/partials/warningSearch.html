@@ -1,0 +1,80 @@
+﻿<div class="row" style="padding-top:25px;">
+    <div class="col-md-12">
+        <form class="form-inline">
+            <div class="pull-left">
+
+                <div class="form-group">
+                    <label class="sr-only">交易类型</label>
+                    <div class="form-group btn-group">
+                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                            {{logType.name || "交易类型"}} <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li ng-repeat="t in LOG_TYPE" ng-class="{'active':logType.id==t.id}"><a href="javascript:void(0);" ng-click="$parent.logType=t">{{t.name}}</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="sr-only">交易关键字</label>
+                    <input type="text" class="form-control" placeholder="交易关键字" ng-model="keywordInput" ng-keypress="formKeypressHandler($event)">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only">源IP</label>
+                    <input type="text" class="form-control" placeholder="源IP" ng-model="srcIpInput" ng-keypress="formKeypressHandler($event)">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only">目的IP</label>
+                    <input type="text" class="form-control" placeholder="目的IP" ng-model="dstIpInput" ng-keypress="formKeypressHandler($event)">
+                </div>
+                <div class="input-group">
+                    <input type="text" class="form-control date" data-date-format="yyyy-mm-dd hh:ii:ss" data-date-language="zh-CN" placeholder="开始时间" ng-model="startTimeInput" ng-keypress="formKeypressHandler($event)">
+                    <span class="input-group-addon" style="border-width:1px 0;">-</span>
+                    <input type="text" class="form-control date" data-date-format="yyyy-mm-dd hh:ii:ss" data-date-language="zh-CN" placeholder="结束时间" ng-model="endTimeInput" ng-keypress="formKeypressHandler($event)">
+                </div>
+                <button class="btn btn-info " type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
+            </div>
+            <div class="pull-right">
+                <!--<button class="btn btn-primary" type="button"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> 导出</button>-->
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row" style="margin-top:25px;">
+    <div class="col-md-12">
+        <table class="table table-hover  table-striped wagningSearch_table">
+            <thead>
+                <tr>
+                    <th style="width:28%;">UID</th>
+                    <th>告警时间</th>
+                    <th><span class="glyphicon glyphicon-time" aria-hidden="true"></span>响应时长(ms)</th>
+                    <th>源IP</th>
+                    <th>目标IP</th>
+                    <th>详情</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat-start="record in recordList">
+                    <td>{{record.aggregate_key}}</td>
+                    <td>{{record.warnTime}}</td>
+                    <td>{{record.respmills}}</td>
+                    <td>{{record.src_ip}}</td>
+                    <td>{{record.dest_ip}}</td>
+                    <td>
+                        <a class="btn btn-default" href="javascript:void(0);" ng-click="record.showDetail=!record.showDetail" ng-class="{'active':record.showDetail,'disabled':!record.text}">详情</a>
+                    </td>
+                </tr>
+                <tr ng-repeat-end ng-show="record.showDetail" style="background-color:#F1F8FA; border-top:1px solid #bcbcbc; border-bottom:1px solid #bcbcbc; ">
+                    <td colspan="11">{{record.text||"暂无详情"}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <nav class="text-center" style="position:relative;">
+            <div class="pull-right" style="line-height:34px;position:absolute;top:0;right:0;">
+                <span style="padding-right:10px;">匹配的记录 {{recordSize||0}} 笔</span>
+                <span style="padding-right:10px;">第 {{pageNum||0}} 页</span>
+                <span>共 {{pageTotal||0}} 页</span>
+            </div>
+            <ul class="pagination" style="margin:0 auto;" data-page-click="show"></ul>
+        </nav>
+    </div>
+</div>

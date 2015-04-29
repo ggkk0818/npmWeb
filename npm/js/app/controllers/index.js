@@ -72,7 +72,7 @@
                 //$scope.warnTimeLine_warnS3.push(data);
 
             }
-            var warnQueryStartTime = new Date(now.getTime() - $scope.warnTimeLine_size * $scope.warnTimeLine_interval * 1000).Format("yyyy-MM-dd HH:mm:ss");
+            var warnQueryStartTime = new Date(now.getTime() - $scope.warnTimeLine_size * $scope.warnTimeLine_interval * 1000).Format("yyyy-MM-dd hh:mm:ss");
             var warnQueryDone = function (data, type) {
                 if (data && data.state == 200 && data.data) {
                     for (var i = 0; i < data.data.length; i++) {
@@ -82,19 +82,22 @@
                         warn.warnTime = new Date(warn.warnTime);
                         warn.value = [warn.warnTime, warn.respmills, warn.protocol, warn.src_ip, warn.dest_ip];
                         warn.type = type;
-                        if (status == 0) {
-                            $scope.warnTimeLine_warnS0.push(warn);
-                        } else if (status == 1) {
-                            $scope.warnTimeLine_warnS1.push(warn);
-                        } else if (status == 2) {
-                            $scope.warnTimeLine_warnS2.push(warn);
-                        } else if (status == 3) {
-                            $scope.warnTimeLine_warnS3.push(warn);
-                        } else if (status == 6) {
-                            $scope.warnTimeLine_warnS6.push(warn);
-                        } else if (status == 7) {
-                            $scope.warnTimeLine_warnS7.push(warn);
+                        if (typeof status === "number" && $scope["warnTimeLine_warnS" + status]) {
+                            $scope["warnTimeLine_warnS" + status].push(warn);
                         }
+                        //if (status == 0) {
+                        //    $scope.warnTimeLine_warnS0.push(warn);
+                        //} else if (status == 1) {
+                        //    $scope.warnTimeLine_warnS1.push(warn);
+                        //} else if (status == 2) {
+                        //    $scope.warnTimeLine_warnS2.push(warn);
+                        //} else if (status == 3) {
+                        //    $scope.warnTimeLine_warnS3.push(warn);
+                        //} else if (status == 6) {
+                        //    $scope.warnTimeLine_warnS6.push(warn);
+                        //} else if (status == 7) {
+                        //    $scope.warnTimeLine_warnS7.push(warn);
+                        //}
 
                     }
                 }
@@ -154,19 +157,22 @@
 
                             warn.warnTime = new Date(warn.warnTime);
                             warn.value = [warn.warnTime, warn.respmills, warn.protocol, warn.src_ip, warn.dest_ip];
-                            if (status == 0) {
-                                $scope.warnTimeLine_warnS0.push(warn);
-                            } else if (status == 1) {
-                                $scope.warnTimeLine_warnS1.push(warn);
-                            } else if (status == 2) {
-                                $scope.warnTimeLine_warnS2.push(warn);
-                            } else if (status == 3) {
-                                $scope.warnTimeLine_warnS3.push(warn);
-                            } else if (status == 6) {
-                                $scope.warnTimeLine_warnS6.push(warn);
-                            } else if (status == 7) {
-                                $scope.warnTimeLine_warnS7.push(warn);
+                            if (typeof status === "number" && $scope["warnTimeLine_warnS" + status]) {
+                                $scope["warnTimeLine_warnS" + status].push(warn);
                             }
+                            //if (status == 0) {
+                            //    $scope.warnTimeLine_warnS0.push(warn);
+                            //} else if (status == 1) {
+                            //    $scope.warnTimeLine_warnS1.push(warn);
+                            //} else if (status == 2) {
+                            //    $scope.warnTimeLine_warnS2.push(warn);
+                            //} else if (status == 3) {
+                            //    $scope.warnTimeLine_warnS3.push(warn);
+                            //} else if (status == 6) {
+                            //    $scope.warnTimeLine_warnS6.push(warn);
+                            //} else if (status == 7) {
+                            //    $scope.warnTimeLine_warnS7.push(warn);
+                            //}
                         }
                     }
                 }
@@ -1129,7 +1135,7 @@
             if (chart_warn) {
                 //chart_warn_options.series.data = $scope.warnTimeLine_warnList
                 //chart_warn.setOption(chart_warn_options);
-                chart_warn.setSeries(chart_warn_options.series, true)
+                chart_warn.setSeries(chart_warn_options.series, true);
             }
         });
         $scope.$watch(function () {

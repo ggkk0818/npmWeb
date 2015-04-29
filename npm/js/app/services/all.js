@@ -3,5 +3,6 @@
     "./statisticService",
     "./warningService",
     "./warningSocketService",
-    "./settingsService"
+    "./settingsService",
+    "./protocolService"
 ], function () { });

@@ -16,14 +16,14 @@
             name: "按协议查看",
             href: null,
             children: [
-                { name: "HTTP", href: "#/http", icon: "glyphicon-screenshot" },
-                { name: "8583", href: "#/8583", icon: "glyphicon-th" },
-                { name: "20022", href: "#/20022", icon: "glyphicon-list-alt" },
-                { name: "SOAP-XML", href: "#/soap", icon: "glyphicon-globe" },
-                { name: "TUXEDO", href: "#/tuxedo", icon: "glyphicon-road" },
-                { name: "MQ", href: "#/mq", icon: "glyphicon-tasks" },
-                { name: "DB2", href: "#/db2", icon: "glyphicon-modal-window" },
-                { name: "ORACLE", href: "#/oracle", icon: "glyphicon-credit-card" },
+                { name: "HTTP", href: "#/protocol/http", icon: "glyphicon-screenshot" },
+                { name: "8583", href: "#/protocol/8583", icon: "glyphicon-th" },
+                { name: "20022", href: "#/protocol/20022", icon: "glyphicon-list-alt" },
+                { name: "SOAP-XML", href: "#/protocol/soap", icon: "glyphicon-globe" },
+                { name: "TUXEDO", href: "#/protocol/tuxedo", icon: "glyphicon-road" },
+                { name: "MQ", href: "#/protocol/mq", icon: "glyphicon-tasks" },
+                { name: "DB2", href: "#/protocol/db2", icon: "glyphicon-modal-window" },
+                { name: "ORACLE", href: "#/protocol/oracle", icon: "glyphicon-credit-card" },
             ]
         });
         sidebarNav.push({
@@ -44,15 +44,27 @@
             name: "报表",
             href: "#/report/.*"
         });
+        var getRoutePath = function (target) {
+            var path = null;
+            if (target && target.$$route) {
+                path = target.$$route.originalPath;
+                if (target.pathParams) {
+                    for (var name in target.pathParams) {
+                        path = path.replace(":" + name, target.pathParams[name]);
+                    }
+                }
+            }
+            return path;
+        };
         $rootScope.$on('$routeChangeSuccess', function (event, target) {
             var page = null;
             if (target.$$route) {
                 _.forEach($scope.sidebarNav, function (val) {
-                    if ("#" + target.$$route.originalPath == val.href)
+                    if ("#" + getRoutePath(target) == val.href)
                         page = val;
                     else if (val.children) {
                         _.forEach(val.children, function (child) {
-                            if ("#" + target.$$route.originalPath == child.href)
+                            if ("#" + getRoutePath(target) == child.href)
                                 page = child;
                         });
                     }

@@ -4,5 +4,6 @@
     "./settings",
     "./deviceStatistic",
     "./statisticSearch",
-    "./warningSearch"
+    "./warningSearch",
+    "./protocol"
 ], function () { });

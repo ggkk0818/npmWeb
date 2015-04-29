@@ -84,6 +84,10 @@
                 templateUrl: 'js/app/partials/deviceStatistic.html',
                 controller: 'DeviceStatisticCtrl'
             })
+            .when('/protocol/:protocol', {
+                templateUrl: 'js/app/partials/protocol.html',
+                controller: 'ProtocolCtrl'
+            })
             .otherwise({
                 redirectTo: '/'
             });

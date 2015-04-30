@@ -22,6 +22,20 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
+        this.group = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'protocol/group',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
         //获取字段信息
         this.fields = function (params, callback) {
             $http({

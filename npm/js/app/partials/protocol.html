@@ -1,5 +1,12 @@
 ﻿<div class="row">
     <div class="col-xs-12">
+        <div class="page-header">
+            <h1>交易追踪</h1>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
         <div class="pull-right">
             <div class="dropdown">
                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
@@ -66,7 +73,7 @@
     <div class="col-xs-12">
         <div class="list-group">
             <a href="javascript:void(0);" class="list-group-item" ng-repeat="(name,field) in FIELD_LIST" ng-click="toggleDisplayField(field)">
-                <span class="glyphicon" aria-hidden="true" ng-class="{'glyphicon-ok-circle':displayFieldList[name].show,'glyphicon-ban-circle':!displayFieldList[name].show}"></span>{{field.displayName||field.name}}
+                <span class="glyphicon" aria-hidden="true" ng-class="{'glyphicon-ok-circle':displayFieldList[name],'glyphicon-ban-circle':!displayFieldList[name]}"></span>{{field.displayName||field.name}}
             </a>
         </div>
     </div>
@@ -86,4 +93,63 @@
         </div>
     </div>
 </div>
+<div class="row" style="margin-top:10px;">
+    <div class="col-xs-12">
+        <button class="btn btn-primary" type="button" ng-click="applyFilter()"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>应用</button>
+        <button class="btn btn-default" type="button" ng-click="reset()"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>重置</button>
+    </div>
+</div>
 <hr />
+<div class="row" ng-hide="isGroupMode">
+    <div class="col-xs-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th ng-repeat="(name,field) in displayFieldList">{{field.displayName||field.name}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="record in recordList">
+                    <td ng-repeat="(name,field) in displayFieldList">{{record[name]}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <nav class="text-center" style="position:relative;">
+            <div class="pull-right" style="line-height:34px;position:absolute;top:0;right:0;">
+                <span style="padding-right:10px;">匹配的记录 {{recordSize||0}} 笔</span>
+                <span style="padding-right:10px;">第 {{pageNum||0}} 页</span>
+                <span>共 {{pageTotal||0}} 页</span>
+            </div>
+            <ul class="pagination" style="margin:0 auto;" data-page-click="doQuery"></ul>
+        </nav>
+    </div>
+</div>
+<div class="row" ng-show="isGroupMode">
+    <div class="col-xs-12">
+        <div ng-repeat="record in recordList">
+            <h3 ng-click="record.showTable=!record.showTable">{{record.groupfield}} <span class="label label-default">{{record.count||0}}</span></h3>
+            <div ng-show="record.showTable">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th ng-repeat="(name,field) in displayFieldList">{{field.displayName||field.name}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="subRecord in record.subRecordList">
+                            <td ng-repeat="(name,field) in displayFieldList">{{subRecord[name]}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <nav class="text-center" style="position:relative;">
+                    <div class="pull-right" style="line-height:34px;position:absolute;top:0;right:0;">
+                        <span style="padding-right:10px;">匹配的记录 {{record.recordSize||0}} 笔</span>
+                        <span style="padding-right:10px;">第 {{record.pageNum||0}} 页</span>
+                        <span>共 {{record.pageTotal||0}} 页</span>
+                    </div>
+                    <ul class="pagination" style="margin:0 auto;" data-page-click="groupQuery" data-protocol-group="{{record.groupfield}}"></ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>

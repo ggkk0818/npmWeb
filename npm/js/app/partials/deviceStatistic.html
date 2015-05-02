@@ -52,9 +52,9 @@
                     <td>{{record.dstip}}</td>
                     <td>{{record.count}}</td>
                     <td>{{record.avgDuration}}</td>
-                    <td>{{record.allflow}}</td>
-                    <td>{{record.scount}}</td>
-                    <td>{{record.rcount}}</td>
+                    <td>{{record.allflowStr}}</td>
+                    <td>{{record.scountStr}}</td>
+                    <td>{{record.rcountStr}}</td>
                     <td>{{record.warnCount||0}}</td>
                 </tr>
             </tbody>
@@ -62,5 +62,5 @@
     </div>
 </div>
 <div class="row" style="margin-top:25px;">
-    <canvas id="deviceStatistic_topology" width="800" height="450"></canvas>
+    <div id="deviceStatistic_topology" style="height:400px;"></div>
 </div>

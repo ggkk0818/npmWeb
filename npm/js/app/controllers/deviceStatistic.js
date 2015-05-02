@@ -27,6 +27,8 @@
         $scope.queryDurationType = null;
         //表单数据
         $scope.startTimeInput = $scope.startTime = new Date().Format("yyyy-MM-dd hh:mm:00");
+        //图表变量
+        $scope.deviceChart = null;
         //获取查询参数
         $scope.getSearchParams = function () {
             var params = { pageNum: $scope.pageNum };
@@ -106,12 +108,13 @@
                     for (var i = 0; i < $scope.recordList.length; i++) {
                         var record = $scope.recordList[i];
                         if (typeof record.count === "number" && typeof record.scount === "number")
-                            record.scount = Math.round(record.scount * 10000 / record.count) / 100;
+                            record.scountStr = Math.round(record.scount * 10000 / record.count) / 100;
                         if (typeof record.count === "number" && typeof record.rcount === "number")
-                            record.rcount = Math.round(record.rcount * 10000 / record.count) / 100;
+                            record.rcountStr = Math.round(record.rcount * 10000 / record.count) / 100;
                         if (typeof record.allflow === "number")
-                            record.allflow = numeral(record.allflow).format("0.00b");
+                            record.allflowStr = numeral(record.allflow).format("0.00b");
                     }
+                    $scope.draw($scope.recordList);
                     if ($scope.queryLogType && $scope.queryLogType.warnId) {
                         //查询告警信息
                         warningService.showDevice({ type: $scope.queryLogType.warnId, startWarnTime: params.starttime, endWarnTime: params.endtime, start: params.start, limit: params.limit }, function (data2) {
@@ -176,31 +179,133 @@
                 $scope.search();
             }
         };
-        //canvas
-        $scope.draw = function (list) {
-            var sys = arbor.ParticleSystem(1000, 600, 0.5) // create the system with sensible repulsion/stiffness/friction
-            sys.parameters({ gravity: true }) // use center-gravity to make the graph settle nicely (ymmv)
-            sys.renderer = arborService.getRender()("#deviceStatistic_topology") // our newly created renderer will have its .init() method called shortly by sys...
-
-            if (list && list.length) {
-                var nodes = {}, edges = {};
-                for (var i = 0; i < list.length; i++) {
-                    var record = list[i];
-                    if (!nodes[record.srcip]) {
-                        nodes[record.srcip] = { borders: Math.round(Math.random() * 10), length: record.allflow, label: record.srcip };
-                        edges[record.srcip] = { };
-                    }
-                    else {
-                        nodes[record.srcip].length += record.allflow;
-                    }
-                    edges[record.srcip][record.dstip] = { border: record.allflow };
-                    //sys.addEdge(record.srcip, record.dstip);
+        //图表
+        var option = {
+            title: {
+                text: 'Force',
+                subtext: 'Force-directed tree',
+                x: 'right',
+                y: 'bottom'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} : {b}'
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    restore: { show: true },
+                    magicType: { show: true, type: ['force', 'chord'] },
+                    saveAsImage: { show: true }
                 }
-                sys.merge({ nodes: nodes, edges: edges });
+            },
+            legend: {
+                x: 'left',
+                data: ['叶子节点', '非叶子节点', '根节点']
+            },
+            series: [
+                {
+                    type: 'force',
+                    name: "Force tree",
+                    ribbonType: false,
+                    categories: [
+                        {
+                            name: '叶子节点'
+                        },
+                        {
+                            name: '非叶子节点'
+                        },
+                        {
+                            name: '根节点'
+                        }
+                    ],
+                    itemStyle: {
+                        normal: {
+                            label: {
+                                show: false
+                            },
+                            nodeStyle: {
+                                brushType: 'both',
+                                borderColor: 'rgba(255,215,0,0.6)',
+                                borderWidth: 1
+                            }
+                        }
+                    },
+                    minRadius: 3,
+                    maxRadius: 10,
+                    coolDown: 0.995,
+                    nodes: [],
+                    links: [],
+                    steps: 1
+                }
+            ]
+        };
+        $scope.draw = function (list) {
+            if (!$scope.deviceChart)
+                return;
+            var nodes = {
+                root: {
+                    name: 'ROOT',
+                    value: 10,
+                    id: 0,
+                    depth: 0,
+                    category: 2
+                }
+            }, linkList = [];
+            var nodeIndex = 0;
+            for (var i = 0; i < list.length; i++) {
+                var record = list[i];
+                if (!nodes[record.dstip]) {
+                    var node = {};
+                    node.id = nodeIndex++;
+                    node.name = record.dstip;
+                    node.value = 8;
+                    node.depth = 0;
+                    node.category = 1;
+                    nodes[record.dstip] = node;
+                    linkList.push({
+                        source: 0,
+                        target: record.dstip,
+                        weight: 1
+                    });
+                }
+                var childrenID = record.dstip + "-" + record.srcip;
+                if (!nodes[childrenID]) {
+                    var node = {};
+                    node.id = nodeIndex++;
+                    node.name = record.srcip;
+                    node.value = 4;
+                    node.depth = 1;
+                    node.category = 0;
+                    node.flow = 0;
+                    node.count = 0;
+                    node.scount = 0;
+                    node.rcount = 0;
+                    nodes[childrenID] = node;
+                    linkList.push({
+                        source: nodes[record.dstip].id,
+                        target: node.id,
+                        weight: 1
+                    });
+                }
+                nodes[childrenID].flow += record.allflow;
+                nodes[childrenID].scount += record.scount;
+                nodes[childrenID].rcount += record.rcount;
             }
+            var nodeList = [];
+            for (var name in nodes) {
+                nodeList.push(nodes[name]);
+            }
+            option.series[0].nodes = nodeList;
+            option.series[0].links = linkList;
+            $scope.deviceChart.setOption(option);
         };
         //获取url查询参数
         $scope.setSearchParams();
         $scope.doQuery();
+        //初始化图表
+        $timeout(function () {
+            $scope.deviceChart = echarts.init($("#deviceStatistic_topology").get(0));
+        });
     });
 });

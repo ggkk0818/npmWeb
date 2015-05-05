@@ -8,8 +8,7 @@
             name: "全景视图",
             href: null,
             children: [
-                { name: "实时监控", href: "#/", icon: "glyphicon-eye-open" },
-                { name: "总体拓扑", href: "#/topology", icon: "glyphicon-equalizer" },
+                { name: "实时监控", href: "#/", icon: "glyphicon-eye-open" }
             ]
         });
         sidebarNav.push({
@@ -41,8 +40,8 @@
             href: "#/settings"
         });
         otherNav.push({
-            name: "报表",
-            href: "#/report/.*"
+            name: "物理拓扑",
+            href: "#/device/statistic"
         });
         var getRoutePath = function (target) {
             var path = null;

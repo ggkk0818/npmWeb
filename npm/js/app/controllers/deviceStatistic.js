@@ -252,7 +252,7 @@
                     category: 2
                 }
             }, linkList = [];
-            var nodeIndex = 0;
+            var nodeIndex = 1;
             for (var i = 0; i < list.length; i++) {
                 var record = list[i];
                 if (!nodes[record.dstip]) {
@@ -260,7 +260,7 @@
                     node.id = nodeIndex++;
                     node.name = record.dstip;
                     node.value = 8;
-                    node.depth = 0;
+                    node.depth = 1;
                     node.category = 1;
                     nodes[record.dstip] = node;
                     linkList.push({
@@ -269,13 +269,16 @@
                         weight: 1
                     });
                 }
+            }
+            for (var i = 0; i < list.length; i++) {
+                var record = list[i];
                 var childrenID = record.dstip + "-" + record.srcip;
                 if (!nodes[childrenID]) {
                     var node = {};
                     node.id = nodeIndex++;
                     node.name = record.srcip;
                     node.value = 4;
-                    node.depth = 1;
+                    node.depth = 2;
                     node.category = 0;
                     node.flow = 0;
                     node.count = 0;

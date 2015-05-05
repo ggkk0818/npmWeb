@@ -536,10 +536,19 @@
         var chart_warn_options = {
             animation: false,
             title: {
-                text: '告警'
+                text: '实时监控',
+                subtext: ''
             },
             tooltip: {
-                trigger: 'axis'
+                trigger: 'axis',
+                axisPointer: {
+                    show: true,
+                    type: 'cross',
+                    lineStyle: {
+                        type: 'dashed',
+                        width: 1
+                    }
+                }
             },
             legend: {
                 data: ['status0', 'status1', 'status2', 'status3', 'status6', 'status7']
@@ -557,10 +566,10 @@
             toolbox: {
                 show: true,
                 feature: {
-                    mark: {show: true},
-                    dataView: {show: true, readOnly: false},
-                    restore: {show: true},
-                    saveAsImage: {show: true}
+                    mark: { show: true },
+                    dataView: { show: true, readOnly: false },
+                    restore: { show: true },
+                    saveAsImage: { show: true }
                 }
             },
             //dataZoom: {
@@ -782,84 +791,83 @@
             toolbox: {
                 show: true
             },
-            series: [
-                {
-                    name: '响应率',
-                    type: 'gauge',
-                    min: 0,
-                    max: 100,
-                    splitNumber: 10,
-                    axisLine: {            // 坐标轴线
-                        lineStyle: {       // 属性lineStyle控制线条样式
-                            width: 10
-                        }
-                    },
-                    axisTick: {            // 坐标轴小标记
-                        length: 15,        // 属性length控制线长
-                        lineStyle: {       // 属性lineStyle控制线条样式
-                            color: 'auto'
-                        }
-                    },
-                    splitLine: {           // 分隔线
-                        length: 20,         // 属性length控制线长
-                        lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
-                            color: 'auto'
-                        }
-                    },
-                    title: {
-                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                            fontWeight: 'bolder',
-                            fontSize: 20,
-                            fontStyle: 'italic'
-                        }
-                    },
-                    detail: {
-                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                            fontWeight: 'bolder'
-                        }
-                    },
-                    data: [{value: 0, name: ''}]
+            series: [{
+                name: '响应率',
+                type: 'gauge',
+                min: 50,
+                max: 100,
+                radius: '85%',
+                splitNumber: 5,
+                axisLine: {            // 坐标轴线
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        width: 10
+                    }
                 },
-                {
-                    name: '成功率',
-                    type: 'gauge',
-                    center: ['25%', '55%'],    // 默认全局居中
-                    radius: '80%',
-                    min: 0,
-                    max: 100,
-                    endAngle: 45,
-                    splitNumber: 10,
-                    axisLine: {            // 坐标轴线
-                        lineStyle: {       // 属性lineStyle控制线条样式
-                            width: 8
-                        }
-                    },
-                    axisTick: {            // 坐标轴小标记
-                        length: 12,        // 属性length控制线长
-                        lineStyle: {       // 属性lineStyle控制线条样式
-                            color: 'auto'
-                        }
-                    },
-                    splitLine: {           // 分隔线
-                        length: 20,         // 属性length控制线长
-                        lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
-                            color: 'auto'
-                        }
-                    },
-                    pointer: {
-                        width: 5
-                    },
-                    title: {
-                        offsetCenter: [0, '-30%']      // x, y，单位px
-                    },
-                    detail: {
-                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                            fontWeight: 'bolder'
-                        }
-                    },
-                    data: [{value: 0, name: ''}]
+                axisTick: {            // 坐标轴小标记
+                    length: 15,        // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: 'auto'
+                    }
                 },
-            ]
+                splitLine: {           // 分隔线
+                    length: 20,         // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+                title: {
+                    textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder',
+                        fontSize: 12,
+                        fontStyle: 'normal',
+                    }
+                },
+                detail: {
+                    textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder'
+                    }
+                },
+                data: [{ value: 0, name: '响应率' }]
+            }, {
+                name: '成功率',
+                type: 'gauge',
+                center: ['25%', '50%'],    // 默认全局居中
+                radius: '90%',
+                min: 50,
+                max: 100,
+                endAngle: 45,
+                splitNumber: 5,
+                axisLine: {            // 坐标轴线
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        width: 8
+                    }
+                },
+                axisTick: {            // 坐标轴小标记
+                    length: 12,        // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: 'auto'
+                    }
+                },
+                splitLine: {           // 分隔线
+                    length: 20,         // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+                pointer: {
+                    width: 5
+                },
+                title: {
+                    offsetCenter: [0, '-30%'],       // x, y，单位px
+                },
+                detail:
+                {
+                    textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder'
+                    }
+                },
+                data: [{ value: 0, name: '成功率' }]
+            }]
         };
         var chart_8583 = null;
         var chart_8583_options = {
@@ -869,84 +877,83 @@
             toolbox: {
                 show: true
             },
-            series: [
-                {
-                    name: '响应率',
-                    type: 'gauge',
-                    min: 0,
-                    max: 100,
-                    splitNumber: 10,
-                    axisLine: {            // 坐标轴线
-                        lineStyle: {       // 属性lineStyle控制线条样式
-                            width: 10
-                        }
-                    },
-                    axisTick: {            // 坐标轴小标记
-                        length: 15,        // 属性length控制线长
-                        lineStyle: {       // 属性lineStyle控制线条样式
-                            color: 'auto'
-                        }
-                    },
-                    splitLine: {           // 分隔线
-                        length: 20,         // 属性length控制线长
-                        lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
-                            color: 'auto'
-                        }
-                    },
-                    title: {
-                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                            fontWeight: 'bolder',
-                            fontSize: 20,
-                            fontStyle: 'italic'
-                        }
-                    },
-                    detail: {
-                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                            fontWeight: 'bolder'
-                        }
-                    },
-                    data: [{value: 0, name: ''}]
+            series: [{
+                name: '响应率',
+                type: 'gauge',
+                min: 50,
+                max: 100,
+                radius: '85%',
+                splitNumber: 5,
+                axisLine: {            // 坐标轴线
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        width: 10
+                    }
                 },
-                {
-                    name: '成功率',
-                    type: 'gauge',
-                    center: ['25%', '55%'],    // 默认全局居中
-                    radius: '80%',
-                    min: 0,
-                    max: 100,
-                    endAngle: 45,
-                    splitNumber: 10,
-                    axisLine: {            // 坐标轴线
-                        lineStyle: {       // 属性lineStyle控制线条样式
-                            width: 8
-                        }
-                    },
-                    axisTick: {            // 坐标轴小标记
-                        length: 12,        // 属性length控制线长
-                        lineStyle: {       // 属性lineStyle控制线条样式
-                            color: 'auto'
-                        }
-                    },
-                    splitLine: {           // 分隔线
-                        length: 20,         // 属性length控制线长
-                        lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
-                            color: 'auto'
-                        }
-                    },
-                    pointer: {
-                        width: 5
-                    },
-                    title: {
-                        offsetCenter: [0, '-30%']     // x, y，单位px
-                    },
-                    detail: {
-                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                            fontWeight: 'bolder'
-                        }
-                    },
-                    data: [{value: 0, name: ''}]
+                axisTick: {            // 坐标轴小标记
+                    length: 15,        // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: 'auto'
+                    }
                 },
-            ]
+                splitLine: {           // 分隔线
+                    length: 20,         // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+                title: {
+                    textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder',
+                        fontSize: 12,
+                        fontStyle: 'normal',
+                    }
+                },
+                detail: {
+                    textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder'
+                    }
+                },
+                data: [{ value: 0, name: '响应率' }]
+            }, {
+                name: '成功率',
+                type: 'gauge',
+                center: ['25%', '50%'],    // 默认全局居中
+                radius: '90%',
+                min: 50,
+                max: 100,
+                endAngle: 45,
+                splitNumber: 5,
+                axisLine: {            // 坐标轴线
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        width: 8
+                    }
+                },
+                axisTick: {            // 坐标轴小标记
+                    length: 12,        // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: 'auto'
+                    }
+                },
+                splitLine: {           // 分隔线
+                    length: 20,         // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+                pointer: {
+                    width: 5
+                },
+                title: {
+                    offsetCenter: [0, '-30%'],       // x, y，单位px
+                },
+                detail:
+                {
+                    textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder'
+                    }
+                },
+                data: [{ value: 0, name: '成功率' }]
+            }]
         };
         var chart_20022 = null;
         var chart_20022_options = {
@@ -956,84 +963,83 @@
             toolbox: {
                 show: true
             },
-            series: [
-                {
-                    name: '响应率',
-                    type: 'gauge',
-                    min: 0,
-                    max: 100,
-                    splitNumber: 10,
-                    axisLine: {            // 坐标轴线
-                        lineStyle: {       // 属性lineStyle控制线条样式
-                            width: 10
-                        }
-                    },
-                    axisTick: {            // 坐标轴小标记
-                        length: 15,        // 属性length控制线长
-                        lineStyle: {       // 属性lineStyle控制线条样式
-                            color: 'auto'
-                        }
-                    },
-                    splitLine: {           // 分隔线
-                        length: 20,         // 属性length控制线长
-                        lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
-                            color: 'auto'
-                        }
-                    },
-                    title: {
-                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                            fontWeight: 'bolder',
-                            fontSize: 20,
-                            fontStyle: 'italic'
-                        }
-                    },
-                    detail: {
-                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                            fontWeight: 'bolder'
-                        }
-                    },
-                    data: [{value: 0, name: ''}]
+            series: [{
+                name: '响应率',
+                type: 'gauge',
+                min: 50,
+                max: 100,
+                radius: '85%',
+                splitNumber: 5,
+                axisLine: {            // 坐标轴线
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        width: 10
+                    }
                 },
-                {
-                    name: '成功率',
-                    type: 'gauge',
-                    center: ['25%', '55%'],    // 默认全局居中
-                    radius: '80%',
-                    min: 0,
-                    max: 100,
-                    endAngle: 45,
-                    splitNumber: 10,
-                    axisLine: {            // 坐标轴线
-                        lineStyle: {       // 属性lineStyle控制线条样式
-                            width: 8
-                        }
-                    },
-                    axisTick: {            // 坐标轴小标记
-                        length: 12,        // 属性length控制线长
-                        lineStyle: {       // 属性lineStyle控制线条样式
-                            color: 'auto'
-                        }
-                    },
-                    splitLine: {           // 分隔线
-                        length: 20,         // 属性length控制线长
-                        lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
-                            color: 'auto'
-                        }
-                    },
-                    pointer: {
-                        width: 5
-                    },
-                    title: {
-                        offsetCenter: [0, '-30%']      // x, y，单位px
-                    },
-                    detail: {
-                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                            fontWeight: 'bolder'
-                        }
-                    },
-                    data: [{value: 0, name: ''}]
+                axisTick: {            // 坐标轴小标记
+                    length: 15,        // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: 'auto'
+                    }
                 },
-            ]
+                splitLine: {           // 分隔线
+                    length: 20,         // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+                title: {
+                    textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder',
+                        fontSize: 12,
+                        fontStyle: 'normal',
+                    }
+                },
+                detail: {
+                    textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder'
+                    }
+                },
+                data: [{ value: 0, name: '响应率' }]
+            }, {
+                name: '成功率',
+                type: 'gauge',
+                center: ['25%', '50%'],    // 默认全局居中
+                radius: '90%',
+                min: 50,
+                max: 100,
+                endAngle: 45,
+                splitNumber: 5,
+                axisLine: {            // 坐标轴线
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        width: 8
+                    }
+                },
+                axisTick: {            // 坐标轴小标记
+                    length: 12,        // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: 'auto'
+                    }
+                },
+                splitLine: {           // 分隔线
+                    length: 20,         // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+                pointer: {
+                    width: 5
+                },
+                title: {
+                    offsetCenter: [0, '-30%'],       // x, y，单位px
+                },
+                detail:
+                {
+                    textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder'
+                    }
+                },
+                data: [{ value: 0, name: '成功率' }]
+            }]
         };
         var chart_mysql = null;
         var chart_mysql_options = {
@@ -1043,84 +1049,83 @@
             toolbox: {
                 show: true
             },
-            series: [
-                {
-                    name: '响应率',
-                    type: 'gauge',
-                    min: 0,
-                    max: 100,
-                    splitNumber: 10,
-                    axisLine: {            // 坐标轴线
-                        lineStyle: {       // 属性lineStyle控制线条样式
-                            width: 10
-                        }
-                    },
-                    axisTick: {            // 坐标轴小标记
-                        length: 15,        // 属性length控制线长
-                        lineStyle: {       // 属性lineStyle控制线条样式
-                            color: 'auto'
-                        }
-                    },
-                    splitLine: {           // 分隔线
-                        length: 20,         // 属性length控制线长
-                        lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
-                            color: 'auto'
-                        }
-                    },
-                    title: {
-                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                            fontWeight: 'bolder',
-                            fontSize: 20,
-                            fontStyle: 'italic'
-                        }
-                    },
-                    detail: {
-                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                            fontWeight: 'bolder'
-                        }
-                    },
-                    data: [{value: 0, name: ''}]
+            series: [{
+                name: '响应率',
+                type: 'gauge',
+                min: 50,
+                max: 100,
+                radius: '85%',
+                splitNumber: 5,
+                axisLine: {            // 坐标轴线
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        width: 10
+                    }
                 },
-                {
-                    name: '成功率',
-                    type: 'gauge',
-                    center: ['25%', '55%'],    // 默认全局居中
-                    radius: '80%',
-                    min: 0,
-                    max: 100,
-                    endAngle: 45,
-                    splitNumber: 10,
-                    axisLine: {            // 坐标轴线
-                        lineStyle: {       // 属性lineStyle控制线条样式
-                            width: 8
-                        }
-                    },
-                    axisTick: {            // 坐标轴小标记
-                        length: 12,        // 属性length控制线长
-                        lineStyle: {       // 属性lineStyle控制线条样式
-                            color: 'auto'
-                        }
-                    },
-                    splitLine: {           // 分隔线
-                        length: 20,         // 属性length控制线长
-                        lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
-                            color: 'auto'
-                        }
-                    },
-                    pointer: {
-                        width: 5
-                    },
-                    title: {
-                        offsetCenter: [0, '-30%']       // x, y，单位px
-                    },
-                    detail: {
-                        textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                            fontWeight: 'bolder'
-                        }
-                    },
-                    data: [{value: 0, name: ''}]
+                axisTick: {            // 坐标轴小标记
+                    length: 15,        // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: 'auto'
+                    }
                 },
-            ]
+                splitLine: {           // 分隔线
+                    length: 20,         // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+                title: {
+                    textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder',
+                        fontSize: 12,
+                        fontStyle: 'normal',
+                    }
+                },
+                detail: {
+                    textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder'
+                    }
+                },
+                data: [{ value: 0, name: '响应率' }]
+            }, {
+                name: '成功率',
+                type: 'gauge',
+                center: ['25%', '50%'],    // 默认全局居中
+                radius: '90%',
+                min: 50,
+                max: 100,
+                endAngle: 45,
+                splitNumber: 5,
+                axisLine: {            // 坐标轴线
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        width: 8
+                    }
+                },
+                axisTick: {            // 坐标轴小标记
+                    length: 12,        // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: 'auto'
+                    }
+                },
+                splitLine: {           // 分隔线
+                    length: 20,         // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+                pointer: {
+                    width: 5
+                },
+                title: {
+                    offsetCenter: [0, '-30%'],       // x, y，单位px
+                },
+                detail:
+                {
+                    textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder'
+                    }
+                },
+                data: [{ value: 0, name: '成功率' }]
+            }]
         };
         $scope.$watch(function () {
             var r = null;

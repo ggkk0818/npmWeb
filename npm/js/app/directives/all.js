@@ -3,4 +3,5 @@
     "./numberAnimate",
     "./pagination",
     "./popover",
+    "./paginationProtocolGroup"
 ], function () { });

@@ -185,13 +185,13 @@
             $timeout(function () {
                 chart_warn = echarts.init($("#index_chart_warn")[0]);
                 chart_warn.setOption(chart_warn_options);
-                chart_http = echarts.init($("#index_chart_http")[0]);
+                chart_http = echarts.init($("#index_chart_http")[0], "blue");
                 chart_http.setOption(chart_http_options);
-                chart_8583 = echarts.init($("#index_chart_8583")[0]);
+                chart_8583 = echarts.init($("#index_chart_8583")[0], "blue");
                 chart_8583.setOption(chart_8583_options);
-                chart_20022 = echarts.init($("#index_chart_20022")[0]);
+                chart_20022 = echarts.init($("#index_chart_20022")[0], "blue");
                 chart_20022.setOption(chart_20022_options);
-                chart_mysql = echarts.init($("#index_chart_mysql")[0]);
+                chart_mysql = echarts.init($("#index_chart_mysql")[0], "blue");
                 chart_mysql.setOption(chart_mysql_options);
             });
 

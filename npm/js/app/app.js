@@ -88,6 +88,10 @@
                 templateUrl: 'js/app/partials/protocol.html',
                 controller: 'ProtocolCtrl'
             })
+            .when('/protocolChart/:protocol', {
+                templateUrl: 'js/app/partials/protocolChart.html',
+                controller: 'ProtocolChartCtrl'
+            })
             .otherwise({
                 redirectTo: '/'
             });

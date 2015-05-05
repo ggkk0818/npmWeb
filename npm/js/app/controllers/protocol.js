@@ -55,7 +55,7 @@
                 }
             });
         };
-
+        //配置过滤器方法
         $scope.addFilter = function (field) {
             if (field)
                 $scope.queryFieldList[field.name] = field;
@@ -64,7 +64,7 @@
             if (field)
                 delete $scope.queryFieldList[field.name];
         };
-
+        //配置分组方法
         $scope.toggleGroup = function (field) {
             if (field) {
                 if($scope.groupFieldList[field.name])
@@ -80,7 +80,7 @@
                 r++;
             return r;
         };
-
+        //配置显示字段方法
         $scope.toggleDisplayField = function (field) {
             if (!field)
                 return;
@@ -96,7 +96,7 @@
             $scope.groupFieldCount = 0;
             $scope.displayFieldList = {};
         };
-        
+        //普通查询
         $scope.doQuery = function (pageNum) {
             if (pageNum)
                 $scope.pageNum = pageNum;
@@ -129,7 +129,7 @@
                 }
             });
         };
-
+        //分组查询
         $scope.doGroup = function (pageNum) {
             if (pageNum)
                 $scope.pageNum = pageNum;
@@ -169,9 +169,66 @@
                 }
             });
         };
-
+        //分组详细查询
+        $scope.toggleGroupDetailTable = function (record) {
+            record.showTable = !record.showTable;
+            if (!record.subRecordList) {
+                $scope.groupQuery(1, record.groupfield);
+            }
+        };
         $scope.groupQuery = function (pageNum, groupField) {
-
+            var group = null;
+            for (var i = 0; i < $scope.recordList.length; i++) {
+                var record = $scope.recordList[i];
+                if (record.groupfield == groupField) {
+                    group = record;
+                    break;
+                }
+            }
+            if (!group)
+                return;
+            if (pageNum)
+                group.pageNum = pageNum;
+            var groupValueArr = groupField.split(",");
+            var params = {
+                start: (group.pageNum - 1) * $scope.pageSize,
+                limit: $scope.pageSize,
+                name: $scope.protocolType
+            };
+            var queryFieldList = _.clone($scope.queryFieldList, true) || {};
+            if ($scope.groupFieldList) {
+                var groupIndex = 0;
+                for (var name in $scope.groupFieldList) {
+                    if (groupIndex >= groupValueArr.length)
+                        break;
+                    var field = $scope.groupFieldList[name];
+                    queryFieldList[name] = { name: field.name, type: field.type, opt: { name: "=" }, inputValue1: groupValueArr[groupIndex] };
+                    groupIndex++;
+                }
+            }
+            if (queryFieldList) {
+                var i = 0;
+                for (var name in queryFieldList) {
+                    var field = queryFieldList[name];
+                    if (!field.opt)
+                        continue;
+                    params["fields[" + i + "]"] = name;
+                    params["opts[" + name + "]"] = field.opt.name;
+                    if (typeof field.inputValue1 === "string")
+                        params["values[" + name + "][0]"] = field.inputValue1;
+                    if (typeof field.inputValue1 === "string" && typeof field.inputValue2 === "string")
+                        params["values[" + name + "][1]"] = field.inputValue2;
+                    params["types[" + name + "]"] = field.type;
+                    i++;
+                }
+            }
+            protocolService.list(params, function (data) {
+                if (data) {
+                    group.subRecordList = data && data.data ? data.data : [];
+                    group.recordSize = data && data.count ? data.count : 0;
+                    group.pageTotal = Math.floor(group.recordSize / $scope.pageSize) + (group.recordSize % $scope.pageSize > 0 ? 1 : 0);
+                }
+            });
         };
 
         $scope.applyFilter = function () {

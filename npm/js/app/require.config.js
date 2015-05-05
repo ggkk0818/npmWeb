@@ -33,7 +33,7 @@ require.config({
         elasticjs: '../vendor/elasticjs/elastic',
         'date-format': '../vendor/Date.Format',
         'json-format': '../vendor/JSONFormat',
-        'echarts': '../vendor/echarts/echarts-all'
+        'echarts': '../vendor/echarts/echarts-all-src'
     },
     shim: {
         angular: {

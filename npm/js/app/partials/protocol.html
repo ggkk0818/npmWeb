@@ -127,7 +127,7 @@
 <div class="row" ng-show="isGroupMode">
     <div class="col-xs-12">
         <div ng-repeat="record in recordList">
-            <h3 ng-click="record.showTable=!record.showTable">{{record.groupfield}} <span class="label label-default">{{record.count||0}}</span></h3>
+            <h3 ng-click="toggleGroupDetailTable(record)">{{record.groupfield}} <span class="label label-default">{{record.count||0}}</span></h3>
             <div ng-show="record.showTable">
                 <table class="table">
                     <thead>
@@ -147,7 +147,7 @@
                         <span style="padding-right:10px;">第 {{record.pageNum||0}} 页</span>
                         <span>共 {{record.pageTotal||0}} 页</span>
                     </div>
-                    <ul class="pagination" style="margin:0 auto;" data-page-click="groupQuery" data-protocol-group="{{record.groupfield}}"></ul>
+                    <ul class="pagination" style="margin:0 auto;" data-page-num="{{record.pageNum||0}}" data-page-total="{{record.pageTotal||0}}" data-page-click="groupQuery" data-protocol-group="{{record.groupfield}}"></ul>
                 </nav>
             </div>
         </div>

@@ -5,5 +5,6 @@
     "./deviceStatistic",
     "./statisticSearch",
     "./warningSearch",
-    "./protocol"
+    "./protocol",
+    "./protocolChart"
 ], function () { });

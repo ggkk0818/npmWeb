@@ -1,155 +1,201 @@
 ﻿<div class="row">
     <div class="col-xs-12">
-        <div class="page-header">
-            <h1>交易追踪</h1>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-xs-12">
-        <div class="pull-right">
-            <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                    增加过滤器
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
-                    <li role="presentation" ng-repeat="(name,field) in FIELD_LIST" ng-class="{'disabled':queryFieldList[name]}">
-                        <a role="menuitem" tabindex="-1" href="javascript:void(0);" ng-click="addFilter(field)">{{field.displayName||field.name}}</a>
-                    </li>
-                </ul>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="javascript:void(0);" role="tab" data-toggle="tab" data-target="#protocol-tab-chart">统计</a></li>
+            <li role="presentation"><a href="javascript:void(0);" role="tab" data-toggle="tab" data-target="#protocol-tab-statistic">交易追踪</a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="protocol-tab-chart">
+                <div class="row" style="margin-top:20px;">
+                    <div class="col-md-12">
+                        <div class="pull-left">
+                            <form class="form-inline">
+                                <input type="text" class="form-control date" data-date-format="yyyy-mm-dd hh:ii:ss" data-date-language="zh-CN" placeholder="开始时间" ng-model="startTimeInput" ng-keypress="formKeypressHandler($event)">
+                                <div class="form-group">
+                                    <label class="sr-only">时间间隔</label>
+                                    <div class="form-group btn-group">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                                            {{durationType.name || "时间间隔"}} <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li ng-repeat="t in DURATION_TYPE" ng-class="{'active':durationType.id==t.id}"><a href="javascript:void(0);" ng-click="$parent.durationType=t">{{t.name}}</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <button class="btn btn-info" type="button" ng-click="chartSearch()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:20px;">
+                    <div class="col-xs-6">
+                        <div id="protocol-chart-flow" style="height:400px;"></div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div id="protocol-chart-resp" style="height:400px;"></div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:20px;">
+                    <div class="col-xs-6">
+                        <div id="protocol-chart-code" style="height:400px;"></div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div id="protocol-chart-warn" style="height:400px;"></div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <table class="table">
-            <tbody>
-                <tr ng-repeat="(fieldName,queryField) in queryFieldList">
-                    <td style="width:30px;"><a href="javascript:void(0);" ng-click="removeFilter(queryField)"><span class="glyphicon glyphicon-remove"></span></a></td>
-                    <td style="width:200px;">{{queryField.displayName||queryField.name}}</td>
-                    <td style="width:100px;">
-                        <div class="dropdown" ng-repeat="(name,opts) in FIELD_OPT" ng-show="name==queryField.type">
+            <div role="tabpanel" class="tab-pane" id="protocol-tab-statistic">
+                <div class="row" style="margin-top:20px;">
+                    <div class="col-xs-12">
+                        <div class="pull-right">
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
+                                    增加过滤器
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                    <li role="presentation" ng-repeat="(name,field) in FIELD_LIST" ng-class="{'disabled':queryFieldList[name]}">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);" ng-click="addFilter(field)">{{field.displayName||field.name}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <table class="table">
+                            <tbody>
+                                <tr ng-repeat="(fieldName,queryField) in queryFieldList">
+                                    <td style="width:30px;"><a href="javascript:void(0);" ng-click="removeFilter(queryField)"><span class="glyphicon glyphicon-remove"></span></a></td>
+                                    <td style="width:200px;">{{queryField.displayName||queryField.name}}</td>
+                                    <td style="width:100px;">
+                                        <div class="dropdown" ng-repeat="(name,opts) in FIELD_OPT" ng-show="name==queryField.type">
+                                            <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
+                                                {{queryField.opt.displayName || queryField.opt.name ||"选择操作"}}
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                                <li role="presentation" ng-repeat="opt in opts" ng-class="{'active':queryField.opt.name==opt.name}">
+                                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);" ng-click="queryField.opt=opt">{{opt.displayName||opt.name}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div ng-show="queryField.type=='String'||queryField.type=='Int'||queryField.type=='Byte'">
+                                            <form class="form-inline">
+                                                <div class="form-group">
+                                                    <label class="sr-only">&nbsp;</label>
+                                                    <input class="form-control input-sm" type="text" ng-model="queryField.inputValue1" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="sr-only">&nbsp;</label>
+                                                    <input class="form-control input-sm" type="text" ng-model="queryField.inputValue2" ng-show="queryField.opt.name=='><'" />
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div ng-show="queryField.type=='Date'">
+                                            <form class="form-inline">
+                                                <div class="form-group">
+                                                    <label class="sr-only">&nbsp;</label>
+                                                    <input class="form-control input-sm date" type="text" data-date-format="yyyy-mm-dd hh:ii:ss" data-date-language="zh-CN" ng-model="queryField.inputValue1" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="sr-only">&nbsp;</label>
+                                                    <input class="form-control input-sm date" type="text" data-date-format="yyyy-mm-dd hh:ii:ss" data-date-language="zh-CN" ng-model="queryField.inputValue2" ng-show="queryField.opt.name=='><'" />
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="list-group">
+                            <a href="javascript:void(0);" class="list-group-item" ng-repeat="(name,field) in FIELD_LIST" ng-click="toggleDisplayField(field)">
+                                <span class="glyphicon" aria-hidden="true" ng-class="{'glyphicon-ok-circle':displayFieldList[name],'glyphicon-ban-circle':!displayFieldList[name]}"></span>{{field.displayName||field.name}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="dropdown">
                             <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
-                                {{queryField.opt.displayName || queryField.opt.name ||"选择操作"}}
+                                {{ groupFieldCount ? groupFieldCount + "个分组条件" : "选择分组条件"}}
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                <li role="presentation" ng-repeat="opt in opts" ng-class="{'active':queryField.opt.name==opt.name}">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);" ng-click="queryField.opt=opt">{{opt.displayName||opt.name}}</a>
+                                <li role="presentation" ng-repeat="(name,field) in FIELD_LIST" ng-class="{'active':groupFieldList[name]}">
+                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);" ng-click="toggleGroup(field)">{{field.displayName||field.name}}</a>
                                 </li>
                             </ul>
                         </div>
-                    </td>
-                    <td>
-                        <div ng-show="queryField.type=='String'||queryField.type=='Int'">
-                            <form class="form-inline">
-                                <div class="form-group">
-                                    <label class="sr-only">&nbsp;</label>
-                                    <input class="form-control input-sm" type="text" ng-model="queryField.inputValue1" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="sr-only">&nbsp;</label>
-                                    <input class="form-control input-sm" type="text" ng-model="queryField.inputValue2" ng-show="queryField.opt.name=='><'" />
-                                </div>
-                            </form>
-                        </div>
-                        <div ng-show="queryField.type=='Date'">
-                            <form class="form-inline">
-                                <div class="form-group">
-                                    <label class="sr-only">&nbsp;</label>
-                                    <input class="form-control input-sm date" type="text" data-date-format="yyyy-mm-dd hh:ii:ss" data-date-language="zh-CN" ng-model="queryField.inputValue1" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="sr-only">&nbsp;</label>
-                                    <input class="form-control input-sm date" type="text" data-date-format="yyyy-mm-dd hh:ii:ss" data-date-language="zh-CN" ng-model="queryField.inputValue1" ng-show="queryField.opt.name=='><'" />
-                                </div>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="row">
-    <div class="col-xs-12">
-        <div class="list-group">
-            <a href="javascript:void(0);" class="list-group-item" ng-repeat="(name,field) in FIELD_LIST" ng-click="toggleDisplayField(field)">
-                <span class="glyphicon" aria-hidden="true" ng-class="{'glyphicon-ok-circle':displayFieldList[name],'glyphicon-ban-circle':!displayFieldList[name]}"></span>{{field.displayName||field.name}}
-            </a>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-xs-12">
-        <div class="dropdown">
-            <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
-                {{ groupFieldCount ? groupFieldCount + "个分组条件" : "选择分组条件"}}
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                <li role="presentation" ng-repeat="(name,field) in FIELD_LIST" ng-class="{'active':groupFieldList[name]}">
-                    <a role="menuitem" tabindex="-1" href="javascript:void(0);" ng-click="toggleGroup(field)">{{field.displayName||field.name}}</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
-<div class="row" style="margin-top:10px;">
-    <div class="col-xs-12">
-        <button class="btn btn-primary" type="button" ng-click="applyFilter()"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>应用</button>
-        <button class="btn btn-default" type="button" ng-click="reset()"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>重置</button>
-    </div>
-</div>
-<hr />
-<div class="row" ng-hide="isGroupMode">
-    <div class="col-xs-12">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th ng-repeat="(name,field) in displayFieldList">{{field.displayName||field.name}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="record in recordList">
-                    <td ng-repeat="(name,field) in displayFieldList">{{record[name]}}</td>
-                </tr>
-            </tbody>
-        </table>
-        <nav class="text-center" style="position:relative;">
-            <div class="pull-right" style="line-height:34px;position:absolute;top:0;right:0;">
-                <span style="padding-right:10px;">匹配的记录 {{recordSize||0}} 笔</span>
-                <span style="padding-right:10px;">第 {{pageNum||0}} 页</span>
-                <span>共 {{pageTotal||0}} 页</span>
-            </div>
-            <ul class="pagination" style="margin:0 auto;" data-page-click="doQuery"></ul>
-        </nav>
-    </div>
-</div>
-<div class="row" ng-show="isGroupMode">
-    <div class="col-xs-12">
-        <div ng-repeat="record in recordList">
-            <h3 ng-click="toggleGroupDetailTable(record)">{{record.groupfield}} <span class="label label-default">{{record.count||0}}</span></h3>
-            <div ng-show="record.showTable">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th ng-repeat="(name,field) in displayFieldList">{{field.displayName||field.name}}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="subRecord in record.subRecordList">
-                            <td ng-repeat="(name,field) in displayFieldList">{{subRecord[name]}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <nav class="text-center" style="position:relative;">
-                    <div class="pull-right" style="line-height:34px;position:absolute;top:0;right:0;">
-                        <span style="padding-right:10px;">匹配的记录 {{record.recordSize||0}} 笔</span>
-                        <span style="padding-right:10px;">第 {{record.pageNum||0}} 页</span>
-                        <span>共 {{record.pageTotal||0}} 页</span>
                     </div>
-                    <ul class="pagination" style="margin:0 auto;" data-page-num="{{record.pageNum||0}}" data-page-total="{{record.pageTotal||0}}" data-page-click="groupQuery" data-protocol-group="{{record.groupfield}}"></ul>
-                </nav>
+                </div>
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-xs-12">
+                        <button class="btn btn-primary" type="button" ng-click="applyFilter()"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>应用</button>
+                        <button class="btn btn-default" type="button" ng-click="reset()"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>重置</button>
+                    </div>
+                </div>
+                <hr />
+                <div class="row" ng-hide="isGroupMode">
+                    <div class="col-xs-12">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th ng-repeat="(name,field) in displayFieldList">{{field.displayName||field.name}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="record in recordList">
+                                    <td ng-repeat="(name,field) in displayFieldList">{{record[name]}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <nav class="text-center" style="position:relative;">
+                            <div class="pull-right" style="line-height:34px;position:absolute;top:0;right:0;">
+                                <span style="padding-right:10px;">匹配的记录 {{recordSize||0}} 笔</span>
+                                <span style="padding-right:10px;">第 {{pageNum||0}} 页</span>
+                                <span>共 {{pageTotal||0}} 页</span>
+                            </div>
+                            <ul class="pagination" style="margin:0 auto;" data-page-click="doQuery"></ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="row" ng-show="isGroupMode">
+                    <div class="col-xs-12">
+                        <div ng-repeat="record in recordList">
+                            <h3 ng-click="toggleGroupDetailTable(record)">{{record.groupfield}} <span class="label label-default">{{record.count||0}}</span></h3>
+                            <div ng-show="record.showTable">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th ng-repeat="(name,field) in displayFieldList">{{field.displayName||field.name}}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="subRecord in record.subRecordList">
+                                            <td ng-repeat="(name,field) in displayFieldList">{{subRecord[name]}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <nav class="text-center" style="position:relative;">
+                                    <div class="pull-right" style="line-height:34px;position:absolute;top:0;right:0;">
+                                        <span style="padding-right:10px;">匹配的记录 {{record.recordSize||0}} 笔</span>
+                                        <span style="padding-right:10px;">第 {{record.pageNum||0}} 页</span>
+                                        <span>共 {{record.pageTotal||0}} 页</span>
+                                    </div>
+                                    <ul class="pagination" style="margin:0 auto;" data-page-num="{{record.pageNum||0}}" data-page-total="{{record.pageTotal||0}}" data-page-click="groupQuery" data-protocol-group="{{record.groupfield}}"></ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
     </div>
 </div>

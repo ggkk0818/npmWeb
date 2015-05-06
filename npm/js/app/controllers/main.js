@@ -18,11 +18,11 @@
                 { name: "HTTP", href: "#/protocol/http", icon: "glyphicon-screenshot" },
                 { name: "8583", href: "#/protocol/8583", icon: "glyphicon-th" },
                 { name: "20022", href: "#/protocol/20022", icon: "glyphicon-list-alt" },
-                { name: "SOAP-XML", href: "#/protocol/soap", icon: "glyphicon-globe" },
-                { name: "TUXEDO", href: "#/protocol/tuxedo", icon: "glyphicon-road" },
-                { name: "MQ", href: "#/protocol/mq", icon: "glyphicon-tasks" },
-                { name: "DB2", href: "#/protocol/db2", icon: "glyphicon-modal-window" },
-                { name: "ORACLE", href: "#/protocol/oracle", icon: "glyphicon-credit-card" },
+                { name: "MYSQL", href: "#/protocol/mysql", icon: "glyphicon-globe" },
+                { name: "RADIUS", href: "#/protocol/radius", icon: "glyphicon-road" },
+                { name: "DNS", href: "#/protocol/dns", icon: "glyphicon-tasks" },
+                { name: "MQ", href: "#/protocol/mq", icon: "glyphicon-modal-window" },
+                //{ name: "ORACLE", href: "#/protocol/oracle", icon: "glyphicon-credit-card" },
             ]
         });
         sidebarNav.push({

@@ -85,20 +85,6 @@
                         if (typeof status === "number" && $scope["warnTimeLine_warnS" + status]) {
                             $scope["warnTimeLine_warnS" + status].push(warn);
                         }
-                        //if (status == 0) {
-                        //    $scope.warnTimeLine_warnS0.push(warn);
-                        //} else if (status == 1) {
-                        //    $scope.warnTimeLine_warnS1.push(warn);
-                        //} else if (status == 2) {
-                        //    $scope.warnTimeLine_warnS2.push(warn);
-                        //} else if (status == 3) {
-                        //    $scope.warnTimeLine_warnS3.push(warn);
-                        //} else if (status == 6) {
-                        //    $scope.warnTimeLine_warnS6.push(warn);
-                        //} else if (status == 7) {
-                        //    $scope.warnTimeLine_warnS7.push(warn);
-                        //}
-
                     }
                 }
                 $scope.warnTimeLine_loading = false;
@@ -111,25 +97,6 @@
             }, function (data) {
                 warnQueryDone(data, "iso8583");
             });
-            //warningService.list({
-            //    type: "iso20022",
-            //    startWarnTime: warnQueryStartTime,
-            //    start: 0,
-            //    limit: 0
-            //}, function (data) {
-            //    warnQueryDone(data, "iso20022");
-            //});
-            //warningService.list({type: "http", startWarnTime: warnQueryStartTime, start: 0, limit: 0}, function (data) {
-            //    warnQueryDone(data, "http");
-            //});
-            //warningService.list({
-            //    type: "mysql",
-            //    startWarnTime: warnQueryStartTime,
-            //    start: 0,
-            //    limit: 0
-            //}, function (data) {
-            //    warnQueryDone(data, "mysql");
-            //});
 
             //$scope.warnTimeLine_warnList.sort(function (o1, o2) {
             //    var o1time = o1.warnTime.getTime();
@@ -160,19 +127,6 @@
                             if (typeof status === "number" && $scope["warnTimeLine_warnS" + status]) {
                                 $scope["warnTimeLine_warnS" + status].push(warn);
                             }
-                            //if (status == 0) {
-                            //    $scope.warnTimeLine_warnS0.push(warn);
-                            //} else if (status == 1) {
-                            //    $scope.warnTimeLine_warnS1.push(warn);
-                            //} else if (status == 2) {
-                            //    $scope.warnTimeLine_warnS2.push(warn);
-                            //} else if (status == 3) {
-                            //    $scope.warnTimeLine_warnS3.push(warn);
-                            //} else if (status == 6) {
-                            //    $scope.warnTimeLine_warnS6.push(warn);
-                            //} else if (status == 7) {
-                            //    $scope.warnTimeLine_warnS7.push(warn);
-                            //}
                         }
                     }
                 }
@@ -183,7 +137,7 @@
             topologyTimer = $interval($scope.topology_query, 60000);
             //初始化图表
             $timeout(function () {
-                chart_warn = echarts.init($("#index_chart_warn")[0]);
+                chart_warn = echarts.init($("#index_chart_warn")[0], "blue");
                 chart_warn.setOption(chart_warn_options);
                 chart_http = echarts.init($("#index_chart_http")[0], "blue");
                 chart_http.setOption(chart_http_options);

@@ -66,10 +66,7 @@
             for (var i = $scope.warnTimeLine_size; i >= 0; i--) {
                 var time = new Date(now.getTime() - $scope.warnTimeLine_interval * i * 1000);
                 var data = {warnTime: time, value: [time, "-",]};
-                $scope.warnTimeLine_warnS0.push(data);
-                //$scope.warnTimeLine_warnS1.push(data);
-                //$scope.warnTimeLine_warnS2.push(data);
-                //$scope.warnTimeLine_warnS3.push(data);
+                $scope.warnTimeLine_warnS2.push(data);
 
             }
             var warnQueryStartTime = new Date(now.getTime() - $scope.warnTimeLine_size * $scope.warnTimeLine_interval * 1000).Format("yyyy-MM-dd hh:mm:ss");
@@ -78,7 +75,6 @@
                     for (var i = 0; i < data.data.length; i++) {
                         var warn = data.data[i];
                         var status = warn.status;
-
                         warn.warnTime = new Date(warn.warnTime);
                         warn.value = [warn.warnTime, warn.respmills, warn.protocol, warn.src_ip, warn.dest_ip];
                         warn.type = type;
@@ -119,9 +115,7 @@
                     else if (socketData && socketData.warn && socketData.warn.length) {
                         for (var i = 0; i < socketData.warn.length; i++) {
                             var warn = socketData.warn[i];
-
                             var status = warn.status;
-
                             warn.warnTime = new Date(warn.warnTime);
                             warn.value = [warn.warnTime, warn.respmills, warn.protocol, warn.src_ip, warn.dest_ip];
                             if (typeof status === "number" && $scope["warnTimeLine_warnS" + status]) {
@@ -134,19 +128,15 @@
             warnTimeLineTimer = $interval(warnTimeLineTimerTick, $scope.warnTimeLine_interval * 1000);
             //拓扑图查询
             $scope.topology_query();
-            topologyTimer = $interval($scope.topology_query, 60000);
+            topologyTimer = $interval($scope.topology_query, 5000);
             //初始化图表
             $timeout(function () {
                 chart_warn = echarts.init($("#index_chart_warn")[0], "blue");
                 chart_warn.setOption(chart_warn_options);
                 chart_http = echarts.init($("#index_chart_http")[0], "blue");
-                chart_http.setOption(chart_http_options);
                 chart_8583 = echarts.init($("#index_chart_8583")[0], "blue");
-                chart_8583.setOption(chart_8583_options);
                 chart_20022 = echarts.init($("#index_chart_20022")[0], "blue");
-                chart_20022.setOption(chart_20022_options);
                 chart_mysql = echarts.init($("#index_chart_mysql")[0], "blue");
-                chart_mysql.setOption(chart_mysql_options);
             });
 
 
@@ -155,12 +145,12 @@
         var warnTimeLineTimer = null;
         var warnTimeLineTimerTick = function () {
             var now = new Date();
-            var allWarn = [$scope.warnTimeLine_warnS0,
+            var allWarn = [
                 $scope.warnTimeLine_warnS1,
                 $scope.warnTimeLine_warnS2,
                 $scope.warnTimeLine_warnS3,
-                $scope.warnTimeLine_warnS6,
-                $scope.warnTimeLine_warnS7];
+                $scope.warnTimeLine_warnS7
+            ];
             for (var j = 0; j < allWarn.length; j++) {
                 var warnArr = allWarn[j];
                 for (var i = 0; i < warnArr.length; i++) {
@@ -173,10 +163,7 @@
                 }
             }
 
-            $scope.warnTimeLine_warnS0.push({warnTime: now, value: [now, "-", "-"]});
-            //$scope.warnTimeLine_warnS1.push({warnTime: now, value: [now, "-", "-"]});
-            //$scope.warnTimeLine_warnS2.push({warnTime: now, value: [now, "-", "-"]});
-            //$scope.warnTimeLine_warnS3.push({warnTime: now, value: [now, "-", "-"]});
+            $scope.warnTimeLine_warnS1.push({warnTime: now, value: [now, "-", "-"]});
         };
         //告警时间线点击跳转
         $scope.warnTimeLine_query = function (warn) {
@@ -494,29 +481,11 @@
                 subtext: ''
             },
             tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    show: true,
-                    type: 'cross',
-                    lineStyle: {
-                        type: 'dashed',
-                        width: 1
-                    }
-                }
+                trigger: 'axis'
             },
             legend: {
-                data: ['status0', 'status1', 'status2', 'status3', 'status6', 'status7']
+                data: ['延迟', '失败', '延迟并失败', '不完整']
             },
-            //dataRange: {
-            //    min: 0,
-            //    max: 7,
-            //    orient: 'horizontal',
-            //    y: 30,
-            //    x: 'center',
-            //    //text:['高','低'],           // 文本，默认为数值文本
-            //    color: ['lightgreen', 'orange'],
-            //    splitNumber: 8
-            //},
             toolbox: {
                 show: true,
                 feature: {
@@ -526,25 +495,17 @@
                     saveAsImage: { show: true }
                 }
             },
-            //dataZoom: {
-            //    show: true,
-            //    start : 30,
-            //    end : 70
-            //},
-            xAxis: [
-                {
-                    type: 'time'
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'value',
-                    splitNumber: 5,
-                    scale: true
-                }
-            ],
+            xAxis: [{
+                type: 'time'
+            }],
+            yAxis: [{
+                type: 'value',
+                splitNumber: 5,
+                scale: true,
+                max: 5000
+            }],
             series: [{
-                name: 'status0',
+                name: '延迟',
                 type: 'scatter',
                 symbolSize: function (value) {
                     return 5;
@@ -555,92 +516,24 @@
                         var date = new Date(params.value[0]);
                         return params.seriesName
                             + ' （'
-                            + date.getFullYear() + '-'
-                            + (date.getMonth() + 1) + '-'
-                            + date.getDate() + ' '
-                            + date.getHours() + ':'
-                            + date.getMinutes()
+                            + date.Format("yyyy-MM-dd hh:mm:ss")
                             + '）<br/>'
                             + '时延: ' + params.value[1] + ' ms<br/>'
                             + '协议: ' + params.value[2] + '<br/> '
                             + '源IP: ' + params.value[3] + '<br/>'
                             + '目的IP: ' + params.value[4] + '<br/>';
                     },
-                    axisPointer: {
-                        type: 'cross',
-                        lineStyle: {
-                            type: 'dashed',
-                            width: 1
-                        }
-                    }
-                },
-                data: $scope.warnTimeLine_warnS0
-            }, {
-                name: 'status1',
-                type: 'scatter',
-                symbolSize: function (value) {
-                    return 5;
-                },
-                tooltip: {
-                    trigger: 'axis',
-                    formatter: function (params) {
-                        var date = new Date(params.value[0]);
-                        return params.seriesName
-                            + ' （'
-                            + date.getFullYear() + '-'
-                            + (date.getMonth() + 1) + '-'
-                            + date.getDate() + ' '
-                            + date.getHours() + ':'
-                            + date.getMinutes()
-                            + '）<br/>'
-                            + '时延: ' + params.value[1] + ' ms<br/>'
-                            + '协议: ' + params.value[2] + '<br/> '
-                            + '源IP: ' + params.value[3] + '<br/>'
-                            + '目的IP: ' + params.value[4] + '<br/>';
-                    },
-                    axisPointer: {
-                        type: 'cross',
-                        lineStyle: {
-                            type: 'dashed',
-                            width: 1
-                        }
-                    }
-                },
-                data: $scope.warnTimeLine_warnS1
-            }, {
-                name: 'status2',
-                type: 'scatter',
-                symbolSize: function (value) {
-                    return 5;
-                },
-                tooltip: {
-                    trigger: 'axis',
-                    formatter: function (params) {
-                        var date = new Date(params.value[0]);
-                        return params.seriesName
-                            + ' （'
-                            + date.getFullYear() + '-'
-                            + (date.getMonth() + 1) + '-'
-                            + date.getDate() + ' '
-                            + date.getHours() + ':'
-                            + date.getMinutes()
-                            + '）<br/>'
-                            + '时延: ' + params.value[1] + ' ms<br/>'
-                            + '协议: ' + params.value[2] + '<br/> '
-                            + '源IP: ' + params.value[3] + '<br/>'
-                            + '目的IP: ' + params.value[4] + '<br/>';
-                    },
-                    axisPointer: {
-                        type: 'cross',
-                        lineStyle: {
-                            type: 'dashed',
-                            width: 1
-                        }
-                    }
+                    //axisPointer: {
+                    //    type: 'cross',
+                    //    lineStyle: {
+                    //        type: 'dashed',
+                    //        width: 1
+                    //    }
+                    //}
                 },
                 data: $scope.warnTimeLine_warnS2
             }, {
-                name: 'status3',
+                name: '失败',
                 type: 'scatter',
                 symbolSize: function (value) {
                     return 5;
@@ -651,28 +544,24 @@
                         var date = new Date(params.value[0]);
                         return params.seriesName
                             + ' （'
-                            + date.getFullYear() + '-'
-                            + (date.getMonth() + 1) + '-'
-                            + date.getDate() + ' '
-                            + date.getHours() + ':'
-                            + date.getMinutes()
+                            + date.Format("yyyy-MM-dd hh:mm:ss")
                             + '）<br/>'
                             + '时延: ' + params.value[1] + ' ms<br/>'
                             + '协议: ' + params.value[2] + '<br/> '
                             + '源IP: ' + params.value[3] + '<br/>'
                             + '目的IP: ' + params.value[4] + '<br/>';
                     },
-                    axisPointer: {
-                        type: 'cross',
-                        lineStyle: {
-                            type: 'dashed',
-                            width: 1
-                        }
-                    }
+                    //axisPointer: {
+                    //    type: 'cross',
+                    //    lineStyle: {
+                    //        type: 'dashed',
+                    //        width: 1
+                    //    }
+                    //}
                 },
                 data: $scope.warnTimeLine_warnS3
             }, {
-                name: 'status6',
+                name: '延迟并失败',
                 type: 'scatter',
                 symbolSize: function (value) {
                     return 5;
@@ -683,28 +572,24 @@
                         var date = new Date(params.value[0]);
                         return params.seriesName
                             + ' （'
-                            + date.getFullYear() + '-'
-                            + (date.getMonth() + 1) + '-'
-                            + date.getDate() + ' '
-                            + date.getHours() + ':'
-                            + date.getMinutes()
+                            + date.Format("yyyy-MM-dd hh:mm:ss")
                             + '）<br/>'
                             + '时延: ' + params.value[1] + ' ms<br/>'
                             + '协议: ' + params.value[2] + '<br/> '
                             + '源IP: ' + params.value[3] + '<br/>'
                             + '目的IP: ' + params.value[4] + '<br/>';
                     },
-                    axisPointer: {
-                        type: 'cross',
-                        lineStyle: {
-                            type: 'dashed',
-                            width: 1
-                        }
-                    }
+                    //axisPointer: {
+                    //    type: 'cross',
+                    //    lineStyle: {
+                    //        type: 'dashed',
+                    //        width: 1
+                    //    }
+                    //}
                 },
-                data: $scope.warnTimeLine_warnS6
+                data: $scope.warnTimeLine_warnS1
             }, {
-                name: 'status7',
+                name: '不完整',
                 type: 'scatter',
                 symbolSize: function (value) {
                     return 5;
@@ -715,24 +600,20 @@
                         var date = new Date(params.value[0]);
                         return params.seriesName
                             + ' （'
-                            + date.getFullYear() + '-'
-                            + (date.getMonth() + 1) + '-'
-                            + date.getDate() + ' '
-                            + date.getHours() + ':'
-                            + date.getMinutes()
+                            + date.Format("yyyy-MM-dd hh:mm:ss")
                             + '）<br/>'
                             + '时延: ' + params.value[1] + ' ms<br/>'
                             + '协议: ' + params.value[2] + '<br/> '
                             + '源IP: ' + params.value[3] + '<br/>'
                             + '目的IP: ' + params.value[4] + '<br/>';
                     },
-                    axisPointer: {
-                        type: 'cross',
-                        lineStyle: {
-                            type: 'dashed',
-                            width: 1
-                        }
-                    }
+                    //axisPointer: {
+                    //    type: 'cross',
+                    //    lineStyle: {
+                    //        type: 'dashed',
+                    //        width: 1
+                    //    }
+                    //}
                 },
                 data: $scope.warnTimeLine_warnS7
             }]
@@ -1083,17 +964,16 @@
         };
         $scope.$watch(function () {
             var r = null;
-            if ($scope.warnTimeLine_warnS0 && $scope.warnTimeLine_warnS0.length) {
-                _.forEach($scope.warnTimeLine_warnS0, function (warn) {
+            if ($scope.warnTimeLine_warnS2 && $scope.warnTimeLine_warnS2.length) {
+                _.forEach($scope.warnTimeLine_warnS2, function (warn) {
                     r += warn.warnTime.getTime();
                 });
             }
-
             return r;
         }, function () {
             if (chart_warn) {
                 //chart_warn_options.series.data = $scope.warnTimeLine_warnList
-                //chart_warn.setOption(chart_warn_options);
+                //chart_warn.setOption(chart_warn_options, true);
                 chart_warn.setSeries(chart_warn_options.series, true);
             }
         });

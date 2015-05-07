@@ -473,11 +473,7 @@
                         var date = new Date(params.value[0]);
                         return params.seriesName
                             + ' （'
-                            + date.getFullYear() + '-'
-                            + (date.getMonth() + 1) + '-'
-                            + date.getDate() + ' '
-                            + date.getHours() + ':'
-                            + date.getMinutes()
+                            + date.Format("yyyy-MM-dd hh:mm:ss")
                             + '）<br/>'
                             + '时延: ' + params.value[1] + ' ms<br/>'
                             + '协议: ' + params.value[2] + '<br/> '
@@ -505,11 +501,7 @@
                         var date = new Date(params.value[0]);
                         return params.seriesName
                             + ' （'
-                            + date.getFullYear() + '-'
-                            + (date.getMonth() + 1) + '-'
-                            + date.getDate() + ' '
-                            + date.getHours() + ':'
-                            + date.getMinutes()
+                            + date.Format("yyyy-MM-dd hh:mm:ss")
                             + '）<br/>'
                             + '时延: ' + params.value[1] + ' ms<br/>'
                             + '协议: ' + params.value[2] + '<br/> '
@@ -537,11 +529,7 @@
                         var date = new Date(params.value[0]);
                         return params.seriesName
                             + ' （'
-                            + date.getFullYear() + '-'
-                            + (date.getMonth() + 1) + '-'
-                            + date.getDate() + ' '
-                            + date.getHours() + ':'
-                            + date.getMinutes()
+                            + date.Format("yyyy-MM-dd hh:mm:ss")
                             + '）<br/>'
                             + '时延: ' + params.value[1] + ' ms<br/>'
                             + '协议: ' + params.value[2] + '<br/> '
@@ -569,11 +557,7 @@
                         var date = new Date(params.value[0]);
                         return params.seriesName
                             + ' （'
-                            + date.getFullYear() + '-'
-                            + (date.getMonth() + 1) + '-'
-                            + date.getDate() + ' '
-                            + date.getHours() + ':'
-                            + date.getMinutes()
+                            + date.Format("yyyy-MM-dd hh:mm:ss")
                             + '）<br/>'
                             + '时延: ' + params.value[1] + ' ms<br/>'
                             + '协议: ' + params.value[2] + '<br/> '

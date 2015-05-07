@@ -43,6 +43,10 @@
             name: "物理拓扑",
             href: "#/device/statistic"
         });
+        otherNav.push({
+            name: "业务逻辑",
+            href: "#/topology"
+        });
         var getRoutePath = function (target) {
             var path = null;
             if (target && target.$$route) {

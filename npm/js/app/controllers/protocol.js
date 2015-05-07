@@ -72,10 +72,6 @@
                 }
             });
             $timeout(function () {
-                $scope.chart_flow = echarts.init($("#protocol-chart-flow").get(0), "blue");
-                $scope.chart_resp = echarts.init($("#protocol-chart-resp").get(0), "blue");
-                $scope.chart_code = echarts.init($("#protocol-chart-code").get(0), "blue");
-                $scope.chart_warn = echarts.init($("#protocol-chart-warn").get(0), "blue");
             });
         };
         //配置过滤器方法
@@ -626,7 +622,13 @@
                     resp_option.xAxis[0].data = axis_data.length ? axis_data : [""];
                     resp_option.series[0].data = suc_ratio;
                     resp_option.series[1].data = resp_ratio;
+                    if ($scope.chart_flow)
+                        $scope.chart_flow.dispose();
+                    $scope.chart_flow = echarts.init($("#protocol-chart-flow").get(0), "blue");
                     $scope.chart_flow.setOption(flow_option, true);
+                    if ($scope.chart_resp)
+                        $scope.chart_resp.dispose();
+                    $scope.chart_resp = echarts.init($("#protocol-chart-resp").get(0), "blue");
                     $scope.chart_resp.setOption(resp_option, true);
                 }
             });
@@ -644,6 +646,9 @@
                     }
                     code_option.legend.data = code_legend_data;
                     code_option.series[0].data = code_data;
+                    if ($scope.chart_code)
+                        $scope.chart_code.dispose();
+                    $scope.chart_code = echarts.init($("#protocol-chart-code").get(0), "blue");
                     $scope.chart_code.setOption(code_option, true);
                 }
             });
@@ -677,6 +682,9 @@
                     warn_option.series[1].data = warn_data_s3;
                     warn_option.series[2].data = warn_data_s1;
                     warn_option.series[3].data = warn_data_s7;
+                    if ($scope.chart_warn)
+                        $scope.chart_warn.dispose();
+                    $scope.chart_warn = echarts.init($("#protocol-chart-warn").get(0), "blue");
                     $scope.chart_warn.setOption(warn_option, true);
                 }
             });

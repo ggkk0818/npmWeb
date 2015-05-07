@@ -6,5 +6,6 @@
     "./statisticSearch",
     "./warningSearch",
     "./protocol",
-    "./protocolChart"
+    "./protocolChart",
+    "./topology"
 ], function () { });

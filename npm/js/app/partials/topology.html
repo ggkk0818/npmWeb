@@ -1,0 +1,146 @@
+﻿<div class="row">
+    <div class="col-xs-12">
+        <div class=" topology_box">
+            <img src="topologyimg/tpbj.jpg" class="tpbj" /><!-- 拓扑背景-->
+            <div class="qdxttitle"><span>渠道系统</span></div>
+            <div class="yhnbtitle"><span>银行内部</span></div>
+            <div class="wlqztitle"><span>外联前置</span></div>
+            <div class="wltitle"><span>外联</span></div>
+            <!--以上是四个标题  -->
+            <p class="yizu gmxt" ng-mouseenter="show_gmxt_data=true" ng-mouseleave="show_gmxt_data=false"><img src="topologyimg/gmxt.png" /><br />柜面系统</p>
+            <p class="yizu wyxt" ng-mouseenter="show_wyxt_data=true" ng-mouseleave="show_wyxt_data=false"><img src="topologyimg/wyxt.png" /><br />网银系统</p>
+            <p class="yizu sjyh" ng-mouseenter="show_sjyh_data=true" ng-mouseleave="show_sjyh_data=false"><img src="topologyimg/sjyh.png" /><br />手机银行</p>
+            <p class="yizu zzcx" ng-mouseenter="show_zzcx_data=true" ng-mouseleave="show_zzcx_data=false"><img src="topologyimg/zzcx.png" /><br />自助查询</p>
+            <p class="yizu atm" ng-mouseenter="show_atm_data=true" ng-mouseleave="show_atm_data=false"><img src="topologyimg/atm.png" /><br />ATM</p>
+            <!--以上是第一组 红色  （一竖排为一组）-->
+            <p class="erzu ylqz" ng-mouseenter="show_ylqz_data=true" ng-mouseleave="show_ylqz_data=false"><img src="topologyimg/ylqz.png" /><br />银联前置</p>
+            <!--以上是第二组 橘黄色-->
+            <p class="sanzu yl" ng-mouseenter="show_yl_data=true" ng-mouseleave="show_yl_data=false"><img src="topologyimg/yl.png" /></p>
+            <p class="sanzu ylxm" ng-mouseenter="show_ylxm_data=true" ng-mouseleave="show_ylxm_data=false"><img src="topologyimg/ylxm.png" /></p>
+            <!--以上是第三组 绿色-->
+            <div class="gmxt_data" ng-show="show_gmxt_data">
+                <table>
+                    <tr>
+                        <td colspan="2">HTTP</td>
+                    </tr>
+                    <tr>
+                        <td>{{topology_http_count||0}}<br />交易笔数</td>
+                        <td>{{topology_http_duration||0}}ms<br />响应时间</td>
+                    </tr>
+                    <tr>
+                        <td>{{topology_http_successRatio||0}}%<br />成功率</td>
+                        <td>{{topology_http_warnCount||0}}<br />报警事件</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="wyxt_data" ng-show="show_wyxt_data">
+                <span>HTTP</span>
+                <span></span>
+            </div>
+            <div class="sjyh_data" ng-show="show_sjyh_data">
+                <span>HTTP</span>
+                <span></span>
+            </div>
+            <div class="zzcx_data" ng-show="show_zzcx_data">
+                <table>
+                    <tr>
+                        <td colspan="2">8583</td>
+                    </tr>
+                    <tr>
+                        <td>{{topology_8583_count||0}}<br />交易笔数</td>
+                        <td>{{topology_8583_duration||0}}ms<br />响应时间</td>
+                    </tr>
+                    <tr>
+                        <td>{{topology_8583_successRatio||0}}%<br />成功率</td>
+                        <td>{{topology_8583_warnCount||0}}<br />报警事件</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="atm_data" ng-show="show_atm_data">
+                <span>8583</span>
+                <span></span>
+            </div>
+            <!--以上是第一组 线上的数据-->
+            <div class="ylqz_data" ng-show="show_ylqz_data">
+                <table>
+                    <tr>
+                        <td colspan="2">8583</td>
+                    </tr>
+                    <tr>
+                        <td>{{topology_8583_count||0}}<br />交易笔数</td>
+                        <td>{{topology_8583_duration||0}}ms<br />响应时间</td>
+                    </tr>
+                    <tr>
+                        <td>{{topology_8583_successRatio||0}}%<br />成功率</td>
+                        <td>{{topology_8583_warnCount||0}}<br />报警事件</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="wyhl_yi_data" ng-show="show_wyhl_yi_data">
+                <span>20022大额</span>
+                <span></span>
+            </div>
+            <div class="wyhl_er_data" ng-show="show_wyhl_er_data">
+                <span>20022小额</span>
+                <span></span>
+            </div>
+            <div class="wyhl_san_data" ng-show="show_wyhl_san_data">
+                <table>
+                    <tr>
+                        <td colspan="2">20022商业汇票</td>
+                    </tr>
+                    <tr>
+                        <td>{{topology_20022_count||0}}<br />交易笔数</td>
+                        <td>{{topology_20022_duration||0}}ms<br />响应时间</td>
+                    </tr>
+                    <tr>
+                        <td>{{topology_20022_successRatio||0}}%<br />成功率</td>
+                        <td>{{topology_20022_warnCount||0}}<br />报警事件</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="wyhl_si_data" ng-show="show_wyhl_si_data">
+                <span>20022网银互联</span>
+                <span></span>
+            </div>
+            <!--以上是第二组 线上的数据-->
+            <div class="yl_data" ng-show="show_yl_data">
+                <table>
+                    <tr>
+                        <td colspan="2">8583</td>
+                    </tr>
+                    <tr>
+                        <td>{{topology_8583_count||0}}<br />交易笔数</td>
+                        <td>{{topology_8583_duration||0}}ms<br />响应时间</td>
+                    </tr>
+                    <tr>
+                        <td>{{topology_8583_successRatio||0}}%<br />成功率</td>
+                        <td>{{topology_8583_warnCount||0}}<br />报警事件</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="ylxm_data" ng-show="show_ylxm_data">
+                <table>
+                    <tr>
+                        <td colspan="2">MQ</td>
+                    </tr>
+                    <tr>
+                        <td>{{topology_mq_count||0}}<br />交易笔数</td>
+                        <td>{{topology_mq_duration||0}}ms<br />响应时间</td>
+                    </tr>
+                    <tr>
+                        <td>{{topology_mq_successRatio||0}}%<br />成功率</td>
+                        <td>{{topology_mq_warnCount||0}}<br />报警事件</td>
+                    </tr>
+                </table>
+            </div>
+            <!--以上是第三组 线上的数据-->
+            <!--网银互联前置的4个点-->
+            <div class="dian_yi wyhl_yi" ng-mouseenter="show_wyhl_yi_data=true" ng-mouseleave="show_wyhl_yi_data=false"></div>
+            <div class="dian_er wyhl_er" ng-mouseenter="show_wyhl_er_data=true" ng-mouseleave="show_wyhl_er_data=false"></div>
+            <div class="dian_san wyhl_san" ng-mouseenter="show_wyhl_san_data=true" ng-mouseleave="show_wyhl_san_data=false"></div>
+            <div class="dian_si wyhl_si" ng-mouseenter="show_wyhl_si_data=true" ng-mouseleave="show_wyhl_si_data=false"></div>
+            <!--以上是网银互联前置的4个点-->
+        </div>
+    </div>
+</div>

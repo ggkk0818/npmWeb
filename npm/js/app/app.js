@@ -92,6 +92,10 @@
                 templateUrl: 'js/app/partials/protocolChart.html',
                 controller: 'ProtocolChartCtrl'
             })
+            .when('/topology', {
+                templateUrl: 'js/app/partials/topology.html',
+                controller: 'TopologyCtrl'
+            })
             .otherwise({
                 redirectTo: '/'
             });

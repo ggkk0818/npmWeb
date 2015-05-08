@@ -47,14 +47,8 @@
             </div>
             <div role="tabpanel" class="tab-pane" id="protocol-tab-statistic">
                 <div class="row" style="margin-top:20px;">
-                    <div class="col-xs-12" ng-init="showQueryFieldPanel=false">
-                        <div class="page-header" ng-click="showQueryFieldPanel=!showQueryFieldPanel" style="cursor:pointer;">
-                            <h6>
-                                <span class="glyphicon" aria-hidden="true" ng-class="{'glyphicon-minus':showQueryFieldPanel,'glyphicon-plus':!showQueryFieldPanel}">
-                                </span>过滤器
-                            </h6>
-                        </div>
-                        <div class="pull-right" ng-show="showQueryFieldPanel">
+                    <div class="col-xs-12">
+                        <div class="pull-right">
                             <div class="dropdown">
                                 <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
                                     增加过滤器
@@ -67,7 +61,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <table class="table" ng-show="showQueryFieldPanel">
+                        <table class="table">
                             <tbody>
                                 <tr ng-repeat="(fieldName,queryField) in queryFieldList">
                                     <td style="width:30px;"><a href="javascript:void(0);" ng-click="removeFilter(queryField)"><span class="glyphicon glyphicon-remove"></span></a></td>

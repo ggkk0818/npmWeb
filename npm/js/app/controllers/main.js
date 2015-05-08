@@ -50,7 +50,7 @@
         });
         otherNav.push({
             name: "物理拓扑",
-            href: "#/device/statistic"
+            href: "#/ipTopology"
         });
         otherNav.push({
             name: "业务逻辑",

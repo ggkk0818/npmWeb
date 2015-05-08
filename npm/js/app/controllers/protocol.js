@@ -143,6 +143,23 @@
                     $scope.recordList = data && data.data ? data.data : [];
                     $scope.recordSize = data && data.count ? data.count : 0;
                     $scope.pageTotal = Math.floor($scope.recordSize / $scope.pageSize) + ($scope.recordSize % $scope.pageSize > 0 ? 1 : 0);
+                    if ($scope.recordList && $scope.recordList.length) {
+                        for (var i = 0; i < $scope.recordList.length; i++) {
+                            var record = $scope.recordList[i];
+                            if (typeof record.time1 === "number")
+                                record.time1 = new Date(record.time1).Format("yyyy-MM-dd hh:mm:ss");
+                            if (typeof record.time2 === "number")
+                                record.time2 = new Date(record.time2).Format("yyyy-MM-dd hh:mm:ss");
+                            if (typeof record.time3 === "number")
+                                record.time3 = new Date(record.time3).Format("yyyy-MM-dd hh:mm:ss");
+                            if (typeof record.starttime === "number")
+                                record.starttime = new Date(record.starttime).Format("yyyy-MM-dd hh:mm:ss");
+                            if (typeof record.endtime === "number")
+                                record.endtime = new Date(record.endtime).Format("yyyy-MM-dd hh:mm:ss");
+                            if (typeof record.flow === "number")
+                                record.flow = numeral(record.flow).format("0.00b");
+                        }
+                    }
                 }
             });
         };
@@ -244,6 +261,23 @@
                     group.subRecordList = data && data.data ? data.data : [];
                     group.recordSize = data && data.count ? data.count : 0;
                     group.pageTotal = Math.floor(group.recordSize / $scope.pageSize) + (group.recordSize % $scope.pageSize > 0 ? 1 : 0);
+                    if (group.subRecordList && group.subRecordList.length) {
+                        for (var i = 0; i < group.subRecordList.length; i++) {
+                            var record = group.subRecordList[i];
+                            if (typeof record.time1 === "number")
+                                record.time1 = new Date(record.time1).Format("yyyy-MM-dd hh:mm:ss");
+                            if (typeof record.time2 === "number")
+                                record.time2 = new Date(record.time2).Format("yyyy-MM-dd hh:mm:ss");
+                            if (typeof record.time3 === "number")
+                                record.time3 = new Date(record.time3).Format("yyyy-MM-dd hh:mm:ss");
+                            if (typeof record.starttime === "number")
+                                record.starttime = new Date(record.starttime).Format("yyyy-MM-dd hh:mm:ss");
+                            if (typeof record.endtime === "number")
+                                record.endtime = new Date(record.endtime).Format("yyyy-MM-dd hh:mm:ss");
+                            if (typeof record.flow === "number")
+                                record.flow = numeral(record.flow).format("0.00b");
+                        }
+                    }
                 }
             });
         };
@@ -673,7 +707,7 @@
                         } else if (status == 3) {
                             warn_data_s3.push(warn);
                         } else if (status == 7) {
-                            warn.value[2] = 5000;
+                            warn.value[1] = 5000;
                             warn_data_s7.push(warn);
                         }
                     }

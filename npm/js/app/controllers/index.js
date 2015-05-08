@@ -78,7 +78,7 @@
                         warn.value = [warn.warnTime, warn.respmills, warn.protocol, warn.src_ip, warn.dest_ip];
                         warn.type = type;
                         if (status === 7)
-                            warn.value[2] = 5000;
+                            warn.value[1] = 5000;
                         if (typeof status === "number" && $scope["warnTimeLine_warnS" + status]) {
                             $scope["warnTimeLine_warnS" + status].push(warn);
                         }
@@ -120,7 +120,7 @@
                             warn.warnTime = new Date(warn.warnTime);
                             warn.value = [warn.warnTime, warn.respmills, warn.protocol, warn.src_ip, warn.dest_ip];
                             if (status === 7)
-                                warn.value[2] = 5000;
+                                warn.value[1] = 5000;
                             if (typeof status === "number" && $scope["warnTimeLine_warnS" + status]) {
                                 $scope["warnTimeLine_warnS" + status].push(warn);
                             }
@@ -729,8 +729,8 @@
             series: [{
                 name: '响应率',
                 type: 'gauge',
-                min: 0,
-                max: 100,
+                //min: 0,
+                //max: 100,
                 radius: '85%',
                 splitNumber: 5,
                 axisLine: {            // 坐标轴线
@@ -768,8 +768,8 @@
                 type: 'gauge',
                 center: ['25%', '50%'],    // 默认全局居中
                 radius: '90%',
-                min: 0,
-                max: 100,
+                //min: 0,
+                //max: 100,
                 endAngle: 45,
                 splitNumber: 5,
                 axisLine: {            // 坐标轴线
@@ -815,8 +815,8 @@
             series: [{
                 name: '响应率',
                 type: 'gauge',
-                min: 0,
-                max: 100,
+                //min: 0,
+                //max: 100,
                 radius: '85%',
                 splitNumber: 5,
                 axisLine: {            // 坐标轴线
@@ -854,8 +854,8 @@
                 type: 'gauge',
                 center: ['25%', '50%'],    // 默认全局居中
                 radius: '90%',
-                min: 0,
-                max: 100,
+                //min: 0,
+                //max: 100,
                 endAngle: 45,
                 splitNumber: 5,
                 axisLine: {            // 坐标轴线
@@ -901,8 +901,8 @@
             series: [{
                 name: '响应率',
                 type: 'gauge',
-                min: 0,
-                max: 100,
+                //min: 0,
+                //max: 100,
                 radius: '85%',
                 splitNumber: 5,
                 axisLine: {            // 坐标轴线
@@ -940,8 +940,8 @@
                 type: 'gauge',
                 center: ['25%', '50%'],    // 默认全局居中
                 radius: '90%',
-                min: 0,
-                max: 100,
+                //min: 0,
+                //max: 100,
                 endAngle: 45,
                 splitNumber: 5,
                 axisLine: {            // 坐标轴线
@@ -987,8 +987,8 @@
             series: [{
                 name: '响应率',
                 type: 'gauge',
-                min: 0,
-                max: 100,
+                //min: 0,
+                //max: 100,
                 radius: '85%',
                 splitNumber: 5,
                 axisLine: {            // 坐标轴线
@@ -1026,8 +1026,8 @@
                 type: 'gauge',
                 center: ['25%', '50%'],    // 默认全局居中
                 radius: '90%',
-                min: 0,
-                max: 100,
+                //min: 0,
+                //max: 100,
                 endAngle: 45,
                 splitNumber: 5,
                 axisLine: {            // 坐标轴线

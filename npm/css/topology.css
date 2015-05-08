@@ -31,38 +31,52 @@
 .gmxt_data table td{ border-left:1px solid #ebeae8; border-bottom:1px solid #ebeae8; padding: 0px 5px 0px 5px; text-align: center;}
 .gmxt_data table tr:first-child td{background-color: #ff5e4e; color: #fff;}
 
-.wyxt_data{position: absolute;top: 40%; left:16%; z-index: 5; background-color: #ff5e4e; width: 4%; color: #fff; text-align: center; }
-.wyxt_data span:nth-child(2){ position: absolute; top: -6px; right: 5px;display:block;border:4px solid #fff;border-color:#fff #fff #ff5e4e #fff;border-width:0px 6px 6px 6px;}
+.wyxt_data{position: absolute;top: 30%; left:15%; z-index: 5; background-color: #fff;  }
+.wyxt_data table{border-top:1px solid #ebeae8; border-right:1px solid #ebeae8;}
+.wyxt_data table td{ border-left:1px solid #ebeae8; border-bottom:1px solid #ebeae8; padding: 0px 5px 0px 5px; text-align: center;}
+.wyxt_data table tr:first-child td{background-color: #ff5e4e; color: #fff;}
 
-.sjyh_data{position: absolute;top: 48%; left:20%; z-index: 5; background-color: #ff5e4e; width: 4%; color: #fff; text-align: center; }
-.sjyh_data span:nth-child(2){ position: absolute; top: -6px; right: 5px;display:block;border:4px solid #fff;border-color:#fff #fff #ff5e4e #fff;border-width:0px 6px 6px 6px;}
+.sjyh_data{position: absolute;top: 42%; left:16%; z-index: 5; background-color: #fff;  }
+.sjyh_data table{border-top:1px solid #ebeae8; border-right:1px solid #ebeae8;}
+.sjyh_data table td{ border-left:1px solid #ebeae8; border-bottom:1px solid #ebeae8; padding: 0px 5px 0px 5px; text-align: center;}
+.sjyh_data table tr:first-child td{background-color: #ff5e4e; color: #fff;}
 
-.zzcx_data{position: absolute;top: 58%; left:18%; z-index: 5; background-color: #fff;}
+
+.zzcx_data{position: absolute;top: 58%; left:16%; z-index: 5; background-color: #fff;}
 .zzcx_data table{border-top:1px solid #ebeae8; border-right:1px solid #ebeae8;}
 .zzcx_data table td{ border-left:1px solid #ebeae8; border-bottom:1px solid #ebeae8; padding: 0px 5px 0px 5px; text-align: center;}
 .zzcx_data table tr:first-child td{background-color: #ff5e4e; color: #fff;}
 
-.atm_data{position: absolute;top: 80.5%; left:17%; z-index: 5; background-color: #ff5e4e; width: 4%; color: #fff; text-align: center; }
-.atm_data span:nth-child(2){ position: absolute; bottom: -6px; right: 5px;display:block;border:4px solid #fff;border-color:#ff5e4e #fff #fff #fff;border-width:6px 6px 0px 6px;}
+.atm_data{position: absolute;top: 78%; left:17%; z-index: 5; background-color: #fff; }
+.atm_data table{border-top:1px solid #ebeae8; border-right:1px solid #ebeae8;}
+.atm_data table td{ border-left:1px solid #ebeae8; border-bottom:1px solid #ebeae8; padding: 0px 5px 0px 5px; text-align: center;}
+.atm_data table tr:first-child td{background-color: #ff5e4e; color: #fff;}
+
 /********以下是第二组线数据css************/
 .ylqz_data{position: absolute;top: 18%; left:44%; z-index: 5; background-color: #fff;}
 .ylqz_data table{border-top:1px solid #ebeae8; border-right:1px solid #ebeae8;}
 .ylqz_data table td{ border-left:1px solid #ebeae8; border-bottom:1px solid #ebeae8; padding: 0px 5px 0px 5px; text-align: center;}
 .ylqz_data table tr:first-child td{background-color: #ff5e4e; color: #fff;}
 
-.wyhl_yi_data{position: absolute;top: 39%; left:63%; z-index: 5; background-color: #ff5e4e; width: 7%; color: #fff; text-align: center; }
-.wyhl_yi_data span:nth-child(2){ position: absolute; bottom: -6px; left: 5px;display:block;border:4px solid #fff;border-color:#ff5e4e #fff #fff #fff;border-width:6px 6px 0px 6px;}
+.wyhl_yi_data{position: absolute;top: 35%; left:50%; z-index: 5; background-color: #fff; }
+.wyhl_yi_data table{border-top:1px solid #ebeae8; border-right:1px solid #ebeae8;}
+.wyhl_yi_data table td{ border-left:1px solid #ebeae8; border-bottom:1px solid #ebeae8; padding: 0px 5px 0px 5px; text-align: center;}
+.wyhl_yi_data table tr:first-child td{background-color: #ff5e4e; color: #fff;}
 
-.wyhl_er_data{position: absolute;top: 44%; left:56%; z-index: 5; background-color: #ff5e4e; width: 6%; color: #fff; text-align: center; }
-.wyhl_er_data span:nth-child(2){ position: absolute; bottom: -6px; left: 5px;display:block;border:4px solid #fff;border-color:#ff5e4e #fff #fff #fff;border-width:6px 6px 0px 6px;}
+.wyhl_er_data{position: absolute;top: 40%; left:48%; z-index: 5; background-color: #fff; }
+.wyhl_er_data table{border-top:1px solid #ebeae8; border-right:1px solid #ebeae8;}
+.wyhl_er_data table td{ border-left:1px solid #ebeae8; border-bottom:1px solid #ebeae8; padding: 0px 5px 0px 5px; text-align: center;}
+.wyhl_er_data table tr:first-child td{background-color: #ff5e4e; color: #fff;}
 
 .wyhl_san_data{position: absolute;top: 54%; left:48%; z-index: 5; background-color: #fff;}
 .wyhl_san_data table{border-top:1px solid #ebeae8; border-right:1px solid #ebeae8;}
 .wyhl_san_data table td{ border-left:1px solid #ebeae8; border-bottom:1px solid #ebeae8; padding: 0px 5px 0px 5px; text-align: center;}
 .wyhl_san_data table tr:first-child td{background-color: #ff5e4e; color: #fff;}
 
-.wyhl_si_data{position: absolute;top: 79.5%; left:51%; z-index: 5; background-color: #ff5e4e; width: 9%; color: #fff; text-align: center; }
-.wyhl_si_data span:nth-child(2){ position: absolute; top: -6px; right: 5px;display:block;border:4px solid #fff;border-color:#fff #fff #ff5e4e #fff;border-width:0px 6px 6px 6px;}
+.wyhl_si_data{position: absolute;top: 68%; left:51%; z-index: 5; background-color: #fff; }
+.wyhl_si_data table{border-top:1px solid #ebeae8; border-right:1px solid #ebeae8;}
+.wyhl_si_data table td{ border-left:1px solid #ebeae8; border-bottom:1px solid #ebeae8; padding: 0px 5px 0px 5px; text-align: center;}
+.wyhl_si_data table tr:first-child td{background-color: #ff5e4e; color: #fff;}
 /********以下是第三组线数据css************/
 .yl_data{position: absolute;top: 12%; left:74%; z-index: 5; background-color: #fff;}
 .yl_data table{border-top:1px solid #ebeae8; border-right:1px solid #ebeae8;}
@@ -80,8 +94,9 @@
 .dian_san{position:absolute; top:59.55%; left:60.85%;width: 1%; height: 2%; z-index: 11; }
 .dian_si{position:absolute; top:69.85%; left:62.75%;width: 1%; height: 2%; z-index: 11; }
 
-
-
+.icocolor thead th:nth-child(2) span{color: #01b703;}
+.icocolor thead th:nth-child(3) span{color: #ffb300;}
+.icocolor thead th:nth-child(4) span{color: #d9442f;}
 
 
 

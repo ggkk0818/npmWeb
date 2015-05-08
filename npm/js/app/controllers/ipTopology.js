@@ -201,8 +201,10 @@
                             var arr = record.split(",");
                             if (!arr || arr.length < 3 || typeof protocols[arr[2]] === "undefine")
                                 continue;
-                            var srcIp = arr[0] + "-" + arr[2],
-                                dstIp = arr[1] + "-" + arr[2];
+                            //var srcIp = arr[0] + "-" + arr[2],
+                            //    dstIp = arr[1] + "-" + arr[2];
+                            var srcIp = arr[0],
+                                dstIp = arr[1];
                             if (!nodes[srcIp]) {
                                 nodes[srcIp] = {
                                     category: protocols[arr[2]],
@@ -220,6 +222,7 @@
                             linkList.push({
                                 source: srcIp,
                                 target: dstIp,
+                                name: arr[2],
                                 weight: 1
                             });
                         }

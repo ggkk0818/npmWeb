@@ -18,39 +18,30 @@
         //拓扑图变量
         $scope.topology_startTime = null;
         $scope.topology_endTime = null;
-        $scope.topology_8583_count = 1609;
-        $scope.topology_8583_duration = 481.5;
-        $scope.topology_8583_successRatio = 95;
-        $scope.topology_8583_responseRatio = 99;
-        $scope.topology_8583_warnCount = 2;
-        $scope.topology_8583_flow = 65;
+        $scope.topology_8583_count = 0;
+        $scope.topology_8583_duration = 0;
+        $scope.topology_8583_successRatio = 0;
+        $scope.topology_8583_responseRatio = 0;
+        $scope.topology_8583_warnCount = 0;
+        $scope.topology_8583_flow = 0;
         $scope.topology_8583_flowSuffix = "M";
-        $scope.topology_8583_deviceList = [
-            {srcip: "192.168.200.20", dstip: "192.168.200.22", allflow: "30.43MB", count: 785, warnCount: 1},
-            {srcip: "192.168.200.21", dstip: "192.168.200.22", allflow: "34.57MB", count: 824, warnCount: 1}
-        ];
-        $scope.topology_20022_count = 812;
-        $scope.topology_20022_duration = 338;
-        $scope.topology_20022_successRatio = 100;
-        $scope.topology_20022_responseRatio = 100;
+        $scope.topology_8583_deviceList = [];
+        $scope.topology_20022_count = 0;
+        $scope.topology_20022_duration = 0;
+        $scope.topology_20022_successRatio = 0;
+        $scope.topology_20022_responseRatio = 0;
         $scope.topology_20022_warnCount = 0;
-        $scope.topology_20022_flow = 33;
+        $scope.topology_20022_flow = 0;
         $scope.topology_20022_flowSuffix = "M";
-        $scope.topology_20022_deviceList = [
-            {srcip: "192.168.200.20", dstip: "192.168.200.23", allflow: "18MB", count: 412, warnCount: 0},
-            {srcip: "192.168.200.21", dstip: "192.168.200.23", allflow: "15MB", count: 400, warnCount: 0}
-        ];
-        $scope.topology_http_count = 1745;
-        $scope.topology_http_duration = 251;
-        $scope.topology_http_successRatio = 98;
-        $scope.topology_http_responseRatio = 99;
+        $scope.topology_20022_deviceList = [];
+        $scope.topology_http_count = 0;
+        $scope.topology_http_duration = 0;
+        $scope.topology_http_successRatio = 0;
+        $scope.topology_http_responseRatio = 0;
         $scope.topology_http_warnCount = 0;
-        $scope.topology_http_flow = 291;
+        $scope.topology_http_flow = 0;
         $scope.topology_http_flowSuffix = "M";
-        $scope.topology_http_deviceList = [
-            {srcip: "192.168.200.20", dstip: "192.168.200.24", allflow: "130MB", count: 695, warnCount: 0},
-            {srcip: "192.168.200.21", dstip: "192.168.200.24", allflow: "161MB", count: 1050, warnCount: 0}
-        ];
+        $scope.topology_http_deviceList = [];
         $scope.topology_mysql_count = 0;
         $scope.topology_mysql_duration = 0;
         $scope.topology_mysql_successRatio = 0;
@@ -58,7 +49,7 @@
         $scope.topology_mysql_warnCount = 0;
         $scope.topology_mysql_flow = 0;
         $scope.topology_mysql_flowSuffix = "M";
-        $scope.topology_mysql_deviceList = null;
+        $scope.topology_mysql_deviceList = [];
         $scope.topology_mq_count = 0;
         $scope.topology_mq_duration = 0;
         $scope.topology_mq_successRatio = 0;
@@ -66,7 +57,7 @@
         $scope.topology_mq_warnCount = 0;
         $scope.topology_mq_flow = 0;
         $scope.topology_mq_flowSuffix = "M";
-        $scope.topology_mq_deviceList = null;
+        $scope.topology_mq_deviceList = [];
         //初始化
         $scope.init = function () {
             //告警时间线
@@ -140,15 +131,19 @@
             warnTimeLineTimer = $interval(warnTimeLineTimerTick, $scope.warnTimeLine_interval * 1000);
             //拓扑图查询
             $scope.topology_query();
-            topologyTimer = $interval($scope.topology_query, 5000);
+            topologyTimer = $interval($scope.topology_query, 60000);
             //初始化图表
             $timeout(function () {
                 chart_warn = echarts.init($("#index_chart_warn")[0], "blue");
                 chart_warn.setOption(chart_warn_options);
                 chart_http = echarts.init($("#index_chart_http")[0], "blue");
+                chart_http.setOption(chart_http_options, true);
                 chart_8583 = echarts.init($("#index_chart_8583")[0], "blue");
+                chart_8583.setOption(chart_8583_options, true);
                 chart_20022 = echarts.init($("#index_chart_20022")[0], "blue");
+                chart_20022.setOption(chart_20022_options, true);
                 chart_mq = echarts.init($("#index_chart_mq")[0], "blue");
+                chart_mq.setOption(chart_mq_options, true);
             });
 
 
@@ -191,8 +186,8 @@
         //查询拓扑图数据
         var topologyTimer = null;
         $scope.topology_query = function () {
-            $scope.topology_startTime = "2014-03-31 12:00:00";
-            $scope.topology_endTime = "2016-03-31 13:00:00";
+            $scope.topology_startTime = "2015-02-09 11:53:00";
+            $scope.topology_endTime = "2015-02-09 11:54:00";
             var sortFunc = function (a, b) {
                 var val1 = a.count || 0;
                 var val2 = b.count || 0;
@@ -209,12 +204,16 @@
                         var row = data.data[0];
                         $scope.topology_8583_count = row.count || 0;
                         $scope.topology_8583_duration = row.maxDuration || 0;
-                        $scope.topology_8583_successRatio = row.count > 0 ? Math.round(row.scount * 10000 / row.count) / 100 : 0;
-                        $scope.topology_8583_responseRatio = row.count > 0 ? Math.round(row.rcount * 10000 / row.count) / 100 : 0;
+                        $scope.topology_8583_successRatio = row.count > 0 && row.scount > 0 ? Math.round(row.scount * 10000 / row.count) / 100 : 0;
+                        $scope.topology_8583_responseRatio = row.count > 0 && row.rcount > 0 ? Math.round(row.rcount * 10000 / row.count) / 100 : 0;
                         if (typeof row.allflow === "number") {
                             var flow = numeral(row.allflow).format("0b");
                             $scope.topology_8583_flow = /\d+/.exec(flow)[0];
                             $scope.topology_8583_flowSuffix = /[a-zA-Z]+/.exec(flow)[0];
+                        }
+                        else {
+                            $scope.topology_8583_flow = 0;
+                            $scope.topology_8583_flowSuffix = "M";
                         }
                     }
                 }
@@ -281,12 +280,16 @@
                         var row = data.data[0];
                         $scope.topology_20022_count = row.count || 0;
                         $scope.topology_20022_duration = row.maxDuration || 0;
-                        $scope.topology_20022_successRatio = row.count > 0 ? Math.round(row.scount * 10000 / row.count) / 100 : 0;
-                        $scope.topology_20022_responseRatio = row.count > 0 ? Math.round(row.rcount * 10000 / row.count) / 100 : 0;
+                        $scope.topology_20022_successRatio = row.count > 0 && row.scount > 0 ? Math.round(row.scount * 10000 / row.count) / 100 : 0;
+                        $scope.topology_20022_responseRatio = row.count > 0 && row.rcount > 0 ? Math.round(row.rcount * 10000 / row.count) / 100 : 0;
                         if (typeof row.allflow === "number") {
                             var flow = numeral(row.allflow).format("0b");
                             $scope.topology_20022_flow = /\d+/.exec(flow)[0];
                             $scope.topology_20022_flowSuffix = /[a-zA-Z]+/.exec(flow)[0];
+                        }
+                        else {
+                            $scope.topology_20022_flow = 0;
+                            $scope.topology_20022_flowSuffix = "M";
                         }
                     }
                 }
@@ -351,12 +354,16 @@
                         var row = data.data[0];
                         $scope.topology_http_count = row.count || 0;
                         $scope.topology_http_duration = row.maxDuration || 0;
-                        $scope.topology_http_successRatio = row.count > 0 ? Math.round(row.scount * 10000 / row.count) / 100 : 0;
-                        $scope.topology_http_responseRatio = row.count > 0 ? Math.round(row.rcount * 10000 / row.count) / 100 : 0;
+                        $scope.topology_http_successRatio = row.count > 0 && row.scount > 0 ? Math.round(row.scount * 10000 / row.count) / 100 : 0;
+                        $scope.topology_http_responseRatio = row.count > 0 && row.rcount > 0 ? Math.round(row.rcount * 10000 / row.count) / 100 : 0;
                         if (typeof row.allflow === "number") {
                             var flow = numeral(row.allflow).format("0b");
                             $scope.topology_http_flow = /\d+/.exec(flow)[0];
                             $scope.topology_http_flowSuffix = /[a-zA-Z]+/.exec(flow)[0];
+                        }
+                        else {
+                            $scope.topology_http_flow = 0;
+                            $scope.topology_http_flowSuffix = "M";
                         }
                     }
                 }
@@ -424,13 +431,17 @@
                         var row = data.data[0];
                         $scope.topology_mysql_count = row.count || 0;
                         $scope.topology_mysql_duration = row.maxDuration || 0;
-                        $scope.topology_mysql_successRatio = row.count > 0 ? Math.round(row.scount * 10000 / row.count) / 100 : 0;
-                        $scope.topology_mysql_responseRatio = row.count > 0 ? Math.round(row.rcount * 10000 / row.count) / 100 : 0;
+                        $scope.topology_mysql_successRatio = row.count > 0 && row.scount > 0 ? Math.round(row.scount * 10000 / row.count) / 100 : 0;
+                        $scope.topology_mysql_responseRatio = row.count > 0 && row.rcount > 0 ? Math.round(row.rcount * 10000 / row.count) / 100 : 0;
 
                         if (typeof row.allflow === "number") {
                             var flow = numeral(row.allflow).format("0b");
                             $scope.topology_mysql_flow = /\d+/.exec(flow)[0];
                             $scope.topology_mysql_flowSuffix = /[a-zA-Z]+/.exec(flow)[0];
+                        }
+                        else {
+                            $scope.topology_mysql_flow = 0;
+                            $scope.topology_mysql_flowSuffix = "M";
                         }
                     }
                 }
@@ -494,13 +505,17 @@
                         var row = data.data[0];
                         $scope.topology_mq_count = row.count || 0;
                         $scope.topology_mq_duration = row.maxDuration || 0;
-                        $scope.topology_mq_successRatio = row.count > 0 ? Math.round(row.scount * 10000 / row.count) / 100 : 0;
-                        $scope.topology_mq_responseRatio = row.count > 0 ? Math.round(row.rcount * 10000 / row.count) / 100 : 0;
+                        $scope.topology_mq_successRatio = row.count > 0 && row.scount > 0 ? Math.round(row.scount * 10000 / row.count) / 100 : 0;
+                        $scope.topology_mq_responseRatio = row.count > 0 && row.rcount > 0 ? Math.round(row.rcount * 10000 / row.count) / 100 : 0;
 
                         if (typeof row.allflow === "number") {
                             var flow = numeral(row.allflow).format("0b");
                             $scope.topology_mq_flow = /\d+/.exec(flow)[0];
                             $scope.topology_mq_flowSuffix = /[a-zA-Z]+/.exec(flow)[0];
+                        }
+                        else {
+                            $scope.topology_mq_flow = 0;
+                            $scope.topology_mq_flowSuffix = "M";
                         }
                     }
                 }
@@ -711,7 +726,7 @@
             series: [{
                 name: '响应率',
                 type: 'gauge',
-                min: 50,
+                min: 0,
                 max: 100,
                 radius: '85%',
                 splitNumber: 5,
@@ -750,7 +765,7 @@
                 type: 'gauge',
                 center: ['25%', '50%'],    // 默认全局居中
                 radius: '90%',
-                min: 50,
+                min: 0,
                 max: 100,
                 endAngle: 45,
                 splitNumber: 5,
@@ -797,7 +812,7 @@
             series: [{
                 name: '响应率',
                 type: 'gauge',
-                min: 50,
+                min: 0,
                 max: 100,
                 radius: '85%',
                 splitNumber: 5,
@@ -836,7 +851,7 @@
                 type: 'gauge',
                 center: ['25%', '50%'],    // 默认全局居中
                 radius: '90%',
-                min: 50,
+                min: 0,
                 max: 100,
                 endAngle: 45,
                 splitNumber: 5,
@@ -883,7 +898,7 @@
             series: [{
                 name: '响应率',
                 type: 'gauge',
-                min: 50,
+                min: 0,
                 max: 100,
                 radius: '85%',
                 splitNumber: 5,
@@ -922,7 +937,7 @@
                 type: 'gauge',
                 center: ['25%', '50%'],    // 默认全局居中
                 radius: '90%',
-                min: 50,
+                min: 0,
                 max: 100,
                 endAngle: 45,
                 splitNumber: 5,
@@ -969,7 +984,7 @@
             series: [{
                 name: '响应率',
                 type: 'gauge',
-                min: 50,
+                min: 0,
                 max: 100,
                 radius: '85%',
                 splitNumber: 5,
@@ -1008,7 +1023,7 @@
                 type: 'gauge',
                 center: ['25%', '50%'],    // 默认全局居中
                 radius: '90%',
-                min: 50,
+                min: 0,
                 max: 100,
                 endAngle: 45,
                 splitNumber: 5,

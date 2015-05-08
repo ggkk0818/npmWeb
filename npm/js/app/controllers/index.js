@@ -186,8 +186,11 @@
         //查询拓扑图数据
         var topologyTimer = null;
         $scope.topology_query = function () {
-            $scope.topology_startTime = "2015-02-09 11:53:00";
-            $scope.topology_endTime = "2015-02-09 11:54:00";
+            var now = new Date(), start = new Date(now.getTime() - 60000);
+            $scope.topology_startTime = start.Format("yyyy-MM-dd hh:mm:ss");
+            $scope.topology_endTime = now.Format("yyyy-MM-dd hh:mm:ss");
+            //$scope.topology_startTime = "2015-02-09 11:53:00";
+            //$scope.topology_endTime = "2015-02-09 11:54:00";
             var sortFunc = function (a, b) {
                 var val1 = a.count || 0;
                 var val2 = b.count || 0;

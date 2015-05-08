@@ -7,6 +7,7 @@
     <link href="js/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />
 	<link href="css/style.css" rel="stylesheet"/>
     <link href="css/topology.css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
     <script src="js/vendor/require/require.js"></script>
     <script src="js/app/require.config.js"></script>
     <script>require(['app'], function () { })</script>
@@ -16,12 +17,13 @@
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<a class="navbar-brand" href="#/">
-					<img src="img/knowopslogo.png" style=" display: inline-block;  height: 50px; margin: -15px 5px 0 0;" />
-				</a>
+                    <iframe frameborder="0" src="img/oneapm.svg" width="50" height="50" style="margin: -15px 5px 0 0; "></iframe>
+                    <!--<img src="img/knowopslogo.png" style=" display: inline-block;  height: 50px; margin: -15px 5px 0 0;" />-->
+                </a>
 			</div>
 			<ul class="nav navbar-nav navbar-right">
                 <li><a href="#/topology"><span class="glyphicon glyphicon-transfer"></span> 业务逻辑</a></li>
-                <li><a href="#/device/statistic"><span class="glyphicon glyphicon-compressed"></span> 物理拓扑</a></li>
+                <li><a href="#/ipTopology"><span class="glyphicon glyphicon-compressed"></span> 物理拓扑</a></li>
                 <li><a href="#/settings"><span class="glyphicon glyphicon-cog"></span> 设置</a></li>
 		        <li class="dropdown">
 		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">admin <span class="caret"></span></a>

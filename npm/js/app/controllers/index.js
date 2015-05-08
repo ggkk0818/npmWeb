@@ -59,6 +59,14 @@
         $scope.topology_mysql_flow = 0;
         $scope.topology_mysql_flowSuffix = "M";
         $scope.topology_mysql_deviceList = null;
+        $scope.topology_mq_count = 0;
+        $scope.topology_mq_duration = 0;
+        $scope.topology_mq_successRatio = 0;
+        $scope.topology_mq_responseRatio = 0;
+        $scope.topology_mq_warnCount = 0;
+        $scope.topology_mq_flow = 0;
+        $scope.topology_mq_flowSuffix = "M";
+        $scope.topology_mq_deviceList = null;
         //初始化
         $scope.init = function () {
             //告警时间线
@@ -78,6 +86,8 @@
                         warn.warnTime = new Date(warn.warnTime);
                         warn.value = [warn.warnTime, warn.respmills, warn.protocol, warn.src_ip, warn.dest_ip];
                         warn.type = type;
+                        if (status === 7)
+                            warn.value[2] = 5000;
                         if (typeof status === "number" && $scope["warnTimeLine_warnS" + status]) {
                             $scope["warnTimeLine_warnS" + status].push(warn);
                         }
@@ -118,6 +128,8 @@
                             var status = warn.status;
                             warn.warnTime = new Date(warn.warnTime);
                             warn.value = [warn.warnTime, warn.respmills, warn.protocol, warn.src_ip, warn.dest_ip];
+                            if (status === 7)
+                                warn.value[2] = 5000;
                             if (typeof status === "number" && $scope["warnTimeLine_warnS" + status]) {
                                 $scope["warnTimeLine_warnS" + status].push(warn);
                             }
@@ -136,7 +148,7 @@
                 chart_http = echarts.init($("#index_chart_http")[0], "blue");
                 chart_8583 = echarts.init($("#index_chart_8583")[0], "blue");
                 chart_20022 = echarts.init($("#index_chart_20022")[0], "blue");
-                chart_mysql = echarts.init($("#index_chart_mysql")[0], "blue");
+                chart_mq = echarts.init($("#index_chart_mq")[0], "blue");
             });
 
 
@@ -470,6 +482,76 @@
                 }
                 else
                     $scope.topology_mysql_warnCount = 0;
+            });
+            //MQ
+            statisticService.showTopology({
+                type: "mq",
+                starttime: $scope.topology_startTime,
+                endtime: $scope.topology_endTime
+            }, function (data) {
+                if (data && data.state == "200") {
+                    if (data.data && data.data.length) {
+                        var row = data.data[0];
+                        $scope.topology_mq_count = row.count || 0;
+                        $scope.topology_mq_duration = row.maxDuration || 0;
+                        $scope.topology_mq_successRatio = row.count > 0 ? Math.round(row.scount * 10000 / row.count) / 100 : 0;
+                        $scope.topology_mq_responseRatio = row.count > 0 ? Math.round(row.rcount * 10000 / row.count) / 100 : 0;
+
+                        if (typeof row.allflow === "number") {
+                            var flow = numeral(row.allflow).format("0b");
+                            $scope.topology_mq_flow = /\d+/.exec(flow)[0];
+                            $scope.topology_mq_flowSuffix = /[a-zA-Z]+/.exec(flow)[0];
+                        }
+                    }
+                }
+            });
+            statisticService.showDevice({
+                type: "mq",
+                starttime: $scope.topology_startTime,
+                endtime: $scope.topology_endTime
+            }, function (data) {
+                if (data && data.state == "200") {
+                    $scope.topology_mq_deviceList = data.data;
+                    for (var i = 0; i < $scope.topology_mq_deviceList.length; i++) {
+                        var record = $scope.topology_mq_deviceList[i];
+                        if (typeof record.allflow === "number") {
+                            record.allflow = numeral(record.allflow).format("0b");
+                        }
+                    }
+                    //查询告警信息
+                    warningService.showDevice({
+                        type: "mq",
+                        startWarnTime: $scope.topology_startTime,
+                        endWarnTime: $scope.topology_endTime,
+                        start: 0,
+                        limit: 0
+                    }, function (data2) {
+                        if (data2 && data2.data) {
+                            for (var i = 0; i < data2.data.length; i++) {
+                                var warnRecord = data2.data[i];
+                                for (var j = 0; j < $scope.topology_mq_deviceList.length; j++) {
+                                    var record = $scope.topology_mq_deviceList[j];
+                                    if (warnRecord.srcip == record.srcip && warnRecord.dstip == record.dstip) {
+                                        record.warnCount = warnRecord.count;
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+            warningService.list({
+                type: "mq",
+                startWarnTime: $scope.topology_startTime,
+                endWarnTime: $scope.topology_endTime,
+                start: 0,
+                limit: 1
+            }, function (data) {
+                if (data && data.count) {
+                    $scope.topology_mq_warnCount = data.count;
+                }
+                else
+                    $scope.topology_mq_warnCount = 0;
             });
         };
         //图表
@@ -876,8 +958,8 @@
                 data: [{ value: 0, name: '成功率' }]
             }]
         };
-        var chart_mysql = null;
-        var chart_mysql_options = {
+        var chart_mq = null;
+        var chart_mq_options = {
             tooltip: {
                 formatter: "{a} <br/>{c} {b}"
             },
@@ -1002,12 +1084,12 @@
                 chart_20022.setOption(chart_20022_options, true);
         });
         $scope.$watch(function () {
-            return $scope.topology_mysql_successRatio + "" + $scope.topology_mysql_responseRatio;
+            return $scope.topology_mq_successRatio + "" + $scope.topology_mq_responseRatio;
         }, function () {
-            chart_mysql_options.series[0].data[0].value = $scope.topology_mysql_responseRatio;
-            chart_mysql_options.series[1].data[0].value = $scope.topology_mysql_successRatio;
-            if (chart_mysql)
-                chart_mysql.setOption(chart_mysql_options, true);
+            chart_mq_options.series[0].data[0].value = $scope.topology_mq_responseRatio;
+            chart_mq_options.series[1].data[0].value = $scope.topology_mq_successRatio;
+            if (chart_mq)
+                chart_mq.setOption(chart_mq_options, true);
         });
         //窗口调整时更新图表大小
         var windowResize = function () {

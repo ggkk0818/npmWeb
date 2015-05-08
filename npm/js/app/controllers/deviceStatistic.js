@@ -303,9 +303,44 @@
             option.series[0].links = linkList;
             $scope.deviceChart.setOption(option);
         };
+
+        $scope.queryIpTopology = function () {
+            $scope.queryStartTime = $scope.startTime;
+            $scope.queryLogType = $scope.logType;
+            $scope.queryDurationType = $scope.durationType;
+            var params = {
+                type: $scope.logType.id,
+                start: ($scope.pageNum - 1) * $scope.pageSize,
+                limit: $scope.pageSize
+            };
+            if ($scope.startTime) {
+                params.starttime = $scope.startTime;
+            }
+            if ($scope.startTime && $scope.durationType) {
+                var endTime = new Date($scope.startTime.replace(/-/g, "/")),
+                    durationId = $scope.durationType.id;
+                if (durationId == "minute") {
+                    endTime.setMinutes(endTime.getMinutes() + 1);
+                }
+                else if (durationId == "hour") {
+                    endTime.setHours(endTime.getHours() + 1);
+                }
+                else if (durationId == "day") {
+                    endTime.setDate(endTime.getDate() + 1);
+                }
+                params.endtime = endTime.Format("yyyy-MM-dd hh:mm:ss");
+            }
+            statisticService.ipTopology(params, function (data) {
+                if (data && data.data) {
+
+                }
+            });
+        };
+
         //获取url查询参数
         $scope.setSearchParams();
-        $scope.doQuery();
+        //$scope.doQuery();
+        $scope.queryIpTopology();
         //初始化图表
         $timeout(function () {
             $scope.deviceChart = echarts.init($("#deviceStatistic_topology").get(0));

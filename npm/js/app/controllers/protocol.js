@@ -71,8 +71,6 @@
                     }
                 }
             });
-            $timeout(function () {
-            });
         };
         //配置过滤器方法
         $scope.addFilter = function (field) {
@@ -675,6 +673,7 @@
                         } else if (status == 3) {
                             warn_data_s3.push(warn);
                         } else if (status == 7) {
+                            warn.value[2] = 5000;
                             warn_data_s7.push(warn);
                         }
                     }

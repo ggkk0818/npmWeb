@@ -37,16 +37,31 @@ function (angular, $, _, config) {
             }, 3000);
         };
         this.open = function () {
-            socket = new WebSocket("ws://" + window.location.hostname + ":8080/upm/warnSocket");
-            socket.onerror = onerror;
-            socket.onopen = function () {
-                socket.onmessage = onmessage;
-                socket.onclose = onclose;
-                //发送之前积累的消息
-                while (messageQueue.length && socket.readyState === WebSocket.OPEN) {
-                    socket.send(messageQueue.shift());
+            try {
+                var url = window.location.pathname,
+                    socketUrl = "ws://" + window.location.hostname + ":" + window.location.port;
+                var rootPos = url.lastIndexOf("/");
+                if (rootPos > -1) {
+                    socketUrl += url.substring(0, rootPos + 1);
                 }
-            };
+                else {
+                    socketUrl += "/";
+                }
+                socketUrl += "warnSocket";
+                socket = new WebSocket(socketUrl);
+                socket.onerror = onerror;
+                socket.onopen = function () {
+                    socket.onmessage = onmessage;
+                    socket.onclose = onclose;
+                    //发送之前积累的消息
+                    while (messageQueue.length && socket.readyState === WebSocket.OPEN) {
+                        socket.send(messageQueue.shift());
+                    }
+                };
+            }
+            catch (e) {
+                console.error("warning service socket error.", e);
+            }
         };
         this.isOpen = function () {
             return socket && socket.readyState == WebSocket.OPEN ? true : false;

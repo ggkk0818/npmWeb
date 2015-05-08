@@ -1,0 +1,27 @@
+﻿<div class="row" style="padding-top:25px;">
+    <div class="col-md-12">
+        <div class="pull-left">
+            <form class="form-inline">
+                <input type="text" class="form-control date" data-date-format="yyyy-mm-dd hh:ii:ss" data-date-language="zh-CN" placeholder="开始时间" ng-model="startTimeInput" ng-keypress="formKeypressHandler($event)">
+                <div class="form-group">
+                    <label class="sr-only">时间间隔</label>
+                    <div class="form-group btn-group">
+                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                            {{durationType.name || "时间间隔"}} <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li ng-repeat="t in DURATION_TYPE" ng-class="{'active':durationType.id==t.id}"><a href="javascript:void(0);" ng-click="$parent.durationType=t">{{t.name}}</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <button class="btn btn-info" type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
+                <!--<button class="btn btn-info" type="button"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> 导出</button>-->
+            </form>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:25px;">
+    <div class="col-xs-12">
+        <div id="ipTopology_chart" style="height:400px;"></div>
+    </div>
+</div>

@@ -12,6 +12,15 @@
             ]
         });
         sidebarNav.push({
+            name: "服务路径",
+            href: null,
+            children: [
+                { name: "服务路径1", href: "#/path", icon: "glyphicon-equalizer" },
+                { name: "服务路径2", href: "#/path", icon: "glyphicon-equalizer" },
+                { name: "服务路径3", href: "#/path", icon: "glyphicon-equalizer" },
+            ]
+        });
+        sidebarNav.push({
             name: "按协议查看",
             href: null,
             children: [

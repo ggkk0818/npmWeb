@@ -80,9 +80,9 @@
                 templateUrl: 'js/app/partials/warningSearch.html',
                 controller: 'WarningSearchCtrl'
             })
-            .when('/device/statistic', {
-                templateUrl: 'js/app/partials/deviceStatistic.html',
-                controller: 'DeviceStatisticCtrl'
+            .when('/ipTopology', {
+                templateUrl: 'js/app/partials/ipTopology.html',
+                controller: 'IpTopologyCtrl'
             })
             .when('/protocol/:protocol', {
                 templateUrl: 'js/app/partials/protocol.html',

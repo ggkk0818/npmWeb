@@ -7,5 +7,6 @@
     "./warningSearch",
     "./protocol",
     "./protocolChart",
-    "./topology"
+    "./topology",
+    "./ipTopology"
 ], function () { });

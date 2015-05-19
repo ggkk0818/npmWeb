@@ -8,7 +8,7 @@ function (angular, app, _) {
 
     angular
       .module('app.directives')
-      .directive('date', function ($compile, $window) {
+      .directive('datetime', function ($compile, $window) {
           return {
               restrict: 'C',
               link: function ($scope, elem) {

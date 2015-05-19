@@ -2,7 +2,8 @@
     <div class="col-md-12">
         <div class="pull-left">
             <form class="form-inline">
-                <input type="text" class="form-control date" data-date-format="yyyy-mm-dd hh:ii:ss" data-date-language="zh-CN" placeholder="开始时间" ng-model="startTimeInput" ng-keypress="formKeypressHandler($event)">
+                <input type="text" class="form-control datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN" data-min-view="2" placeholder="日期" ng-model="startDateInput" ng-keypress="formKeypressHandler($event)">
+                <input type="text" class="form-control datetime" data-date-format="hh:ii:ss" data-date-language="zh-CN" data-max-view="1" data-start-view="1" placeholder="时间" ng-model="startTimeInput" ng-keypress="formKeypressHandler($event)">
                 <div class="form-group">
                     <label class="sr-only">时间间隔</label>
                     <div class="form-group btn-group">

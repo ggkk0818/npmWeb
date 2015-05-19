@@ -5,5 +5,6 @@
     "./warningSocketService",
     "./settingsService",
     "./protocolService",
-    "./protocolChartService"
+    "./protocolChartService",
+    "./dateTimeService"
 ], function () { });

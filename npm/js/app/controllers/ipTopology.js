@@ -1,24 +1,26 @@
 ﻿define(['angular', 'lodash', 'jquery', 'services/all', 'css!partials/deviceStatistic.css'], function (angular, _, $) {
     "use strict";
     var module = angular.module('app.controllers');
-    module.controller('IpTopologyCtrl', function ($rootScope, $scope, $route, $timeout, $location, statisticService, warningService) {
+    module.controller('IpTopologyCtrl', function ($rootScope, $scope, $route, $timeout, $location, statisticService, warningService, dateTimeService) {
         //初始化变量
         $scope.DURATION_TYPE = [
-            { id: "minute", name: "1分钟" },
-            { id: "hour", name: "1小时" },
-            { id: "day", name: "1天" }
+            { id: "minute", name: "前1分钟" },
+            { id: "hour", name: "前1小时" },
+            { id: "day", name: "前1天" }
         ];
+        $scope.startDate = null;
         $scope.startTime = null;
         $scope.durationType = $scope.DURATION_TYPE[0];
         //表单数据
-        $scope.startTimeInput = $scope.startTime = new Date().Format("yyyy-MM-dd hh:mm:00");
+        $scope.startDateInput = $scope.startTime = dateTimeService.serverTime.Format("yyyy-MM-dd");
+        $scope.startTimeInput = $scope.startTime = dateTimeService.serverTime.Format("hh:mm:ss");
         //图表变量
         $scope.topologyChart = null;
         //获取查询参数
         $scope.getSearchParams = function () {
             var params = {};
             if ($scope.startTime)
-                params.startTime = $scope.startTime;
+                params.startTime = $scope.startDate + " " + $scope.startTime;
             if ($scope.durationType)
                 params.durationType = $scope.durationType.id;
             return params;
@@ -29,8 +31,11 @@
             if (!params)
                 return;
             if (params.startTime) {
-                $scope.startTime = params.startTime;
-                $scope.startTimeInput = params.startTime;
+                var arr = params.startTime.split(" ");
+                $scope.startDate = arr[0];
+                $scope.startDateInput = arr[0];
+                $scope.startTime = arr[1];
+                $scope.startTimeInput = arr[1];
             }
             if (params.durationType) {
                 for (var i = 0; i < $scope.DURATION_TYPE.length; i++) {
@@ -49,6 +54,10 @@
         };
         //搜索
         $scope.search = function () {
+            if (typeof $scope.startDateInput == "undefined" || $scope.startDateInput == null || $scope.startDateInput.length == 0)
+                $scope.startDate = null;
+            else
+                $scope.startDate = $scope.startDateInput;
             if (typeof $scope.startTimeInput == "undefined" || $scope.startTimeInput == null || $scope.startTimeInput.length == 0)
                 $scope.startTime = null;
             else
@@ -169,22 +178,22 @@
                 start: 0,
                 limit: 0
             };
-            if ($scope.startTime) {
-                params.starttime = $scope.startTime;
+            if ($scope.startDate && $scope.startTime) {
+                params.endtime = $scope.startDate + " " + $scope.startTime;
             }
-            if ($scope.startTime && $scope.durationType) {
-                var endTime = new Date($scope.startTime.replace(/-/g, "/")),
+            if ($scope.startDate && $scope.startTime && $scope.durationType) {
+                var endTime = new Date($scope.startDate.replace(/-/g, "/") + " " + $scope.startTime),
                     durationId = $scope.durationType.id;
                 if (durationId == "minute") {
-                    endTime.setMinutes(endTime.getMinutes() + 1);
+                    endTime.setMinutes(endTime.getMinutes() - 1);
                 }
                 else if (durationId == "hour") {
-                    endTime.setHours(endTime.getHours() + 1);
+                    endTime.setHours(endTime.getHours() - 1);
                 }
                 else if (durationId == "day") {
-                    endTime.setDate(endTime.getDate() + 1);
+                    endTime.setDate(endTime.getDate() - 1);
                 }
-                params.endtime = endTime.Format("yyyy-MM-dd hh:mm:ss");
+                params.starttime = endTime.Format("yyyy-MM-dd hh:mm:ss");
             }
             statisticService.ipTopology(params, function (data) {
                 if (data && data.data) {

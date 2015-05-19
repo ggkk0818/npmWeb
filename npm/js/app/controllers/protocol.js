@@ -1,7 +1,7 @@
 ﻿define(['angular', 'lodash', 'jquery', 'services/all', 'css!partials/protocol.css'], function (angular, _, $) {
     "use strict";
     var module = angular.module('app.controllers');
-    module.controller('ProtocolCtrl', function ($rootScope, $scope, $route, $timeout, $location, protocolService, protocolChartService, warningService) {
+    module.controller('ProtocolCtrl', function ($rootScope, $scope, $route, $timeout, $location, protocolService, protocolChartService, warningService, dateTimeService) {
         //初始化变量
         $scope.FIELD_LIST = {};
         $scope.FIELD_OPT = {
@@ -41,13 +41,15 @@
         $scope.isGroupMode = false;
         //图表变量
         $scope.DURATION_TYPE = [
-            { id: "minute", name: "1分钟" },
-            { id: "hour", name: "1小时" },
-            { id: "day", name: "1天" }
+            { id: "minute", name: "前1分钟" },
+            { id: "hour", name: "前1小时" },
+            { id: "day", name: "前1天" }
         ];
+        $scope.startDate = null;
         $scope.startTime = null;
         $scope.durationType = $scope.DURATION_TYPE[0];
-        $scope.startTimeInput = $scope.startTime = new Date().Format("yyyy-MM-dd hh:mm:00");
+        $scope.startDateInput = $scope.startTime = dateTimeService.serverTime.Format("yyyy-MM-dd");
+        $scope.startTimeInput = $scope.startTime = dateTimeService.serverTime.Format("hh:mm:ss");
         $scope.chart_flow = null;
         $scope.chart_resp = null;
         $scope.chart_code = null;
@@ -606,6 +608,10 @@
 
         //图表查询
         $scope.chartSearch = function () {
+            if (typeof $scope.startDateInput == "undefined" || $scope.startDateInput == null || $scope.startDateInput.length == 0)
+                $scope.startDate = null;
+            else
+                $scope.startDate = $scope.startDateInput;
             if (typeof $scope.startTimeInput == "undefined" || $scope.startTimeInput == null || $scope.startTimeInput.length == 0)
                 $scope.startTime = null;
             else
@@ -613,22 +619,22 @@
             var params = {
                 type: $scope.protocolType
             };
-            if ($scope.startTime) {
-                params.starttime = $scope.startTime;
+            if ($scope.startDate && $scope.startTime) {
+                params.endtime = $scope.startDate + " " + $scope.startTime;
             }
-            if ($scope.startTime && $scope.durationType) {
-                var endTime = new Date($scope.startTime.replace(/-/g, "/")),
+            if ($scope.startDate && $scope.startTime && $scope.durationType) {
+                var endTime = new Date($scope.startDate.replace(/-/g, "/") + " " + $scope.startTime),
                     durationId = $scope.durationType.id;
                 if (durationId == "minute") {
-                    endTime.setMinutes(endTime.getMinutes() + 1);
+                    endTime.setMinutes(endTime.getMinutes() - 1);
                 }
                 else if (durationId == "hour") {
-                    endTime.setHours(endTime.getHours() + 1);
+                    endTime.setHours(endTime.getHours() - 1);
                 }
                 else if (durationId == "day") {
-                    endTime.setDate(endTime.getDate() + 1);
+                    endTime.setDate(endTime.getDate() - 1);
                 }
-                params.endtime = endTime.Format("yyyy-MM-dd hh:mm:ss");
+                params.starttime = endTime.Format("yyyy-MM-dd hh:mm:ss");
             }
             protocolChartService.flowList(params, function (data) {
                 if (data && data.data) {

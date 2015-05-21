@@ -26,7 +26,7 @@
                 { name: "!=", displayName: "不等于" }
             ],
         };
-        $scope.queryFieldList = {};
+        $scope.queryFieldList = { endtime: { name: "endtime", displayName: "时间", type: "Date", opt: { name: ">=", displayName: ">=" }, inputValue1: dateTimeService.serverTime.Format("yyyy-MM-dd 00:00:00") } };
         $scope.groupFieldList = {};
         $scope.groupFieldCount = 0;
         $scope.displayFieldList = {};
@@ -45,9 +45,16 @@
             { id: "hour", name: "前1小时" },
             { id: "day", name: "前1天" }
         ];
+        $scope.INTERVAL_TYPE = [
+            { id: "1m", name: "1分钟" },
+            { id: "5m", name: "5分钟" },
+            { id: "1h", name: "1小时" },
+            { id: "1d", name: "1天" }
+        ];
         $scope.startDate = null;
         $scope.startTime = null;
         $scope.durationType = $scope.DURATION_TYPE[0];
+        $scope.intervalType = $scope.INTERVAL_TYPE[0];
         $scope.startDateInput = $scope.startTime = dateTimeService.serverTime.Format("yyyy-MM-dd");
         $scope.startTimeInput = $scope.startTime = dateTimeService.serverTime.Format("hh:mm:ss");
         $scope.chart_flow = null;
@@ -617,7 +624,8 @@
             else
                 $scope.startTime = $scope.startTimeInput;
             var params = {
-                type: $scope.protocolType
+                type: $scope.protocolType,
+                timeType: $scope.intervalType.id
             };
             if ($scope.startDate && $scope.startTime) {
                 params.endtime = $scope.startDate + " " + $scope.startTime;

@@ -5,10 +5,10 @@
                 <input type="text" class="form-control datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN" data-min-view="2" placeholder="日期" ng-model="startDateInput" ng-keypress="formKeypressHandler($event)">
                 <input type="text" class="form-control datetime" data-date-format="hh:ii:ss" data-date-language="zh-CN" data-max-view="1" data-start-view="1" placeholder="时间" ng-model="startTimeInput" ng-keypress="formKeypressHandler($event)">
                 <div class="form-group">
-                    <label class="sr-only">时间间隔</label>
+                    <label class="sr-only">时间跨度</label>
                     <div class="form-group btn-group">
                         <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-                            {{durationType.name || "时间间隔"}} <span class="caret"></span>
+                            {{durationType.name || "时间跨度"}} <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
                             <li ng-repeat="t in DURATION_TYPE" ng-class="{'active':durationType.id==t.id}"><a href="javascript:void(0);" ng-click="$parent.durationType=t">{{t.name}}</a></li>
@@ -23,6 +23,10 @@
 </div>
 <div class="row" style="margin-top:25px;">
     <div class="col-xs-12">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" ng-class="{'active':ipTabActive}"><a href="javascript:void(0);" role="tab" ng-click="showIpChart()">IP拓扑图</a></li>
+            <li role="presentation" ng-class="{'active':deviceTabActive}"><a href="javascript:void(0);" role="tab" ng-click="showDeviceChart()">设备拓扑图</a></li>
+        </ul>
         <div id="ipTopology_chart" style="height:600px;"></div>
     </div>
 </div>

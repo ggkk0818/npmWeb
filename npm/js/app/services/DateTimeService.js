@@ -34,7 +34,7 @@ function (angular, $, _, config) {
         //服务器时间时钟
         $interval(function () {
             if (thiz.serverTime) {
-                thiz.serverTime = new Date(thiz.serverTime.getTime());
+                thiz.serverTime = new Date(thiz.serverTime.getTime() + 1000);
             }
         }, 1000);
         //执行同步

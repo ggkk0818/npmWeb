@@ -68,5 +68,20 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
+
+        this.deviceTopology = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'statistics/device/topology',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
     });
 });

@@ -14,7 +14,7 @@
         $scope.ipTabActive = true;
         $scope.deviceTabActive = false;
         //表单数据
-        $scope.startDateInput = $scope.startTime = dateTimeService.serverTime.Format("yyyy-MM-dd");
+        $scope.startDateInput = $scope.startDate = dateTimeService.serverTime.Format("yyyy-MM-dd");
         $scope.startTimeInput = $scope.startTime = dateTimeService.serverTime.Format("hh:mm:ss");
         //图表变量
         $scope.topologyChart = null;
@@ -207,8 +207,8 @@
                 if (data && data.data) {
                     var nodes = {}, linkList = [], protocols = {};
                     //获取协议index数值
-                    if (option && option.legend && option.legend.data) {
-                        for (var i = 0; i < option.legend.data.length; i++) {
+                    if ($scope.ipLegend) {
+                        for (var i = 0; i < $scope.ipLegend.length; i++) {
                             protocols[option.legend.data[i]] = i;
                         }
                     }
@@ -248,6 +248,8 @@
                     for (var name in nodes) {
                         nodeList.push(nodes[name]);
                     }
+                    $scope.ipNodes = nodeList;
+                    $scope.ipLinks = linkList;
                 }
                 else {
                     $scope.ipNodes = null;
@@ -256,78 +258,98 @@
                 if ($scope.ipTabActive)
                     $scope.showIpChart();
             });
-            statisticService.deviceTopology(params, function (data) {
-                if (data && data.data) {
+            statisticService.relationTopology(params, function (data) {
+                if (data && data.route && data.relation) {
                     var nodes = {}, linkList = [], routerRef = {};
-                    for (var i = 0; i < data.routers.length; i++) {
-                        var router = data.routers[i];
-                        if (!nodes[router.name]) {
-                            nodes[router.name] = {
-                                category: "路由器",
-                                name: router.name,
+                    //路由器交换机和根ip节点
+                    for (var i = 0; i < data.route.length; i++) {
+                        var router = data.route[i];
+                        if (!nodes[router.device]) {
+                            nodes[router.device] = {
+                                category: 0,
+                                name: router.device,
                                 value: 10
                             };
-                            nodes[router.name + "-1"] = {
-                                category: "交换机",
-                                name: router.name + "-1",
+                            nodes[router.device + "-1"] = {
+                                category: 1,
+                                name: router.device + "-1",
                                 value: 8
                             };
-                            nodes[router.name + "-2"] = {
-                                category: "交换机",
-                                name: router.name + "-2",
+                            nodes[router.device + "-2"] = {
+                                category: 1,
+                                name: router.device + "-2",
                                 value: 8
                             };
                             linkList.push({
-                                source: router.name + "-1",
-                                target: router.name,
+                                source: router.device + "-1",
+                                target: router.device,
                                 weight: 1
                             });
                             linkList.push({
-                                source: router.name + "-2",
-                                target: router.name,
+                                source: router.device + "-2",
+                                target: router.device,
                                 weight: 1
                             });
                         }
-                        if (!nodes[router.srcIp]) {
-                            nodes[router.srcIp] = {
-                                category: "服务器",
-                                name: router.srcIp,
+                        if (!nodes[router.source_ip]) {
+                            nodes[router.source_ip] = {
+                                category: 2,
+                                name: router.source_ip,
                                 value: 5
                             };
                             linkList.push({
-                                source: router.srcIp,
-                                target: router.name + "-1",
+                                source: router.source_ip,
+                                target: router.device + "-1",
                                 weight: 1
                             });
-                            routerRef[router.srcIp] = router.name + "-1";
+                            routerRef[router.source_ip] = router.device + "-1";
                         }
-                        if (!nodes[router.dstIp]) {
-                            nodes[router.dstIp] = {
-                                category: "服务器",
-                                name: router.dstIp,
+                        if (!nodes[router.dest_ip]) {
+                            nodes[router.dest_ip] = {
+                                category: 2,
+                                name: router.dest_ip,
                                 value: 5
                             };
                             linkList.push({
-                                source: router.dstIp,
-                                target: router.name + "-2",
+                                source: router.dest_ip,
+                                target: router.device + "-2",
                                 weight: 1
                             });
-                            routerRef[router.dstIp] = router.name + "-2";
+                            routerRef[router.dest_ip] = router.device + "-2";
+                        }
+                        //路由器之间连线
+                        if (i > 0) {
+                            linkList.push({
+                                source: router.device,
+                                target: data.route[i - 1].device,
+                                weight: 1
+                            });
+                        }
+                        if (i + 1 >= data.route.length && data.route.length > 2) {
+                            linkList.push({
+                                source: data.route[0].device,
+                                target: router.device,
+                                weight: 1
+                            });
                         }
                     }
-                    for (var i = 0; i < data.ips.length; i++) {
-                        var record = data.ips[i];
-                        if (!nodes[record.srcIp] && routerRef[record.dstIp]) {
-                            nodes[record.srcIp] = {
-                                category: "服务器",
-                                name: record.srcIp,
-                                value: 5
-                            };
-                            linkList.push({
-                                source: record.srcIp,
-                                target: routerRef[record.dstIp],
-                                weight: 1
-                            });
+                    //其他ip节点
+                    for (var i = 0; i < data.relation.length; i++) {
+                        var arr = data.relation[i] ? data.relation[i].split("->") : null;
+                        if (arr && arr.length >= 2) {
+                            var record = { srcIp: arr[0], dstIp: arr[1] };
+                            if (!nodes[record.srcIp] && routerRef[record.dstIp]) {
+                                nodes[record.srcIp] = {
+                                    category: 2,
+                                    name: record.srcIp,
+                                    value: 5
+                                };
+                                linkList.push({
+                                    source: record.srcIp,
+                                    target: routerRef[record.dstIp],
+                                    weight: 1
+                                });
+                            }
                         }
                     }
                     var nodeList = [];
@@ -351,11 +373,12 @@
             $scope.deviceTabActive = false;
             option.legend.data = $scope.ipLegend;
             option.series[0].categories = [];
-            for (var item in $scope.ipLegend) {
-                option.series[0].categories.push({ name: item });
+            for (var index in $scope.ipLegend) {
+                option.series[0].categories.push({ name: $scope.ipLegend[index] });
             }
             option.series[0].nodes = $scope.ipNodes;
             option.series[0].links = $scope.ipLinks;
+            $scope.topologyChart = echarts.init($("#ipTopology_chart").get(0));
             $scope.topologyChart.setOption(option);
         };
 
@@ -364,11 +387,12 @@
             $scope.deviceTabActive = true;
             option.legend.data = $scope.deviceLegend;
             option.series[0].categories = [];
-            for (var item in $scope.deviceLegend) {
-                option.series[0].categories.push({ name: item });
+            for (var index in $scope.deviceLegend) {
+                option.series[0].categories.push({ name: $scope.deviceLegend[index] });
             }
             option.series[0].nodes = $scope.deviceNodes;
             option.series[0].links = $scope.deviceLinks;
+            $scope.topologyChart = echarts.init($("#ipTopology_chart").get(0));
             $scope.topologyChart.setOption(option);
         };
 
@@ -376,8 +400,8 @@
         $scope.setSearchParams();
         $scope.queryTopology();
         //初始化图表
-        $timeout(function () {
-            $scope.topologyChart = echarts.init($("#ipTopology_chart").get(0));
-        });
+        //$timeout(function () {
+        //    $scope.topologyChart = echarts.init($("#ipTopology_chart").get(0));
+        //});
     });
 });

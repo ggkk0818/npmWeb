@@ -69,10 +69,10 @@ function (angular, $, _, config) {
             });
         };
 
-        this.deviceTopology = function (params, callback) {
+        this.relationTopology = function (params, callback) {
             $http({
                 method: 'GET',
-                url: 'statistics/device/topology',
+                url: 'statistics/ip/relation',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {

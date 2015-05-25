@@ -165,6 +165,10 @@
                             linkStyle: {}
                         }
                     },
+                    effect: {
+                        show: true,
+                        shadowBlur: 0
+                    },
                     minRadius: 15,
                     maxRadius: 25,
                     gravity: 1.1,
@@ -260,7 +264,7 @@
             });
             statisticService.relationTopology(params, function (data) {
                 if (data && data.route && data.relation) {
-                    var nodes = {}, linkList = [], routerRef = {};
+                    var nodes = {}, linkList = [], routers = {}, routerRef = {};
                     //路由器交换机和根ip节点
                     for (var i = 0; i < data.route.length; i++) {
                         var router = data.route[i];
@@ -270,26 +274,26 @@
                                 name: router.device,
                                 value: 10
                             };
-                            nodes[router.device + "-1"] = {
+                            nodes[router.device + "-switch"] = {
                                 category: 1,
-                                name: router.device + "-1",
+                                name: router.device + "-switch",
                                 value: 8
                             };
-                            nodes[router.device + "-2"] = {
-                                category: 1,
-                                name: router.device + "-2",
-                                value: 8
-                            };
+                            //nodes[router.device + "-2"] = {
+                            //    category: 1,
+                            //    name: router.device + "-2",
+                            //    value: 8
+                            //};
                             linkList.push({
-                                source: router.device + "-1",
+                                source: router.device + "-switch",
                                 target: router.device,
                                 weight: 1
                             });
-                            linkList.push({
-                                source: router.device + "-2",
-                                target: router.device,
-                                weight: 1
-                            });
+                            //linkList.push({
+                            //    source: router.device + "-2",
+                            //    target: router.device,
+                            //    weight: 1
+                            //});
                         }
                         if (!nodes[router.source_ip]) {
                             nodes[router.source_ip] = {
@@ -299,38 +303,26 @@
                             };
                             linkList.push({
                                 source: router.source_ip,
-                                target: router.device + "-1",
+                                target: router.device + "-switch",
                                 weight: 1
                             });
-                            routerRef[router.source_ip] = router.device + "-1";
+                            routerRef[router.source_ip] = router.device + "-switch";
                         }
-                        if (!nodes[router.dest_ip]) {
-                            nodes[router.dest_ip] = {
-                                category: 2,
-                                name: router.dest_ip,
-                                value: 5
-                            };
-                            linkList.push({
-                                source: router.dest_ip,
-                                target: router.device + "-2",
-                                weight: 1
-                            });
-                            routerRef[router.dest_ip] = router.device + "-2";
-                        }
-                        //路由器之间连线
-                        if (i > 0) {
-                            linkList.push({
-                                source: router.device,
-                                target: data.route[i - 1].device,
-                                weight: 1
-                            });
-                        }
-                        if (i + 1 >= data.route.length && data.route.length > 2) {
-                            linkList.push({
-                                source: data.route[0].device,
-                                target: router.device,
-                                weight: 1
-                            });
+                        //if (!nodes[router.dest_ip]) {
+                        //    nodes[router.dest_ip] = {
+                        //        category: 2,
+                        //        name: router.dest_ip,
+                        //        value: 5
+                        //    };
+                        //    linkList.push({
+                        //        source: router.dest_ip,
+                        //        target: router.device + "-2",
+                        //        weight: 1
+                        //    });
+                        //    routerRef[router.dest_ip] = router.device + "-2";
+                        //}
+                        if (!routers[router.device]) {
+                            routers[router.device] = router;
                         }
                     }
                     //其他ip节点
@@ -352,6 +344,28 @@
                             }
                         }
                     }
+                    //路由器之间连线
+                    var firstRouter = null, prevRouter = null;
+                    for (var routerName in routers) {
+                        if (!firstRouter)
+                            firstRouter = routerName;
+                        if (prevRouter) {
+                            linkList.push({
+                                source: routerName,
+                                target: prevRouter,
+                                weight: 1
+                            });
+                        }
+                        prevRouter = routerName;
+                    }
+                    if (firstRouter) {
+                        linkList.push({
+                            source: firstRouter,
+                            target: routerName,
+                            weight: 1
+                        });
+                    }
+                    //生成node与link列表
                     var nodeList = [];
                     for (var name in nodes) {
                         nodeList.push(nodes[name]);

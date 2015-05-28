@@ -8,5 +8,8 @@
     "./protocol",
     "./protocolChart",
     "./topology",
-    "./ipTopology"
+    "./ipTopology",
+    "./flowDetail",
+    "./flowSummary",
+    "./flowPcap"
 ], function () { });

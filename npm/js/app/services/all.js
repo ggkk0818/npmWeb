@@ -6,5 +6,6 @@
     "./settingsService",
     "./protocolService",
     "./protocolChartService",
-    "./dateTimeService"
+    "./dateTimeService",
+    "./flowService"
 ], function () { });

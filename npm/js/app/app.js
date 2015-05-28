@@ -96,6 +96,18 @@
                 templateUrl: 'js/app/partials/topology.html',
                 controller: 'TopologyCtrl'
             })
+            .when('/flow/summary', {
+                templateUrl: 'js/app/partials/flowSummary.html',
+                controller: 'FlowSummaryCtrl'
+            })
+            .when('/flow/detail', {
+                templateUrl: 'js/app/partials/flowDetail.html',
+                controller: 'FlowDetailCtrl'
+            })
+            .when('/flow/pcap', {
+                templateUrl: 'js/app/partials/flowPcap.html',
+                controller: 'FlowPcapCtrl'
+            })
             .otherwise({
                 redirectTo: '/'
             });

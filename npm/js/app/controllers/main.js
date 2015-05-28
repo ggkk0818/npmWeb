@@ -12,12 +12,12 @@
             ]
         });
         sidebarNav.push({
-            name: "服务路径",
+            name: "流量监测",
             href: null,
             children: [
-                { name: "服务路径1", href: "#/path", icon: "glyphicon-equalizer" },
-                { name: "服务路径2", href: "#/path", icon: "glyphicon-equalizer" },
-                { name: "服务路径3", href: "#/path", icon: "glyphicon-equalizer" },
+                { name: "总览", href: "#/flow/summary", icon: "glyphicon-equalizer" },
+                { name: "详情", href: "#/flow/detail", icon: "glyphicon-equalizer" },
+                { name: "PCAP包下载", href: "#/flow/pcap", icon: "glyphicon-equalizer" },
             ]
         });
         sidebarNav.push({

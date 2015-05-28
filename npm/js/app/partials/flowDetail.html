@@ -1,0 +1,45 @@
+﻿<div class="row" style="padding-top:25px;">
+    <div class="col-md-12">
+        <div class="pull-left">
+            <form class="form-inline">
+                <input type="text" class="form-control datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN" data-min-view="2" placeholder="日期" ng-model="startDateInput" ng-keypress="formKeypressHandler($event)">
+                <input type="text" class="form-control datetime" data-date-format="hh:ii:ss" data-date-language="zh-CN" data-max-view="1" data-start-view="1" placeholder="时间" ng-model="startTimeInput" ng-keypress="formKeypressHandler($event)">
+                <button class="btn btn-info" type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
+                <button class="btn btn-info" type="button" ng-click="reset()"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Play</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:20px;">
+    <div class="col-xs-12">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" ng-repeat="tab in QUERY_TYPE" ng-class="{'active':queryType.name==tab.name}"><a href="javascript:void(0);" role="tab" ng-click="changeTab(tab)">{{tab.displayName}}</a></li>
+        </ul>
+        <div style="margin-top:20px;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>{{queryType.displayName||queryType.name}}</th>
+                        <th>流量</th>
+                        <th>数据包</th>
+                        <th>接收数据包</th>
+                        <th>发送数据包</th>
+                        <th>接收字节</th>
+                        <th>发送字节</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="record in recordList">
+                        <td>{{record[""]}}</td>
+                        <td>{{record["flow"]}}</td>
+                        <td>{{record["packet"]}}</td>
+                        <td>{{record[""]}}</td>
+                        <td>{{record[""]}}</td>
+                        <td>{{record[""]}}</td>
+                        <td>{{record[""]}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

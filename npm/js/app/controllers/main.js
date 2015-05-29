@@ -25,13 +25,16 @@
             href: null,
             children: [
                 { name: "HTTP", href: "#/protocol/http", icon: "glyphicon-screenshot" },
-                { name: "8583", href: "#/protocol/8583", icon: "glyphicon-th" },
-                { name: "20022", href: "#/protocol/20022", icon: "glyphicon-list-alt" },
+                //{ name: "8583", href: "#/protocol/8583", icon: "glyphicon-th" },
+                //{ name: "20022", href: "#/protocol/20022", icon: "glyphicon-list-alt" },
                 { name: "MYSQL", href: "#/protocol/mysql", icon: "glyphicon-globe" },
                 { name: "RADIUS", href: "#/protocol/radius", icon: "glyphicon-road" },
                 { name: "DNS", href: "#/protocol/dns", icon: "glyphicon-tasks" },
                 { name: "MQ", href: "#/protocol/mq", icon: "glyphicon-modal-window" },
-                //{ name: "ORACLE", href: "#/protocol/oracle", icon: "glyphicon-credit-card" },
+                { name: "ORACLE", href: "#/protocol/oracle", icon: "glyphicon-credit-card" },
+                { name: "DRDA", href: "#/protocol/drda", icon: "glyphicon-credit-card" },
+                { name: "TUXEDO", href: "#/protocol/tuxedo", icon: "glyphicon-credit-card" },
+                { name: "MSSQL", href: "#/protocol/mssql", icon: "glyphicon-credit-card" },
             ]
         });
         sidebarNav.push({

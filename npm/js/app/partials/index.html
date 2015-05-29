@@ -13,7 +13,17 @@
         </div>
         <div id="index_chart_http" style="height:200px; "></div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6 t_relative" style="">
+        <h4 class="httpname">MYSQL</h4>
+        <div class="t_data">
+
+            <p class="bg-info">响应时间{{topology_mysql_duration}}ms</p>
+            <p class="bg-success">交易笔数{{topology_mysql_count}}</p>
+            <p class="bg-danger">告警条数{{topology_mysql_warnCount}}</p>
+        </div>
+        <div id="index_chart_mysql" style="height:200px; "></div>
+    </div>
+    <!--<div class="col-md-6">
         <h4 class="httpname">8583</h4>
         <div class="t_data">
 
@@ -22,9 +32,9 @@
             <p class="bg-danger">告警条数{{topology_8583_warnCount}}</p>
         </div>
         <div id="index_chart_8583" style="height:200px;"></div>
-    </div>
+    </div>-->
 </div>
-<div class="row" style="margin-top:30px;">
+<!--<div class="row" style="margin-top:30px;">
     <div class="col-md-6 t_relative">
         <h4 class="httpname">20022</h4>
         <div class="t_data">
@@ -45,4 +55,4 @@
         </div>
         <div id="index_chart_mq" style="height:200px; "></div>
     </div>
-</div>
+</div>-->

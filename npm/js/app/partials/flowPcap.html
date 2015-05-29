@@ -11,7 +11,7 @@
                         <div class="input-group-addon">秒</div>
                     </div>
                 </div>
-                <div class="form-group">
+                <!--<div class="form-group">
                     <label class="sr-only">协议</label>
                     <div class="form-group btn-group">
                         <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
@@ -21,7 +21,8 @@
                             <li ng-repeat="t in QUERY_TYPE" ng-class="{'active':queryType.name==t.name}"><a href="javascript:void(0);" ng-click="$parent.queryType=t">{{t.displayName}}</a></li>
                         </ul>
                     </div>
-                </div>
+                </div>-->
+                <input type="text" class="form-control" placeholder="协议" ng-model="protocolInput" ng-keypress="formKeypressHandler($event)">
                 <input type="text" class="form-control" placeholder="源IP" ng-model="srcIpInput" ng-keypress="formKeypressHandler($event)">
                 <input type="text" class="form-control" placeholder="源端口" ng-model="srcPortInput" ng-keypress="formKeypressHandler($event)">
                 <input type="text" class="form-control" placeholder="目的IP" ng-model="destIpInput" ng-keypress="formKeypressHandler($event)">
@@ -39,6 +40,7 @@
             <label>点击下载：</label>
             <a href="javascript:void(0);" ng-click="doDownload()">{{fileName}}</a>
         </div>
+        <div ng-show="msg">{{msg}}</div>
     </div>
 </div>
 

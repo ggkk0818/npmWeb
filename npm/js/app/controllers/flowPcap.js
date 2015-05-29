@@ -14,6 +14,7 @@
         $scope.startDateInput = null;
         $scope.startTimeInput = null;
         $scope.durationInput = null;
+        $scope.protocolInput = null;
         $scope.srcIpInput = null;
         $scope.srcPortInput = null;
         $scope.destIpInput = null;
@@ -22,21 +23,25 @@
         $scope.destMacInput = null;
 
         $scope.doQuery = function () {
+            $scope.fileName = null;
+            $scope.msg = null;
             var params = {};
             if ($scope.startDateInput && $scope.startTimeInput) {
-                params.starttime = $scope.startDateInput + " " + $scope.startTimeInput;
+                params.startTime = $scope.startDateInput + " " + $scope.startTimeInput;
             }
-            if (params.starttime && $scope.durationInput) {
+            if (params.startTime && $scope.durationInput) {
                 try {
                     var duration = parseInt($scope.durationInput, 10),
-                        startTime = new Date(params.starttime.replace(/-/g, "/"));
+                        startTime = new Date(params.startTime.replace(/-/g, "/"));
                     if (!isNaN(duration)) {
                         startTime.setSeconds(startTime.getSeconds() + duration);
-                        params.endtime = startTime.Format("yyyy-MM-dd hh:mm:ss");
+                        params.endTime = startTime.Format("yyyy-MM-dd hh:mm:ss");
                     }
                 }
                 catch (e) { }
             }
+            if ($scope.protocolInput)
+                params.proto = $scope.protocolInput;
             if ($scope.srcIpInput)
                 params.srcIp = $scope.srcIpInput;
             if ($scope.srcPortInput)
@@ -53,8 +58,9 @@
                 if (data && data.fileName) {
                     $scope.fileName = data.fileName;
                 }
-                else
-                    $scope.fileName = null;
+                else {
+                    $scope.msg = "暂无结果";
+                }
             });
         };
 

@@ -16,26 +16,86 @@
                 $scope.chartProtocol = echarts.init($("#protocolChart").get(0), "blue");
                 $scope.chartProtocol.setOption(option_protocol);
             });
+            //$scope.doQuery();
             $scope.queryTimer = $interval($scope.doQuery, 1000);
         };
 
         $scope.doQuery = function () {
-            var params = {
-                type: $scope.logType.id,
-                start: ($scope.pageNum - 1) * $scope.pageSize,
-                limit: $scope.pageSize
-            };
-            statisticService.list(params, function (data) {
+            flowService.ipFlowChart({ start: 0, limit: 180 }, function (data) {
                 if (data && data.data) {
-
+                    var chartData = [];
+                    for (var i = 0; i < data.data.length; i++) {
+                        var d = data.data[i];
+                        chartData.push({ value: [d.time, Math.round(d.totalflow / 1024 / 1024) || 0] });
+                    }
+                    option_flow.series[0].data = chartData;
+                    if ($scope.chartFlow)
+                        $scope.chartFlow.dispose();
+                    $scope.chartFlow = echarts.init($("#flowChart").get(0), "blue");
+                    $scope.chartFlow.setOption(option_flow, true);
+                }
+                else {
+                    option_flow.series[0].data = [];
+                }
+            });
+            flowService.ipChart({ start: 0, limit: 10 }, function (data) {
+                if (data && data.data) {
+                    var axisData = [],
+                        chartData1 = [],
+                        chartData2 = [];
+                    data.data = data.data.reverse();
+                    for (var i = 0; i < data.data.length; i++) {
+                        var d = data.data[i];
+                        axisData.push(d.srcip);
+                        chartData1.push({ name: d.srcip, value: d.sendFlow || 0 });
+                        chartData2.push({ name: d.srcip, value: d.recFlow || 0 });
+                    }
+                    option_ip.yAxis[0].data = axisData;
+                    option_ip.series[0].data = chartData1;
+                    option_ip.series[1].data = chartData2;
+                    if ($scope.chartIp)
+                        $scope.chartIp.dispose();
+                    $scope.chartIp = echarts.init($("#ipChart").get(0), "blue");
+                    $scope.chartIp.setOption(option_ip, true);
+                }
+                else {
+                    option_ip.yAxis[0].data = [];
+                    option_ip.series[0].data = [];
+                    option_ip.series[1].data = [];
+                }
+            });
+            flowService.protocolChart({ start: 0, limit: 10 }, function (data) {
+                if (data && data.data) {
+                    var axisData = [],
+                        chartData1 = [],
+                        chartData2 = [];
+                    data.data = data.data.reverse();
+                    for (var i = 0; i < data.data.length; i++) {
+                        var d = data.data[i];
+                        axisData.push(d.protocol);
+                        chartData1.push({ name: d.protocol, value: d.sendFlow || 0 });
+                        chartData2.push({ name: d.protocol, value: d.recFlow || 0 });
+                    }
+                    option_protocol.yAxis[0].data = axisData;
+                    option_protocol.series[0].data = chartData1;
+                    option_protocol.series[1].data = chartData2;
+                    if ($scope.chartProtocol)
+                        $scope.chartProtocol.dispose();
+                    $scope.chartProtocol = echarts.init($("#protocolChart").get(0), "blue");
+                    $scope.chartProtocol.setOption(option_protocol, true);
+                }
+                else {
+                    option_protocol.yAxis[0].data = [];
+                    option_protocol.series[0].data = [];
+                    option_protocol.series[1].data = [];
                 }
             });
         };
         // 折线图
         var option_flow = {
-            animation: true,
+            animation: false,
             title: {
-                text: '总流量'
+                text: '总流量(MB)'
             },
             tooltip: {
                 trigger: 'axis',
@@ -73,11 +133,14 @@
             series: [{
                 name: '总流量',
                 type: 'line',
+                smooth: true,
+                itemStyle: { normal: { areaStyle: { type: 'default' } } },
                 data: []
             }]
         };
         //IP TOP10
         var option_ip = {
+            animation: false,
             title: {
                 text: 'IP TOP10'
             },
@@ -100,27 +163,32 @@
             calculable: true,
             xAxis: [
                 {
-                    type: 'category',
-                    data: []
+                    type: 'value'
                 }
             ],
             yAxis: [
                 {
-                    type: 'value'
+                    type: 'category',
+                    data: []
                 }
             ],
             series: [{
                 name: '发送',
                 type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
                 data: []
             }, {
                 name: '接收',
                 type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
                 data: []
             }]
         };
         //IP TOP10
         var option_protocol = {
+            animation: false,
             title: {
                 text: '协议 TOP10'
             },
@@ -143,25 +211,35 @@
             calculable: true,
             xAxis: [
                 {
-                    type: 'category',
-                    data: []
+                    type: 'value'
                 }
             ],
             yAxis: [
                 {
-                    type: 'value'
+                    type: 'category',
+                    data: []
                 }
             ],
             series: [{
                 name: '发送',
                 type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
                 data: []
             }, {
                 name: '接收',
                 type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
                 data: []
             }]
         };
         $scope.init();
+        //离开该页事件
+        $scope.$on("$routeChangeStart", function () {
+            if ($scope.queryTimer)
+                $interval.cancel($scope.queryTimer);
+        });
+
     });
 });

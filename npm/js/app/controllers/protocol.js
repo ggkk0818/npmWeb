@@ -58,6 +58,8 @@
         $scope.startDateInput = $scope.startTime = dateTimeService.serverTime.Format("yyyy-MM-dd");
         $scope.startTimeInput = $scope.startTime = dateTimeService.serverTime.Format("hh:mm:ss");
         $scope.chart_flow = null;
+        $scope.chart_count = null;
+        $scope.chart_duration = null;
         $scope.chart_resp = null;
         $scope.chart_code = null;
         $scope.chart_warn = null;
@@ -306,7 +308,7 @@
         var flow_option = {
             animation: true,
             title: {
-                text: '流量/交易量/平均时延'
+                text: '流量'
             },
             tooltip: {
                 trigger: 'axis',
@@ -319,7 +321,7 @@
                 }
             },
             legend: {
-                data: ['流量', '交易量', '平均时延']
+                data: ['流量']
             },
             toolbox: {
                 show: true,
@@ -345,12 +347,92 @@
                 name: '流量',
                 type: 'line',
                 data: []
+            }]
+        };
+        var count_option = {
+            animation: true,
+            title: {
+                text: '交易量'
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: function (params) {
+                    var date = new Date(params.value[0]).Format("yyyy-MM-dd hh:mm:ss");
+                    return params.seriesName
+                        + params.value[1] + '(' +
+                        date
+                        + ')<br/>'
+                }
+            },
+            legend: {
+                data: ['交易量']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: true },
+                    dataView: { show: true, readOnly: false },
+                    restore: { show: true },
+                    saveAsImage: { show: true }
+                }
+            },
+            calculable: true,
+            xAxis: [
+                {
+                    type: 'time'
+                }
+            ],
+            yAxis: [{
+                type: 'value'
             }, {
+                type: 'value'
+            }],
+            series: [{
                 name: '交易量',
                 type: 'line',
                 yAxisIndex: 1,
                 data: []
+            }]
+        };
+        var duration_option = {
+            animation: true,
+            title: {
+                text: '平均时延'
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: function (params) {
+                    var date = new Date(params.value[0]).Format("yyyy-MM-dd hh:mm:ss");
+                    return params.seriesName
+                        + params.value[1] + '(' +
+                        date
+                        + ')<br/>'
+                }
+            },
+            legend: {
+                data: ['平均时延']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: true },
+                    dataView: { show: true, readOnly: false },
+                    restore: { show: true },
+                    saveAsImage: { show: true }
+                }
+            },
+            calculable: true,
+            xAxis: [
+                {
+                    type: 'time'
+                }
+            ],
+            yAxis: [{
+                type: 'value'
             }, {
+                type: 'value'
+            }],
+            series: [{
                 name: '平均时延',
                 type: 'line',
                 yAxisIndex: 1,
@@ -387,7 +469,8 @@
             ],
             yAxis: [
                 {
-                    type: 'value'
+                    type: 'value',
+                    max: 1
                 }
             ],
             series: [{
@@ -663,20 +746,28 @@
 
                     }
                     flow_option.series[0].data = flow_data;
-                    flow_option.series[1].data = count_data;
-                    flow_option.series[2].data = avgresp_data;
+                    count_option.series[0].data = count_data;
+                    duration_option.series[0].data = avgresp_data;
                     resp_option.xAxis[0].data = axis_data.length ? axis_data : [""];
                     resp_option.series[0].data = suc_ratio;
                     resp_option.series[1].data = resp_ratio;
-                    if ($scope.chart_flow)
-                        $scope.chart_flow.dispose();
-                    $scope.chart_flow = echarts.init($("#protocol-chart-flow").get(0), "blue");
-                    $scope.chart_flow.setOption(flow_option, true);
-                    if ($scope.chart_resp)
-                        $scope.chart_resp.dispose();
-                    $scope.chart_resp = echarts.init($("#protocol-chart-resp").get(0), "blue");
-                    $scope.chart_resp.setOption(resp_option, true);
                 }
+                if ($scope.chart_flow)
+                    $scope.chart_flow.dispose();
+                $scope.chart_flow = echarts.init($("#protocol-chart-flow").get(0), "blue");
+                $scope.chart_flow.setOption(flow_option, true);
+                if ($scope.chart_count)
+                    $scope.chart_count.dispose();
+                $scope.chart_count = echarts.init($("#protocol-chart-count").get(0), "blue");
+                $scope.chart_count.setOption(count_option, true);
+                if ($scope.chart_duration)
+                    $scope.chart_duration.dispose();
+                $scope.chart_duration = echarts.init($("#protocol-chart-duration").get(0), "blue");
+                $scope.chart_duration.setOption(duration_option, true);
+                if ($scope.chart_resp)
+                    $scope.chart_resp.dispose();
+                $scope.chart_resp = echarts.init($("#protocol-chart-resp").get(0), "blue");
+                $scope.chart_resp.setOption(resp_option, true);
             });
             protocolChartService.codeList(params, function (data) {
                 if (data && data.data) {
@@ -692,11 +783,11 @@
                     }
                     code_option.legend.data = code_legend_data;
                     code_option.series[0].data = code_data;
-                    if ($scope.chart_code)
-                        $scope.chart_code.dispose();
-                    $scope.chart_code = echarts.init($("#protocol-chart-code").get(0), "blue");
-                    $scope.chart_code.setOption(code_option, true);
                 }
+                if ($scope.chart_code)
+                    $scope.chart_code.dispose();
+                $scope.chart_code = echarts.init($("#protocol-chart-code").get(0), "blue");
+                $scope.chart_code.setOption(code_option, true);
             });
             warningService.list({
                 type: $scope.protocolType == "8583" || $scope.protocolType == "20022" ? "iso" + $scope.protocolType : $scope.protocolType,
@@ -729,11 +820,11 @@
                     warn_option.series[1].data = warn_data_s3;
                     warn_option.series[2].data = warn_data_s1;
                     warn_option.series[3].data = warn_data_s7;
-                    if ($scope.chart_warn)
-                        $scope.chart_warn.dispose();
-                    $scope.chart_warn = echarts.init($("#protocol-chart-warn").get(0), "blue");
-                    $scope.chart_warn.setOption(warn_option, true);
                 }
+                if ($scope.chart_warn)
+                    $scope.chart_warn.dispose();
+                $scope.chart_warn = echarts.init($("#protocol-chart-warn").get(0), "blue");
+                $scope.chart_warn.setOption(warn_option, true);
             });
         };
         //表单输入框按键事件

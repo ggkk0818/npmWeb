@@ -64,6 +64,91 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
+        this.ipFlowChart = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'statistics/ip/flow',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        this.macFlowChart = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'statistics/mac/flow',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        this.protocolFlowChart = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'statistics/protocol/flow',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        this.portFlowChart = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'statistics/port/flow',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        this.ipChart = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'statistics/ip',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        this.protocolChart = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'statistics/protocol',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+
         this.pcapSearch = function (params, callback) {
             $http({
                 method: 'GET',

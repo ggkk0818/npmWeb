@@ -1,18 +1,19 @@
-﻿define(['angular', 'lodash', 'jquery', 'services/all', 'css!partials/statisticSearch.css'], function (angular, _, $) {
+﻿define(['angular', 'lodash', 'jquery', 'services/all', 'css!partials/flowDetail.css'], function (angular, _, $) {
     "use strict";
     var module = angular.module('app.controllers');
     module.controller('FlowDetailCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, flowService) {
         //初始化变量
         $scope.QUERY_TYPE = [
-            { name: "ip", displayName: "IP" },
-            { name: "mac", displayName: "MAC" },
-            { name: "protocol", displayName: "协议" },
-            { name: "port", displayName: "端口" }
+            { name: "ip", displayName: "IP", conditionName: "srcip" },
+            { name: "mac", displayName: "MAC", conditionName: "mac" },
+            { name: "protocol", displayName: "协议", conditionName: "protocol" },
+            { name: "port", displayName: "端口", conditionName: "port" }
         ];
         $scope.recordList = 0;
         $scope.startDate = null;
         $scope.startTime = null;
         $scope.queryType = $scope.QUERY_TYPE[0];
+        $scope.queryTimeStr = null;
         $scope.queryTimer = null;
         //表单数据
         $scope.startDateInput = null;
@@ -61,9 +62,19 @@
             }
             flowService[$scope.queryType.name].call(this, params, function (data) {
                 $scope.recordList = data && data.data ? data.data : [];
+                $scope.queryTimeStr = data && data.qtime ? data.qtime : null;
                 if ($scope.recordList && $scope.recordList.length) {
+                    var totalFlow = 0,
+                        totalRecFlow = 0,
+                        totalSendFlow = 0,
+                        totalRecPackage = 0,
+                        totalSendPackage = 0;
                     for (var i = 0; i < $scope.recordList.length; i++) {
                         var record = $scope.recordList[i];
+                        totalRecFlow += record.rec_bytes || 0;
+                        totalSendFlow += record.send_bytes || 0;
+                        totalRecPackage += record.rec_package || 0;
+                        totalSendPackage += record.send_package || 0;
                         if (typeof record.time1 === "number")
                             record.time1 = new Date(record.time1).Format("yyyy-MM-dd hh:mm:ss");
                         if (typeof record.time2 === "number")
@@ -74,9 +85,19 @@
                             record.starttime = new Date(record.starttime).Format("yyyy-MM-dd hh:mm:ss");
                         if (typeof record.endtime === "number")
                             record.endtime = new Date(record.endtime).Format("yyyy-MM-dd hh:mm:ss");
-                        if (typeof record.flow === "number")
-                            record.flow = numeral(record.flow).format("0.00b");
+                        if (typeof record.send_bytes === "number" || typeof record.rec_bytes === "number")
+                            record.flow = numeral((record.send_bytes || 0) + (record.rec_bytes || 0)).format("0.00b");
+                        if (typeof record.send_bytes === "number")
+                            record.send_bytes = numeral(record.send_bytes).format("0.00b");
+                        if (typeof record.rec_bytes === "number")
+                            record.rec_bytes = numeral(record.rec_bytes).format("0.00b");
                     }
+                    totalFlow = numeral(totalSendFlow + totalRecFlow).format("0.00b");
+                    totalRecFlow = numeral(totalRecFlow).format("0.00b");
+                    totalSendFlow = numeral(totalSendFlow).format("0.00b");
+                    var list = [{ flow: totalFlow, rec_package: totalRecPackage, send_package: totalSendPackage, rec_bytes: totalRecFlow, send_bytes: totalSendFlow }];
+                    list[0][$scope.queryType.name] = "总和";
+                    $scope.recordList = list.concat($scope.recordList);
                 }
             });
         };
@@ -110,6 +131,90 @@
                 $scope.queryType = tab;
                 $scope.show();
             }
+        };
+        //显示详细流量图
+        $scope.showDetailChart = function (record) {
+            $("#flow_detail_modal").one("shown.bs.modal", function () {
+                if (record[$scope.queryType.name]) {
+                    var params = {};
+                    if (record[$scope.queryType.name] !== "总和")
+                        params[$scope.queryType.name] = record[$scope.queryType.name];
+                    if ($scope.startDate && $scope.startTime) {
+                        params.endTime = $scope.startDate + " " + $scope.startTime;
+                        var endTime = new Date(params.endTime.replace(/-/g, "/"));
+                        endTime.setSeconds(endTime.getSeconds() - 600);
+                        params.startTime = endTime.Format("yyyy-MM-dd hh:mm:ss");
+                    }
+                    flowService[$scope.queryType.name + "FlowChart"].call(this, params, function (data) {
+                        if (data && data.data) {
+                            var chartData = [];
+                            for (var i = 0; i < data.data.length; i++) {
+                                var d = data.data[i];
+                                chartData.push({ value: [d.time, d.totalflow || 0] });
+                            }
+                            option_flow.series[0].data = chartData;
+                        }
+                        else {
+                            option_flow.series[0].data = [];
+                        }
+                        if ($scope.chartFlow)
+                            $scope.chartFlow.dispose();
+                        $scope.chartFlow = echarts.init($("#detailChart").get(0), "blue");
+                        $scope.chartFlow.setOption(option_flow, true);
+                    });
+                }
+                else {
+                    option_flow.series[0].data = [];
+                    if ($scope.chartFlow)
+                        $scope.chartFlow.dispose();
+                    $scope.chartFlow = echarts.init($("#detailChart").get(0), "blue");
+                    $scope.chartFlow.setOption(option_flow, true);
+                }
+            }).modal("show");
+        };
+        var option_flow = {
+            animation: true,
+            title: {
+                text: '总流量'
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: function (params) {
+                    var date = new Date(params.value[0]).Format("yyyy-MM-dd hh:mm:ss");
+                    return params.seriesName
+                        + params.value[1] + '(' +
+                        date
+                        + ')<br/>'
+                }
+            },
+            legend: {
+                data: ['总流量']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: true },
+                    dataView: { show: true, readOnly: false },
+                    restore: { show: true },
+                    saveAsImage: { show: true }
+                }
+            },
+            calculable: true,
+            xAxis: [
+                {
+                    type: 'time'
+                }
+            ],
+            yAxis: [{
+                type: 'value'
+            }, {
+                type: 'value'
+            }],
+            series: [{
+                name: '总流量',
+                type: 'line',
+                data: []
+            }]
         };
         //离开该页事件
         $scope.$on("$routeChangeStart", function () {

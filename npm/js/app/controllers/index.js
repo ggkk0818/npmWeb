@@ -58,6 +58,14 @@
         $scope.topology_mq_flow = 0;
         $scope.topology_mq_flowSuffix = "M";
         $scope.topology_mq_deviceList = [];
+        $scope.topology_dhcp_count = 0;
+        $scope.topology_dhcp_duration = 0;
+        $scope.topology_dhcp_successRatio = 0;
+        $scope.topology_dhcp_responseRatio = 0;
+        $scope.topology_dhcp_warnCount = 0;
+        $scope.topology_dhcp_flow = 0;
+        $scope.topology_dhcp_flowSuffix = "M";
+        $scope.topology_dhcp_deviceList = [];
         //初始化
         $scope.init = function () {
             //告警时间线
@@ -138,12 +146,14 @@
                 chart_warn.setOption(chart_warn_options);
                 chart_http = echarts.init($("#index_chart_http")[0], "blue");
                 chart_http.setOption(chart_http_options, true);
-                chart_8583 = echarts.init($("#index_chart_8583")[0], "blue");
-                chart_8583.setOption(chart_8583_options, true);
-                chart_20022 = echarts.init($("#index_chart_20022")[0], "blue");
-                chart_20022.setOption(chart_20022_options, true);
-                chart_mq = echarts.init($("#index_chart_mq")[0], "blue");
-                chart_mq.setOption(chart_mq_options, true);
+                //chart_8583 = echarts.init($("#index_chart_8583")[0], "blue");
+                //chart_8583.setOption(chart_8583_options, true);
+                //chart_20022 = echarts.init($("#index_chart_20022")[0], "blue");
+                //chart_20022.setOption(chart_20022_options, true);
+                //chart_mq = echarts.init($("#index_chart_mq")[0], "blue");
+                //chart_mq.setOption(chart_mq_options, true);
+                chart_mysql = echarts.init($("#index_chart_mysql")[0], "blue");
+                chart_mysql.setOption(chart_mq_options, true);
             });
 
 
@@ -571,6 +581,81 @@
                 else
                     $scope.topology_mq_warnCount = 0;
             });
+            //DHCP
+            statisticService.showTopology({
+                type: "dhcp",
+                starttime: $scope.topology_startTime,
+                endtime: $scope.topology_endTime
+            }, function (data) {
+                if (data && data.state == "200") {
+                    if (data.data && data.data.length) {
+                        var row = data.data[0];
+                        $scope.topology_dhcp_count = row.count || 0;
+                        $scope.topology_dhcp_duration = row.maxDuration || 0;
+                        $scope.topology_dhcp_successRatio = row.count > 0 && row.scount > 0 ? Math.round(row.scount * 10000 / row.count) / 100 : 0;
+                        $scope.topology_dhcp_responseRatio = row.count > 0 && row.rcount > 0 ? Math.round(row.rcount * 10000 / row.count) / 100 : 0;
+
+                        if (typeof row.allflow === "number") {
+                            var flow = numeral(row.allflow).format("0b");
+                            $scope.topology_dhcp_flow = /\d+/.exec(flow)[0];
+                            $scope.topology_dhcp_flowSuffix = /[a-zA-Z]+/.exec(flow)[0];
+                        }
+                        else {
+                            $scope.topology_dhcp_flow = 0;
+                            $scope.topology_dhcp_flowSuffix = "M";
+                        }
+                    }
+                }
+            });
+            statisticService.showDevice({
+                type: "dhcp",
+                starttime: $scope.topology_startTime,
+                endtime: $scope.topology_endTime
+            }, function (data) {
+                if (data && data.state == "200") {
+                    $scope.topology_dhcp_deviceList = data.data;
+                    for (var i = 0; i < $scope.topology_dhcp_deviceList.length; i++) {
+                        var record = $scope.topology_dhcp_deviceList[i];
+                        if (typeof record.allflow === "number") {
+                            record.allflow = numeral(record.allflow).format("0b");
+                        }
+                    }
+                    //查询告警信息
+                    warningService.showDevice({
+                        type: "dhcp",
+                        startWarnTime: $scope.topology_startTime,
+                        endWarnTime: $scope.topology_endTime,
+                        start: 0,
+                        limit: 0
+                    }, function (data2) {
+                        if (data2 && data2.data) {
+                            for (var i = 0; i < data2.data.length; i++) {
+                                var warnRecord = data2.data[i];
+                                for (var j = 0; j < $scope.topology_dhcp_deviceList.length; j++) {
+                                    var record = $scope.topology_dhcp_deviceList[j];
+                                    if (warnRecord.srcip == record.srcip && warnRecord.dstip == record.dstip) {
+                                        record.warnCount = warnRecord.count;
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+            warningService.list({
+                type: "dhcp",
+                startWarnTime: $scope.topology_startTime,
+                endWarnTime: $scope.topology_endTime,
+                start: 0,
+                limit: 1
+            }, function (data) {
+                if (data && data.count) {
+                    $scope.topology_dhcp_warnCount = data.count;
+                }
+                else
+                    $scope.topology_dhcp_warnCount = 0;
+            });
+
         };
         //图表
         var chart_warn = null;
@@ -1062,6 +1147,92 @@
                 data: [{ value: 0, name: '成功率' }]
             }]
         };
+        var chart_mysql = null;
+        var chart_mysql_options = {
+            tooltip: {
+                formatter: "{a} <br/>{c} {b}"
+            },
+            toolbox: {
+                show: true
+            },
+            series: [{
+                name: '响应率',
+                type: 'gauge',
+                //min: 0,
+                //max: 100,
+                radius: '85%',
+                splitNumber: 5,
+                axisLine: {            // 坐标轴线
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        width: 10
+                    }
+                },
+                axisTick: {            // 坐标轴小标记
+                    length: 15,        // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: 'auto'
+                    }
+                },
+                splitLine: {           // 分隔线
+                    length: 20,         // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+                title: {
+                    textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder',
+                        fontSize: 12,
+                        fontStyle: 'normal',
+                    }
+                },
+                detail: {
+                    textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder'
+                    }
+                },
+                data: [{ value: 0, name: '响应率' }]
+            }, {
+                name: '成功率',
+                type: 'gauge',
+                center: ['25%', '50%'],    // 默认全局居中
+                radius: '90%',
+                //min: 0,
+                //max: 100,
+                endAngle: 45,
+                splitNumber: 5,
+                axisLine: {            // 坐标轴线
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        width: 8
+                    }
+                },
+                axisTick: {            // 坐标轴小标记
+                    length: 12,        // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        color: 'auto'
+                    }
+                },
+                splitLine: {           // 分隔线
+                    length: 20,         // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+                pointer: {
+                    width: 5
+                },
+                title: {
+                    offsetCenter: [0, '-30%'],       // x, y，单位px
+                },
+                detail:
+                {
+                    textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: 'bolder'
+                    }
+                },
+                data: [{ value: 0, name: '成功率' }]
+            }]
+        };
         $scope.$watch(function () {
             var r = null;
             if ($scope.warnTimeLine_warnS2 && $scope.warnTimeLine_warnS2.length) {
@@ -1085,29 +1256,37 @@
             if (chart_http)
                 chart_http.setOption(chart_http_options, true);
         });
+        //$scope.$watch(function () {
+        //    return $scope.topology_8583_successRatio + "" + $scope.topology_8583_responseRatio;
+        //}, function () {
+        //    chart_8583_options.series[0].data[0].value = $scope.topology_8583_responseRatio;
+        //    chart_8583_options.series[1].data[0].value = $scope.topology_8583_successRatio;
+        //    if (chart_8583)
+        //        chart_8583.setOption(chart_8583_options, true);
+        //});
+        //$scope.$watch(function () {
+        //    return $scope.topology_20022_successRatio + "" + $scope.topology_20022_responseRatio;
+        //}, function () {
+        //    chart_20022_options.series[0].data[0].value = $scope.topology_20022_responseRatio;
+        //    chart_20022_options.series[1].data[0].value = $scope.topology_20022_successRatio;
+        //    if (chart_20022)
+        //        chart_20022.setOption(chart_20022_options, true);
+        //});
+        //$scope.$watch(function () {
+        //    return $scope.topology_mq_successRatio + "" + $scope.topology_mq_responseRatio;
+        //}, function () {
+        //    chart_mq_options.series[0].data[0].value = $scope.topology_mq_responseRatio;
+        //    chart_mq_options.series[1].data[0].value = $scope.topology_mq_successRatio;
+        //    if (chart_mq)
+        //        chart_mq.setOption(chart_mq_options, true);
+        //});
         $scope.$watch(function () {
-            return $scope.topology_8583_successRatio + "" + $scope.topology_8583_responseRatio;
+            return $scope.topology_mysql_successRatio + "" + $scope.topology_mysql_responseRatio;
         }, function () {
-            chart_8583_options.series[0].data[0].value = $scope.topology_8583_responseRatio;
-            chart_8583_options.series[1].data[0].value = $scope.topology_8583_successRatio;
-            if (chart_8583)
-                chart_8583.setOption(chart_8583_options, true);
-        });
-        $scope.$watch(function () {
-            return $scope.topology_20022_successRatio + "" + $scope.topology_20022_responseRatio;
-        }, function () {
-            chart_20022_options.series[0].data[0].value = $scope.topology_20022_responseRatio;
-            chart_20022_options.series[1].data[0].value = $scope.topology_20022_successRatio;
-            if (chart_20022)
-                chart_20022.setOption(chart_20022_options, true);
-        });
-        $scope.$watch(function () {
-            return $scope.topology_mq_successRatio + "" + $scope.topology_mq_responseRatio;
-        }, function () {
-            chart_mq_options.series[0].data[0].value = $scope.topology_mq_responseRatio;
-            chart_mq_options.series[1].data[0].value = $scope.topology_mq_successRatio;
-            if (chart_mq)
-                chart_mq.setOption(chart_mq_options, true);
+            chart_mysql_options.series[0].data[0].value = $scope.topology_mysql_responseRatio;
+            chart_mysql_options.series[1].data[0].value = $scope.topology_mysql_successRatio;
+            if (chart_mysql)
+                chart_mysql.setOption(chart_mysql_options, true);
         });
         //窗口调整时更新图表大小
         var windowResize = function () {

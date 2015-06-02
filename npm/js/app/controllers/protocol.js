@@ -41,7 +41,7 @@
         $scope.isGroupMode = false;
         //图表变量
         $scope.DURATION_TYPE = [
-            { id: "minute", name: "前1分钟" },
+            //{ id: "minute", name: "前1分钟" },
             { id: "hour", name: "前1小时" },
             { id: "day", name: "前1天" }
         ];
@@ -308,7 +308,7 @@
         var flow_option = {
             animation: true,
             title: {
-                text: '流量'
+                text: '流量（kbps）'
             },
             tooltip: {
                 trigger: 'axis',
@@ -346,6 +346,7 @@
             series: [{
                 name: '流量',
                 type: 'line',
+                symbol: 'none',
                 data: []
             }]
         };
@@ -390,6 +391,7 @@
             series: [{
                 name: '交易量',
                 type: 'line',
+                symbol: 'none',
                 yAxisIndex: 1,
                 data: []
             }]
@@ -397,7 +399,7 @@
         var duration_option = {
             animation: true,
             title: {
-                text: '平均时延'
+                text: '平均时延（ms）'
             },
             tooltip: {
                 trigger: 'axis',
@@ -435,6 +437,7 @@
             series: [{
                 name: '平均时延',
                 type: 'line',
+                symbol: 'none',
                 yAxisIndex: 1,
                 data: []
             }]
@@ -470,12 +473,14 @@
             yAxis: [
                 {
                     type: 'value',
-                    max: 1
+                    max: 1,
+                    min: 0
                 }
             ],
             series: [{
                 name: '成功率',
-                type: 'bar',
+                type: 'line',
+                symbol: 'none',
                 //markPoint: {
                 //    data: [
                 //        { type: 'max', name: '最大值' },
@@ -490,7 +495,8 @@
                 data: []
             }, {
                 name: '响应率',
-                type: 'bar',
+                type: 'line',
+                symbol: 'none',
                 //markPoint: {
                 //    data: [
                 //        { type: 'max', name: '最大值' },
@@ -737,7 +743,7 @@
                         resp_ratio = [];
                     for (var i = 0; i < data.data.length; i++) {
                         var d = data.data[i];
-                        flow_data.push({ value: [d.time, d.allflow] });
+                        flow_data.push({ value: [d.time, d.allflow ? (d.allflow * 8 / 1024).toFixed(1) : 0] });
                         count_data.push({ value: [d.time, d.count] });
                         avgresp_data.push({ value: [d.time, d.avgDuration] });
                         axis_data.push(new Date(d.time).Format("hh:mm:ss"));

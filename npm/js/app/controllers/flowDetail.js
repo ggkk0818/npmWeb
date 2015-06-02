@@ -71,6 +71,8 @@
                         totalSendPackage = 0;
                     for (var i = 0; i < $scope.recordList.length; i++) {
                         var record = $scope.recordList[i];
+                        record.rec_bytes = record.rec_bytes ? record.rec_bytes * 8 / 1024 : 0;
+                        record.send_bytes = record.send_bytes ? record.send_bytes * 8 / 1024 : 0;
                         totalRecFlow += record.rec_bytes || 0;
                         totalSendFlow += record.send_bytes || 0;
                         totalRecPackage += record.rec_package || 0;
@@ -86,15 +88,20 @@
                         if (typeof record.endtime === "number")
                             record.endtime = new Date(record.endtime).Format("yyyy-MM-dd hh:mm:ss");
                         if (typeof record.send_bytes === "number" || typeof record.rec_bytes === "number")
-                            record.flow = numeral((record.send_bytes || 0) + (record.rec_bytes || 0)).format("0.00b");
+                            record.flow = ((record.send_bytes || 0) + (record.rec_bytes || 0)).toFixed(1);
+                            //record.flow = numeral((record.send_bytes || 0) + (record.rec_bytes || 0)).format("0.00b");
+                        //if (typeof record.send_bytes === "number")
+                        //    record.send_bytes = numeral(record.send_bytes).format("0.00b");
+                        //if (typeof record.rec_bytes === "number")
+                        //    record.rec_bytes = numeral(record.rec_bytes).format("0.00b");
                         if (typeof record.send_bytes === "number")
-                            record.send_bytes = numeral(record.send_bytes).format("0.00b");
+                            record.send_bytes = record.send_bytes.toFixed(1);
                         if (typeof record.rec_bytes === "number")
-                            record.rec_bytes = numeral(record.rec_bytes).format("0.00b");
+                            record.rec_bytes = record.rec_bytes.toFixed(1);
                     }
-                    totalFlow = numeral(totalSendFlow + totalRecFlow).format("0.00b");
-                    totalRecFlow = numeral(totalRecFlow).format("0.00b");
-                    totalSendFlow = numeral(totalSendFlow).format("0.00b");
+                    totalFlow = (totalSendFlow + totalRecFlow).toFixed(1);
+                    totalRecFlow = totalRecFlow.toFixed(1);
+                    totalSendFlow = totalSendFlow.toFixed(1);
                     var list = [{ flow: totalFlow, rec_package: totalRecPackage, send_package: totalSendPackage, rec_bytes: totalRecFlow, send_bytes: totalSendFlow }];
                     list[0][$scope.queryType.name] = "总和";
                     $scope.recordList = list.concat($scope.recordList);
@@ -150,7 +157,7 @@
                             var chartData = [];
                             for (var i = 0; i < data.data.length; i++) {
                                 var d = data.data[i];
-                                chartData.push({ value: [d.time, d.totalflow || 0] });
+                                chartData.push({ value: [d.time, d.totalflow ? (d.totalflow * 8 / 1024).toFixed(1) : 0] });
                             }
                             option_flow.series[0].data = chartData;
                         }
@@ -175,7 +182,7 @@
         var option_flow = {
             animation: true,
             title: {
-                text: '总流量'
+                text: '总流量（kbps）'
             },
             tooltip: {
                 trigger: 'axis',
@@ -213,6 +220,9 @@
             series: [{
                 name: '总流量',
                 type: 'line',
+                smooth: true,
+                symbol: 'none',
+                itemStyle: { normal: { areaStyle: { type: 'default' } } },
                 data: []
             }]
         };
@@ -226,7 +236,7 @@
         $scope.doQuery();
         //无日期条件每秒查询实时数据
         if (!$scope.startTime) {
-            $scope.queryTimer = $interval($scope.doQuery, 1000);
+            $scope.queryTimer = $interval($scope.doQuery, 3000);
         }
     });
 });

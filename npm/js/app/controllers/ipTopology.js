@@ -18,7 +18,8 @@
         $scope.startTimeInput = $scope.startTime = dateTimeService.serverTime.Format("hh:mm:ss");
         //图表变量
         $scope.topologyChart = null;
-        $scope.ipLegend = ['8583', '20022', 'mysql', 'dns', 'http', 'radius', 'dhcp', 'oracle', 'db2', 'soap', 'mq'];
+        //$scope.ipLegend = ['8583', '20022', 'mysql', 'dns', 'http', 'radius', 'dhcp', 'oracle', 'db2', 'soap', 'mq'];
+        $scope.ipLegend = ['http', 'mysql', 'radius', 'dns', 'mq', 'oracle', 'db2', 'tuxedo', 'mssql'];
         $scope.ipNodes = null;
         $scope.ipLinks = null;
         $scope.deviceLegend = ["路由器", "交换机", "服务器"];

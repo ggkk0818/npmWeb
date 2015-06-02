@@ -148,6 +148,20 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
+        this.timeFlow = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'statistics/time/flow',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
 
         this.pcapSearch = function (params, callback) {
             $http({

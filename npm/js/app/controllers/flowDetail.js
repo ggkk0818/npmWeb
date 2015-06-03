@@ -15,6 +15,7 @@
         $scope.queryType = $scope.QUERY_TYPE[0];
         $scope.queryTimeStr = null;
         $scope.queryTimer = null;
+        $scope.queryDetailName = null;
         //表单数据
         $scope.startDateInput = null;
         $scope.startTimeInput = null;
@@ -143,6 +144,7 @@
         $scope.showDetailChart = function (record) {
             $("#flow_detail_modal").one("shown.bs.modal", function () {
                 if (record[$scope.queryType.name]) {
+                    $scope.queryDetailName = record[$scope.queryType.name];
                     var params = {};
                     if (record[$scope.queryType.name] !== "总和")
                         params[$scope.queryType.name] = record[$scope.queryType.name];
@@ -171,6 +173,7 @@
                     });
                 }
                 else {
+                    $scope.queryDetailName = null;
                     option_flow.series[0].data = [];
                     if ($scope.chartFlow)
                         $scope.chartFlow.dispose();

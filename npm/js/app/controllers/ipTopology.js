@@ -19,7 +19,7 @@
         //图表变量
         $scope.topologyChart = null;
         //$scope.ipLegend = ['8583', '20022', 'mysql', 'dns', 'http', 'radius', 'dhcp', 'oracle', 'db2', 'soap', 'mq'];
-        $scope.ipLegend = ['http', 'mysql', 'radius', 'dns', 'mq', 'oracle', 'db2', 'tuxedo', 'mssql'];
+        $scope.ipLegend = ['http', 'dhcp', 'mysql', 'radius', 'dns', 'mq', 'oracle', 'db2', 'tuxedo', 'mssql'];
         $scope.ipNodes = null;
         $scope.ipLinks = null;
         $scope.deviceLegend = ["路由器", "交换机", "服务器"];
@@ -101,7 +101,7 @@
             },
             legend: {
                 x: 'left',
-                data: ['8583', '20022', 'mysql', 'dns', 'http', 'radius', 'dhcp', 'oracle', 'db2', 'soap', 'mq']
+                data: $scope.ipLegend
             },
             series: [
                 {
@@ -214,7 +214,7 @@
                     //获取协议index数值
                     if ($scope.ipLegend) {
                         for (var i = 0; i < $scope.ipLegend.length; i++) {
-                            protocols[option.legend.data[i]] = i;
+                            protocols[$scope.ipLegend[i]] = i;
                         }
                     }
                     for (var i = 0; i < data.data.length; i++) {

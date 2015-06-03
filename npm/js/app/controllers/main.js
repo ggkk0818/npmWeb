@@ -25,6 +25,7 @@
             href: null,
             children: [
                 { name: "HTTP", href: "#/protocol/http", icon: "glyphicon-screenshot" },
+                { name: "DHCP", href: "#/protocol/dhcp", icon: "glyphicon-credit-card" },
                 //{ name: "8583", href: "#/protocol/8583", icon: "glyphicon-th" },
                 //{ name: "20022", href: "#/protocol/20022", icon: "glyphicon-list-alt" },
                 { name: "MYSQL", href: "#/protocol/mysql", icon: "glyphicon-globe" },

@@ -108,6 +108,14 @@
                 templateUrl: 'js/app/partials/flowPcap.html',
                 controller: 'FlowPcapCtrl'
             })
+            .when('/flow/settings', {
+                templateUrl: 'js/app/partials/flowSettings.html',
+                controller: 'FlowSettingsCtrl'
+            })
+            .when('/flow/histroy', {
+                templateUrl: 'js/app/partials/flowHistory.html',
+                controller: 'FlowHistoryCtrl'
+            })
             .otherwise({
                 redirectTo: '/'
             });

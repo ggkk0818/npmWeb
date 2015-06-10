@@ -177,6 +177,135 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
-        
+
+        this.settings = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'ip/config',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        this.settingsSave = function (params, callback) {
+            $http({
+                method: 'POST',
+                url: 'ip/config',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        this.settingsUpdate = function (params, callback) {
+            $http({
+                method: 'PUT',
+                url: 'ip/config',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        this.settingsDelete = function (params, callback) {
+            $http({
+                method: 'DELETE',
+                url: 'ip/config',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+
+        this.settingsDetailSave = function (params, callback) {
+            $http({
+                method: 'POST',
+                url: 'ip/detail',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        this.settingsDetailUpdate = function (params, callback) {
+            $http({
+                method: 'PUT',
+                url: 'ip/detail',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        this.settingsDetailDelete = function (params, callback) {
+            $http({
+                method: 'DELETE',
+                url: 'ip/detail',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+
+        this.attention = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'ip/attention',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        this.inattention = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'ip/inattention',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+
     });
 });

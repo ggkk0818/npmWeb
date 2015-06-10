@@ -11,5 +11,7 @@
     "./ipTopology",
     "./flowDetail",
     "./flowSummary",
-    "./flowPcap"
+    "./flowPcap",
+    "./flowSettings",
+    "./flowHistory"
 ], function () { });

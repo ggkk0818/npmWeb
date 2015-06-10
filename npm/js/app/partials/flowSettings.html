@@ -1,0 +1,192 @@
+﻿<div class="row" style="padding-top:25px;">
+    <div class="col-md-12">
+        <div class="pull-left">
+            <form class="form-inline">
+                <input type="text" class="form-control" placeholder="IP" ng-model="searchIpInput" ng-keypress="formKeypressHandler($event)">
+                <input type="text" class="form-control" placeholder="别名" ng-model="keywordInput" ng-keypress="formKeypressHandler($event)">
+                <button class="btn btn-info" type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
+            </form>
+        </div>
+        <div class="pull-right">
+            <button class="btn btn-info" type="button" ng-click="showSaveModal()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增</button>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:20px;">
+    <div class="col-xs-12">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" ng-repeat="tab in QUERY_TYPE" ng-class="{'active':queryType.name==tab.name}"><a href="javascript:void(0);" role="tab" ng-click="changeTab(tab)">{{tab.displayName}}</a></li>
+        </ul>
+        <div style="margin-top:20px;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>IP</th>
+                        <th>别名</th>
+                        <th>重点关注</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat-start="record in recordList">
+                        <td>{{record.ip}}</td>
+                        <td>{{record.alias}}</td>
+                        <td><span class="glyphicon glyphicon-ok" aria-hidden="true" ng-show="record.is_attention"></span></td>
+                        <td>
+                            <a href="javascript:void(0);" ng-click="showSaveModal(record)">编辑</a>
+                            <a href="javascript:void(0);" ng-click="showDeleteModal(record)">删除</a>
+                            <a href="javascript:void(0);" ng-click="record.showDetail=!record.showDetail">查看端口</a>
+                            <a href="javascript:void(0);" ng-click="showDetailSaveModal(record)">增加端口</a>
+                        </td>
+                    </tr>
+                    <tr ng-repeat-end ng-show="record.showDetail">
+                        <td colspan="4">
+                            <table class="table" ng-show="record.ipDetails && record.ipDetails.length">
+                                <thead>
+                                    <tr>
+                                        <th>端口</th>
+                                        <th>协议</th>
+                                        <th>别名</th>
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="detail in record.ipDetails">
+                                        <td>{{detail.port}}</td>
+                                        <td>{{detail.protocol}}</td>
+                                        <td>{{detail.alias}}</td>
+                                        <td>
+                                            <a href="javascript:void(0);" ng-click="showDetailSaveModal(record, detail)">编辑</a>
+                                            <a href="javascript:void(0);" ng-click="showDetailDeleteModal(detail)">删除</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div style="text-align:center;" ng-hide="record.ipDetails && record.ipDetails.length">暂无端口</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <nav class="text-center" style="position:relative;">
+                <div class="pull-right" style="line-height:34px;position:absolute;top:0;right:0;">
+                    <span style="padding-right:10px;">匹配的记录 {{recordSize||0}} 笔</span>
+                    <span style="padding-right:10px;">第 {{pageNum||0}} 页</span>
+                    <span>共 {{pageTotal||0}} 页</span>
+                </div>
+                <ul class="pagination" style="margin:0 auto;" data-page-click="show"></ul>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- IP Modal -->
+<div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-labelledby="saveModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">增加IP</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" name="saveForm">
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label">IP</label>
+                        <div class="col-sm-10">
+                            <input name="ipInput" class="form-control" type="text" ng-model="ipInput" ng-required="true" />
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label">别名</label>
+                        <div class="col-sm-10">
+                            <input name="nameInput" class="form-control" type="text" ng-model="nameInput" />
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label">是否关注</label>
+                        <div class="col-sm-10">
+                            <input type="checkbox" ng-model="attentionInput">
+                        </div>
+                    </div>
+                </form>
+                <p class="bg-warning" style="padding: 15px;" ng-show="msg!=null" ng-bind-html="msg"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" ng-click="saveModal()">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">删除IP</h4>
+            </div>
+            <div class="modal-body">
+                <label>是否删除IP {{currentRecord.ip}} ？</label>
+                <p class="bg-warning" style="padding: 15px;" ng-show="msg!=null" ng-bind-html="msg"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" ng-click="deleteModal()">删除</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Detail Modal -->
+<div class="modal fade" id="detailSaveModal" tabindex="-1" role="dialog" aria-labelledby="detailSaveModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">增加端口</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" name="detailSaveForm">
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label">端口</label>
+                        <div class="col-sm-10">
+                            <input name="portInput" class="form-control" type="text" ng-model="portInput" ng-required="true" />
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label">协议</label>
+                        <div class="col-sm-10">
+                            <input name="protocolInput" class="form-control" type="text" ng-model="protocolInput" />
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label">别名</label>
+                        <div class="col-sm-10">
+                            <input name="nameInput" class="form-control" type="text" ng-model="nameInput" />
+                        </div>
+                    </div>
+                </form>
+                <p class="bg-warning" style="padding: 15px;" ng-show="msg!=null" ng-bind-html="msg"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" ng-click="saveDetailModal()">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="detailDeleteModal" tabindex="-1" role="dialog" aria-labelledby="detailDeleteModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">删除端口</h4>
+            </div>
+            <div class="modal-body">
+                <label>是否删除端口 {{currentDetail.port}} ？</label>
+                <p class="bg-warning" style="padding: 15px;" ng-show="msg!=null" ng-bind-html="msg"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" ng-click="deleteDetailModal()">删除</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>

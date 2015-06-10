@@ -1,0 +1,42 @@
+﻿<div class="row" style="padding-top:25px;">
+    <div class="col-md-12">
+        <div class="pull-left">
+            <form class="form-inline">
+                <input type="text" class="form-control datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN" data-min-view="2" placeholder="日期" ng-model="startDateInput" ng-keypress="formKeypressHandler($event)">
+                <input type="text" class="form-control datetime" data-date-format="hh:ii:ss" data-date-language="zh-CN" data-max-view="1" data-start-view="1" placeholder="时间" ng-model="startTimeInput" ng-keypress="formKeypressHandler($event)">
+                <input type="text" class="form-control" placeholder="持续时间" ng-model="durationInput" ng-keypress="formKeypressHandler($event)">
+                <input type="text" class="form-control" placeholder="IP或别名" ng-model="keywordInput" ng-keypress="formKeypressHandler($event)">
+                <button class="btn btn-info" type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:20px;">
+    <div class="col-xs-12">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" ng-repeat="tab in QUERY_TYPE" ng-class="{'active':queryType.name==tab.name}"><a href="javascript:void(0);" role="tab" ng-click="changeTab(tab)">{{tab.displayName}}</a></li>
+        </ul>
+        <div style="margin-top:20px;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>IP</th>
+                        <th>流量（kbps）</th>
+                        <th>包数（pps）</th>
+                        <th>会话数</th>
+                        <th>下载PCAP包</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="record in recordList">
+                        <td>{{record.ip}}</td>
+                        <td><div data-chart="flow"></div></td>
+                        <td><div data-chart="package"></div></td>
+                        <td><div data-chart="session"></div></td>
+                        <td><a href="javascript:void(0);">下载</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

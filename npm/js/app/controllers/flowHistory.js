@@ -1,7 +1,7 @@
-﻿define(['angular', 'lodash', 'jquery', 'services/all', 'css!partials/flowPcap.css'], function (angular, _, $) {
+﻿define(['angular', 'lodash', 'jquery', 'services/all', 'css!partials/flowHistory.css'], function (angular, _, $) {
     "use strict";
     var module = angular.module('app.controllers');
-    module.controller('FlowHistoryCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, flowService) {
+    module.controller('FlowHistoryCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, dateTimeService, flowService) {
         //初始化变量
         $scope.QUERY_TYPE = [
             { name: "follow", displayName: "关注" },
@@ -17,11 +17,13 @@
         $scope.startTime = null;
         $scope.keyword = null;
         $scope.duration = null;
+        $scope.currentRecord = null;
         //表单数据
-        $scope.startDateInput = null;
-        $scope.startTimeInput = null;
+        $scope.startDateInput = $scope.startDate = new Date(dateTimeService.serverTime.getTime() - 300000).Format("yyyy-MM-dd");
+        $scope.startTimeInput = $scope.startTime = new Date(dateTimeService.serverTime.getTime() - 300000).Format("hh:mm:ss");
         $scope.keywordInput = null;
-        $scope.durationInput = null;
+        $scope.durationInput = $scope.duration = 300;
+        $scope.durationInputHasError = false;
         //获取查询参数
         $scope.getSearchParams = function () {
             var params = { pageNum: $scope.pageNum };
@@ -66,7 +68,10 @@
         };
         //显示信息
         $scope.show = function (pageNum) {
-            $scope.isLoading = true;
+            if (isNaN(parseInt($scope.durationInput, 10)) || parseInt($scope.durationInput, 10) > 900) {
+                $scope.durationInputHasError = true;
+                return;
+            }
             if (pageNum)
                 $scope.pageNum = pageNum;
             var params = $scope.getSearchParams();
@@ -95,12 +100,12 @@
                 catch (e) { }
             }
             if ($scope.keyword) {
-                params.alias = $scope.keyword;
+                params.ip = $scope.keyword;
             }
             if ($scope.queryType.name == $scope.QUERY_TYPE[0].name)
-                flowService.attention(params, $scope.doQueryDone);
+                flowService.follow(params, $scope.doQueryDone);
             else
-                flowService.inattention(params, $scope.doQueryDone);
+                flowService.unfollow(params, $scope.doQueryDone);
         };
         $scope.doQueryDone = function (data) {
             $scope.success = data && data.status == 200 ? true : false;
@@ -111,18 +116,26 @@
                 var recordList = [];
                 for (var ip in $scope.recordList) {
                     var record = { ip: ip, details: $scope.recordList[ip] };
-                    $scope.doDetailQuery(record);
+                    if (record.details && record.details.length)
+                        record.alias = record.details[0].alias;
                     recordList.push(record);
                 }
                 $scope.recordList = recordList;
+                $scope.doDetailQuery();
             }
         };
-        $scope.doDetailQuery = function (record) {
-            var params = {
-                ip: record.ip
-            };
+        $scope.doDetailQuery = function () {
+            var params = {};
+            if ($scope.recordList && $scope.recordList.length) {
+                for (var i = 0; i < $scope.recordList.length; i++) {
+                    params["ips[" + i + "]"] = $scope.recordList[i].ip;
+                }
+            }
+            else {
+                return;
+            }
             if ($scope.startDate && $scope.startTime) {
-                params.datetime = $scope.startDate + " " + $scope.startTime;
+                params.startTime = $scope.startDate + " " + $scope.startTime;
             }
             if (params.startTime && $scope.durationInput) {
                 try {
@@ -135,11 +148,29 @@
                 }
                 catch (e) { }
             }
-            flowService.settings(params, function (data) {
-                if (data && data.status == 200) {
-                    record.detailList = data.data;
+            if ($scope.queryType.name == $scope.QUERY_TYPE[0].name)
+                flowService.followDetail(params, $scope.doDetailQueryDone);
+            else
+                flowService.unfollowDetail(params, $scope.doDetailQueryDone);
+        };
+        $scope.doDetailQueryDone = function (data) {
+            if ($scope.recordList && $scope.recordList.length) {
+                for (var i = 0; i < $scope.recordList.length; i++) {
+                    $scope.recordList[i].detailList = [];
                 }
-            });
+                if (data && data.status == 200 && data.data) {
+                    for (var i = 0; i < data.data.length; i++) {
+                        var detail = data.data[i];
+                        for (var j = 0; j < $scope.recordList.length; j++) {
+                            var record = $scope.recordList[j];
+                            if (detail.ip === record.ip) {
+                                record.detailList.push(detail);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         };
         //搜索
         $scope.search = function () {
@@ -171,8 +202,28 @@
         $scope.changeTab = function (tab) {
             if (tab) {
                 $scope.queryType = tab;
-                $scope.show();
+                $scope.show(1);
             }
+        };
+        //点击表格ip
+        $scope.showDetail = function (record) {
+            $scope.currentRecord = record;
+        };
+        //pcap下载
+        $scope.downloadPcap = function (record) {
+            var params = { queryType: "like" };
+            if ($scope.startDate && $scope.startTime) {
+                params.startTime = $scope.startDate + " " + $scope.startTime;
+            }
+            if ($scope.duration)
+                params.duration = $scope.duration;
+            if (record && record.ip)
+                params.srcIp = record.ip;
+            if (record.protocol)
+                params.protocol = record.protocol;
+            if (record.port)
+                params.srcPort = record.port;
+            $location.path("/flow/pcap").search(params);
         };
         //获取url查询参数
         $scope.setSearchParams();

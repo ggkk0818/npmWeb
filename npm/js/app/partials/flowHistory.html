@@ -4,8 +4,14 @@
             <form class="form-inline">
                 <input type="text" class="form-control datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN" data-min-view="2" placeholder="日期" ng-model="startDateInput" ng-keypress="formKeypressHandler($event)">
                 <input type="text" class="form-control datetime" data-date-format="hh:ii:ss" data-date-language="zh-CN" data-max-view="1" data-start-view="1" placeholder="时间" ng-model="startTimeInput" ng-keypress="formKeypressHandler($event)">
-                <input type="text" class="form-control" placeholder="持续时间" ng-model="durationInput" ng-keypress="formKeypressHandler($event)">
-                <input type="text" class="form-control" placeholder="IP或别名" ng-model="keywordInput" ng-keypress="formKeypressHandler($event)">
+                <div class="form-group" ng-class="{'has-error':durationInputHasError}" data-toggle="tooltip" data-placement="bottom" title="{{durationInputHasError?'持续时间错误':null}}">
+                    <label class="sr-only">持续时间</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="持续时间（s），最多900" ng-model="durationInput" ng-keypress="formKeypressHandler($event)">
+                        <div class="input-group-addon">秒</div>
+                    </div>
+                </div>
+                <input type="text" class="form-control" placeholder="IP" ng-model="keywordInput" ng-keypress="formKeypressHandler($event)">
                 <button class="btn btn-info" type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
             </form>
         </div>
@@ -16,27 +22,67 @@
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" ng-repeat="tab in QUERY_TYPE" ng-class="{'active':queryType.name==tab.name}"><a href="javascript:void(0);" role="tab" ng-click="changeTab(tab)">{{tab.displayName}}</a></li>
         </ul>
-        <div style="margin-top:20px;">
+        <div style="margin-top:20px;" ng-show="recordList">
             <table class="table">
                 <thead>
                     <tr>
                         <th>IP</th>
-                        <th>流量（kbps）</th>
-                        <th>包数（pps）</th>
-                        <th>会话数</th>
+                        <th>别名</th>
+                        <th style="width:25%;">流量（kb）</th>
+                        <th style="width:25%;">包数（pps）</th>
+                        <th style="width:25%;">会话数</th>
                         <th>下载PCAP包</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="record in recordList">
-                        <td>{{record.ip}}</td>
-                        <td><div data-chart="flow"></div></td>
-                        <td><div data-chart="package"></div></td>
-                        <td><div data-chart="session"></div></td>
-                        <td><a href="javascript:void(0);">下载</a></td>
+                    <tr class="flow-history-record" ng-repeat="record in recordList">
+                        <td><a href="javascript:void(0);" ng-click="showDetail(record)">{{record.ip}}</a></td>
+                        <td>{{record.alias}}</td>
+                        <td><div data-chart="flow" style="height:50px;"></div></td>
+                        <td><div data-chart="package" style="height:50px;"></div></td>
+                        <td><div data-chart="session" style="height:50px;"></div></td>
+                        <td><a href="javascript:void(0);" ng-click="downloadPcap(record)"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a></td>
                     </tr>
                 </tbody>
             </table>
+            <nav class="text-center" style="position:relative;">
+                <div class="pull-right" style="line-height:34px;position:absolute;top:0;right:0;">
+                    <span style="padding-right:10px;">匹配的记录 {{recordSize||0}} 笔</span>
+                    <span style="padding-right:10px;">第 {{pageNum||0}} 页</span>
+                    <span>共 {{pageTotal||0}} 页</span>
+                </div>
+                <ul class="pagination" style="margin:0 auto;" data-page-click="show"></ul>
+            </nav>
         </div>
+        <div ng-hide="recordList" style="margin-top: 20px; text-align: center;">
+            <span class="glyphicon glyphicon-hourglass flow-histroy-loading" aria-hidden="true"></span>正在加载...
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:20px;" ng-show="currentRecord">
+    <div class="col-xs-12">
+        <hr />
+        <table class="table" ng-show="currentRecord.detailList && currentRecord.detailList.length">
+            <thead>
+                <tr>
+                    <th>协议</th>
+                    <th style="width:25%;">流量（kb）</th>
+                    <th style="width:25%;">包数（pps）</th>
+                    <th style="width:25%;">会话数</th>
+                    <th>下载PCAP包</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="flow-history-detail-record" ng-repeat="record in currentRecord.detailList">
+                    <td>{{record.protocol}}{{record.port ? ":" + record.port : ""}}{{record.alias ? "(" + record.alias+ ")" : ""}}</td>
+                    <td><div data-chart="flow" style="height:50px;"></div></td>
+                    <td><div data-chart="package" style="height:50px;"></div></td>
+                    <td><div data-chart="session" style="height:50px;"></div></td>
+                    <td><a href="javascript:void(0);" ng-click="downloadPcap(record)"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a></td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="text-align:center;" ng-hide="currentRecord.detailList">正在加载...</div>
+        <div style="text-align:center;" ng-show="currentRecord.detailList.length==0">暂无数据</div>
     </div>
 </div>

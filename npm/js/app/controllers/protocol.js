@@ -308,7 +308,7 @@
         var flow_option = {
             animation: true,
             title: {
-                text: '流量（kbps）'
+                text: '流量（kb）'
             },
             tooltip: {
                 trigger: 'axis',

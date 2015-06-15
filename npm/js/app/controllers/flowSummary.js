@@ -9,7 +9,7 @@
         $scope.chartProtocol = null;
         $scope.init = function () {
             $timeout(function () {
-                $scope.chartFlow = echarts.init($("#flowChart").get(0), "blue");
+                $scope.chartFlow = echarts.init($("#flowChart").get(0), "blue");//.showLoading({ effect: "bubble" });
                 $scope.chartFlow.setOption(option_flow);
                 $scope.chartPackage = echarts.init($("#packageChart").get(0), "blue");
                 $scope.chartPackage.setOption(option_package);
@@ -106,7 +106,7 @@
         var option_flow = {
             animation: false,
             title: {
-                text: '总流量（kbps）'
+                text: '总流量（kb）'
             },
             tooltip: {
                 trigger: 'axis',
@@ -203,7 +203,7 @@
             animation: false,
             title: {
                 text: 'IP top 10',
-                subtext: '近10分钟流量之和（kbps）'
+                subtext: '近10分钟流量之和（kb）'
             },
             tooltip: {
                 trigger: 'axis'
@@ -253,7 +253,7 @@
             animation: false,
             title: {
                 text: '协议 top 10',
-                subtext: '近10分钟流量之和（kbps）'
+                subtext: '近10分钟流量之和（kb）'
             },
             tooltip: {
                 trigger: 'axis'

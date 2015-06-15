@@ -3,5 +3,8 @@
     "./numberAnimate",
     "./pagination",
     "./popover",
-    "./paginationProtocolGroup"
+    "./paginationProtocolGroup",
+    "./flowHistoryChart",
+    "./flowHistoryDetailChart",
+    "./tooltip"
 ], function () { });

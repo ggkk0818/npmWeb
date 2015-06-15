@@ -29,25 +29,23 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat-start="record in recordList">
-                        <td>{{record.ip}}</td>
+                        <td><a href="javascript:void(0);" ng-click="record.showDetail=!record.showDetail">{{record.ip}}</a></td>
                         <td>{{record.alias}}</td>
                         <td><span class="glyphicon glyphicon-ok" aria-hidden="true" ng-show="record.is_attention"></span></td>
                         <td>
-                            <a href="javascript:void(0);" ng-click="showSaveModal(record)">编辑</a>
-                            <a href="javascript:void(0);" ng-click="showDeleteModal(record)">删除</a>
-                            <a href="javascript:void(0);" ng-click="record.showDetail=!record.showDetail">查看端口</a>
-                            <a href="javascript:void(0);" ng-click="showDetailSaveModal(record)">增加端口</a>
+                            <a href="javascript:void(0);" title="编辑" ng-click="showSaveModal(record)"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                            <a href="javascript:void(0);" title="删除" ng-click="showDeleteModal(record)" style="margin-left:10px;"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
                         </td>
                     </tr>
                     <tr ng-repeat-end ng-show="record.showDetail">
                         <td colspan="4">
-                            <table class="table" ng-show="record.ipDetails && record.ipDetails.length">
+                            <table class="table">
                                 <thead>
                                     <tr>
                                         <th>端口</th>
                                         <th>协议</th>
                                         <th>别名</th>
-                                        <th>&nbsp;</th>
+                                        <th><a href="javascript:void(0);" title="增加端口" ng-click="showDetailSaveModal(record)"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -56,13 +54,12 @@
                                         <td>{{detail.protocol}}</td>
                                         <td>{{detail.alias}}</td>
                                         <td>
-                                            <a href="javascript:void(0);" ng-click="showDetailSaveModal(record, detail)">编辑</a>
-                                            <a href="javascript:void(0);" ng-click="showDetailDeleteModal(detail)">删除</a>
+                                            <a href="javascript:void(0);" title="编辑" ng-click="showDetailSaveModal(record, detail)"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                                            <a href="javascript:void(0);" title="删除" ng-click="showDetailDeleteModal(detail)" style="margin-left:10px;"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <div style="text-align:center;" ng-hide="record.ipDetails && record.ipDetails.length">暂无端口</div>
                         </td>
                     </tr>
                 </tbody>

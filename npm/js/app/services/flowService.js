@@ -278,10 +278,10 @@ function (angular, $, _, config) {
             });
         };
 
-        this.attention = function (params, callback) {
+        this.follow = function (params, callback) {
             $http({
                 method: 'GET',
-                url: 'ip/attention',
+                url: 'ip/follow',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {
@@ -292,10 +292,38 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
-        this.inattention = function (params, callback) {
+        this.followDetail = function (params, callback) {
             $http({
                 method: 'GET',
-                url: 'ip/inattention',
+                url: 'ip/follow/detail',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        this.unfollow = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'ip/unfollow',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        this.unfollowDetail = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'ip/unfollow/detail',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {

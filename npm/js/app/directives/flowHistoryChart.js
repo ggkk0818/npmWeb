@@ -8,7 +8,7 @@ function (angular, app, _) {
 
     angular
       .module('app.directives')
-      .directive('flowHistoryRecord', function ($compile, $window) {
+      .directive('flowHistoryRecord', function ($compile, $window, $timeout) {
           return {
               restrict: 'C',
               link: function ($scope, elem) {
@@ -192,15 +192,17 @@ function (angular, app, _) {
                           data: sessionData
                       }]
                   };
-                  if (elem.find("div[data-chart=flow]").length) {
-                      echarts.init(elem.find("div[data-chart=flow]").get(0), "blue").setOption(option_flow, true);
-                  }
-                  if (elem.find("div[data-chart=package]").length) {
-                      echarts.init(elem.find("div[data-chart=package]").get(0), "blue").setOption(option_package, true);
-                  }
-                  if (elem.find("div[data-chart=session]").length) {
-                      echarts.init(elem.find("div[data-chart=session]").get(0), "blue").setOption(option_session, true);
-                  }
+                  $timeout(function () {
+                      if (elem.find("div[data-chart=flow]").length) {
+                          echarts.init(elem.find("div[data-chart=flow]").get(0), "blue").setOption(option_flow, true);
+                      }
+                      if (elem.find("div[data-chart=package]").length) {
+                          echarts.init(elem.find("div[data-chart=package]").get(0), "blue").setOption(option_package, true);
+                      }
+                      if (elem.find("div[data-chart=session]").length) {
+                          echarts.init(elem.find("div[data-chart=session]").get(0), "blue").setOption(option_session, true);
+                      }
+                  });
               }
           };
       });

@@ -82,6 +82,14 @@
                     }
                 }
             });
+            $timeout(function () {
+                $scope.chart_flow = echarts.init($("#protocol-chart-flow").get(0), "blue").showLoading({ effect: "bubble" });
+                $scope.chart_count = echarts.init($("#protocol-chart-count").get(0), "blue").showLoading({ effect: "bubble" });
+                $scope.chart_duration = echarts.init($("#protocol-chart-duration").get(0), "blue").showLoading({ effect: "bubble" });
+                $scope.chart_resp = echarts.init($("#protocol-chart-resp").get(0), "blue").showLoading({ effect: "bubble" });
+                $scope.chart_code = echarts.init($("#protocol-chart-code").get(0), "blue").showLoading({ effect: "bubble" });
+                $scope.chart_warn = echarts.init($("#protocol-chart-warn").get(0), "blue").showLoading({ effect: "bubble" });
+            });
         };
         //配置过滤器方法
         $scope.addFilter = function (field) {

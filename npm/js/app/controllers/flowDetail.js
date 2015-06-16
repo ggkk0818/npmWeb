@@ -69,7 +69,8 @@
                         totalRecFlow = 0,
                         totalSendFlow = 0,
                         totalRecPackage = 0,
-                        totalSendPackage = 0;
+                        totalSendPackage = 0,
+                        totalSession = 0;
                     for (var i = 0; i < $scope.recordList.length; i++) {
                         var record = $scope.recordList[i];
                         record.rec_bytes = record.rec_bytes ? record.rec_bytes * 8 / 1024 : 0;
@@ -78,6 +79,7 @@
                         totalSendFlow += record.send_bytes || 0;
                         totalRecPackage += record.rec_package || 0;
                         totalSendPackage += record.send_package || 0;
+                        totalSession += record.session || 0;
                         if (typeof record.time1 === "number")
                             record.time1 = new Date(record.time1).Format("yyyy-MM-dd hh:mm:ss");
                         if (typeof record.time2 === "number")
@@ -103,7 +105,7 @@
                     totalFlow = (totalSendFlow + totalRecFlow).toFixed(1);
                     totalRecFlow = totalRecFlow.toFixed(1);
                     totalSendFlow = totalSendFlow.toFixed(1);
-                    var list = [{ flow: totalFlow, rec_package: totalRecPackage, send_package: totalSendPackage, rec_bytes: totalRecFlow, send_bytes: totalSendFlow }];
+                    var list = [{ flow: totalFlow, rec_package: totalRecPackage, send_package: totalSendPackage, rec_bytes: totalRecFlow, send_bytes: totalSendFlow, session: totalSession }];
                     list[0][$scope.queryType.name] = "总和";
                     $scope.recordList = list.concat($scope.recordList);
                 }

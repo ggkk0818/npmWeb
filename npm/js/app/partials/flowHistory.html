@@ -36,7 +36,7 @@
                 </thead>
                 <tbody>
                     <tr class="flow-history-record" ng-repeat="record in recordList">
-                        <td><a href="javascript:void(0);" ng-click="showDetail(record)">{{record.ip}}</a></td>
+                        <td><a href="javascript:void(0);" ng-click="showDetail(record)">{{record.ip||"暂无"}}</a></td>
                         <td>{{record.alias}}</td>
                         <td><div data-chart="flow" style="height:50px;"></div></td>
                         <td><div data-chart="package" style="height:50px;"></div></td>
@@ -86,3 +86,38 @@
         <div style="text-align:center;" ng-show="currentRecord.detailList.length==0">暂无数据</div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="flow_history_session_modal" tabindex="-1" role="dialog" aria-labelledby="flow_history_session_modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">会话详情({{currentSessionRecord.ip}}{{currentSessionRecord.port ? ":" + currentSessionRecord.port : null}})</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ip1</th>
+                            <th>ip2</th>
+                            <th>port1</th>
+                            <th>port2</th>
+                            <th>proto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="session in currentSessionRecord.connDetails">
+                            <td>{{session.ip1}}</td>
+                            <td>{{session.ip2}}</td>
+                            <td>{{session.port1}}</td>
+                            <td>{{session.port2}}</td>
+                            <td>{{session.proto}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Modal -->

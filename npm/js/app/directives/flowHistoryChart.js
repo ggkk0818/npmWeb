@@ -16,9 +16,9 @@ function (angular, app, _) {
                       upflowData = [], downflowData = [], totalflowData = [],
                       sendPackageData = [], recvPackageData = [], totalPackageData = [],
                       sessionData = [];
-                  if (record && record.details) {
-                      for (var i = 0; i < record.details.length; i++) {
-                          var detail = record.details[i],
+                  if (record && record.ipStatisticses) {
+                      for (var i = 0; i < record.ipStatisticses.length; i++) {
+                          var detail = record.ipStatisticses[i],
                               rec_bytes = detail.rec_bytes || 0,
                               send_bytes = detail.send_bytes || 0,
                               rec_package = detail.rec_package || 0,

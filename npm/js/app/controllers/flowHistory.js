@@ -18,6 +18,7 @@
         $scope.keyword = null;
         $scope.duration = null;
         $scope.currentRecord = null;
+        $scope.currentSessionRecord = null;
         //表单数据
         $scope.startDateInput = $scope.startDate = new Date(dateTimeService.serverTime.getTime() - 300000).Format("yyyy-MM-dd");
         $scope.startTimeInput = $scope.startTime = new Date(dateTimeService.serverTime.getTime() - 300000).Format("hh:mm:ss");
@@ -115,9 +116,9 @@
             if ($scope.recordList) {
                 var recordList = [];
                 for (var ip in $scope.recordList) {
-                    var record = { ip: ip, details: $scope.recordList[ip] };
-                    if (record.details && record.details.length)
-                        record.alias = record.details[0].alias;
+                    var record = { ip: ip, ipStatisticses: $scope.recordList[ip] };
+                    if (record.ipStatisticses && record.ipStatisticses.length)
+                        record.alias = record.ipStatisticses[0].alias;
                     recordList.push(record);
                 }
                 $scope.recordList = recordList;
@@ -224,6 +225,30 @@
             if (record.port)
                 params.srcPort = record.port;
             $location.path("/flow/pcap").search(params);
+        };
+        //点击会话数图表
+        $scope.showSessionModal = function (record) {
+            if (!record)
+                return;
+            $scope.currentSessionRecord = record;
+            if ($scope.recordList && $scope.recordList.length) {
+                for (var i = 0; i < $scope.recordList.length; i++) {
+                    if (record.ip == $scope.recordList[i].ip) {
+                        for (var j = 0; j < $scope.recordList[i].detailList.length; j++) {
+                            var detail = $scope.recordList[i].detailList[j];
+                            if (detail.port == record.port && detail.protocol == record.protocol) {
+                                for (var k = 0; k < detail.ipDetailResults.length; k++) {
+                                    if (detail.ipDetailResults[k].time == record.time) {
+                                        $scope.currentSessionRecord.connDetails = detail.ipDetailResults[k].connDetails;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            $("#flow_history_session_modal").modal("show");
         };
         //获取url查询参数
         $scope.setSearchParams();

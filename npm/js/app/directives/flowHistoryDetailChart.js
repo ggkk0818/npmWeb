@@ -22,9 +22,9 @@ function (angular, app, _) {
                               totalFlow = detail.totalFlow || 0,
                               totalPacket = detail.totalPacket || 0,
                               totalSession = detail.totalSession || 0;
-                          totalflowData.push({ value: [detail.time, (totalFlow * 8 / 1024).toFixed(1)] });
-                          totalPackageData.push({ value: [detail.time, totalPacket] });
-                          sessionData.push({ value: [detail.time, totalSession] });
+                          totalflowData.push({ value: [detail.time, (totalFlow * 8 / 1024).toFixed(1)], record: { time: detail.time, ip: record.ip, port: record.port, protocol: record.protocol } });
+                          totalPackageData.push({ value: [detail.time, totalPacket], record: { time: detail.time, ip: record.ip, port: record.port, protocol: record.protocol } });
+                          sessionData.push({ value: [detail.time, totalSession], record: { time: detail.time, ip: record.ip, port: record.port, protocol: record.protocol } });
                       }
                   }
                   var option_flow = {
@@ -173,7 +173,14 @@ function (angular, app, _) {
                           echarts.init(elem.find("div[data-chart=package]").get(0), "blue").setOption(option_package, true);
                       }
                       if (elem.find("div[data-chart=session]").length) {
-                          echarts.init(elem.find("div[data-chart=session]").get(0), "blue").setOption(option_session, true);
+                          echarts.init(elem.find("div[data-chart=session]").get(0), "blue").setOption(option_session, true).on(echarts.config.EVENT.CLICK, function (e) {
+                              if (typeof e.seriesIndex != 'undefined') {
+                                  var data = option_session.series[e.seriesIndex].data[e.dataIndex];
+                                  if ($scope.$parent && typeof ($scope.$parent.showSessionModal) === "function") {
+                                      $scope.$parent.showSessionModal(record);
+                                  }
+                              }
+                          });
                       }
                   });
               }

@@ -123,8 +123,10 @@
                 }
                 $scope.recordList = recordList;
                 $scope.doDetailQuery();
+                $scope.doSystemQuery();
             }
         };
+        //查询详情
         $scope.doDetailQuery = function () {
             var params = {};
             if ($scope.recordList && $scope.recordList.length) {
@@ -172,6 +174,49 @@
                     }
                 }
             }
+        };
+        //查询操作系统信息
+        $scope.doSystemQuery = function () {
+            var params = {};
+            if ($scope.recordList && $scope.recordList.length) {
+                for (var i = 0; i < $scope.recordList.length; i++) {
+                    params["ips[" + i + "]"] = $scope.recordList[i].ip;
+                }
+            }
+            else {
+                return;
+            }
+            if ($scope.startDate && $scope.startTime) {
+                params.startTime = $scope.startDate + " " + $scope.startTime;
+            }
+            if (params.startTime && $scope.durationInput) {
+                try {
+                    var duration = parseInt($scope.duration, 10),
+                        startTime = new Date(params.startTime.replace(/-/g, "/"));
+                    if (!isNaN(duration)) {
+                        startTime.setSeconds(startTime.getSeconds() + duration);
+                        params.endTime = startTime.Format("yyyy-MM-dd hh:mm:ss");
+                    }
+                }
+                catch (e) { }
+            }
+            flowService.systemDetail(params, function (data) {
+                if ($scope.recordList && $scope.recordList.length) {
+                    if (data && data.status == 200 && data.data) {
+                        for (var i = 0; i < data.data.length; i++) {
+                            var detail = data.data[i];
+                            for (var j = 0; j < $scope.recordList.length; j++) {
+                                var record = $scope.recordList[j];
+                                if (detail.ip === record.ip) {
+                                    record.os = detail.os;
+                                    record.osVersion = detail.osVersion;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         };
         //搜索
         $scope.search = function () {
@@ -230,6 +275,7 @@
         $scope.showSessionModal = function (record) {
             if (!record)
                 return;
+            record.timeStr = new Date(record.time).Format("yyyy-MM-dd hh:mm:ss");
             $scope.currentSessionRecord = record;
             if ($scope.recordList && $scope.recordList.length) {
                 for (var i = 0; i < $scope.recordList.length; i++) {
@@ -240,6 +286,19 @@
                                 for (var k = 0; k < detail.ipDetailResults.length; k++) {
                                     if (detail.ipDetailResults[k].time == record.time) {
                                         $scope.currentSessionRecord.connDetails = detail.ipDetailResults[k].connDetails;
+                                        if ($scope.currentSessionRecord.connDetails && $scope.currentSessionRecord.connDetails.length) {
+                                            for (var l = 0; l < $scope.currentSessionRecord.connDetails.length; l++) {
+                                                var session = $scope.currentSessionRecord.connDetails[l];
+                                                if (session.connectionString) {
+                                                    var strArr = session.connectionString.split(":");
+                                                    session.ip1 = strArr.length > 0 ? strArr[0] : null;
+                                                    session.port1 = strArr.length > 1 ? strArr[1] : null;
+                                                    session.ip2 = strArr.length > 2 ? strArr[2] : null;
+                                                    session.port2 = strArr.length > 3 ? strArr[3] : null;
+                                                    session.totalBytes = session.totalBytes ? (session.totalBytes * 8 / 1024).toFixed(1) : 0;
+                                                }
+                                            }
+                                        }
                                         break;
                                     }
                                 }

@@ -335,5 +335,20 @@ function (angular, $, _, config) {
             });
         };
 
+        this.systemDetail = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'ip/system',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+
     });
 });

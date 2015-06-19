@@ -177,7 +177,7 @@ function (angular, app, _) {
                               if (typeof e.seriesIndex != 'undefined') {
                                   var data = option_session.series[e.seriesIndex].data[e.dataIndex];
                                   if ($scope.$parent && typeof ($scope.$parent.showSessionModal) === "function") {
-                                      $scope.$parent.showSessionModal(record);
+                                      $scope.$parent.showSessionModal(data.record);
                                   }
                               }
                           });

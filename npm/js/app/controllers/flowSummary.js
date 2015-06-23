@@ -18,7 +18,7 @@
                 $scope.chartProtocol = echarts.init($("#protocolChart").get(0), "blue");
                 $scope.chartProtocol.setOption(option_protocol);
             });
-            //$scope.doQuery();
+            $scope.doQuery();
             $scope.queryTimer = $interval($scope.doQuery, 3000);
         };
 

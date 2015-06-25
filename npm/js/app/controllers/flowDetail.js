@@ -4,10 +4,11 @@
     module.controller('FlowDetailCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, flowService) {
         //初始化变量
         $scope.QUERY_TYPE = [
-            { name: "ip", displayName: "IP", conditionName: "srcip" },
-            { name: "mac", displayName: "MAC", conditionName: "mac" },
-            { name: "protocol", displayName: "协议", conditionName: "protocol" },
-            { name: "port", displayName: "端口", conditionName: "port" }
+            { name: "ip", displayName: "IP（外网）", conditionName: "ip", fieldName: "ip" },
+            { name: "ipIntranet", displayName: "IP（内网）", conditionName: "ip", fieldName: "ip" },
+            { name: "mac", displayName: "MAC", conditionName: "mac", fieldName: "mac" },
+            { name: "protocol", displayName: "协议", conditionName: "protocol", fieldName: "protocol" },
+            { name: "port", displayName: "端口", conditionName: "port", fieldName: "port" }
         ];
         $scope.recordList = 0;
         $scope.startDate = null;
@@ -65,21 +66,9 @@
                 $scope.recordList = data && data.data ? data.data : [];
                 $scope.queryTimeStr = data && data.qtime ? data.qtime : null;
                 if ($scope.recordList && $scope.recordList.length) {
-                    var totalFlow = 0,
-                        totalRecFlow = 0,
-                        totalSendFlow = 0,
-                        totalRecPackage = 0,
-                        totalSendPackage = 0,
-                        totalSession = 0;
+                    $scope.recordList[0][$scope.queryType.fieldName] = "总和";
                     for (var i = 0; i < $scope.recordList.length; i++) {
                         var record = $scope.recordList[i];
-                        record.rec_bytes = record.rec_bytes ? record.rec_bytes * 8 / 1024 : 0;
-                        record.send_bytes = record.send_bytes ? record.send_bytes * 8 / 1024 : 0;
-                        totalRecFlow += record.rec_bytes || 0;
-                        totalSendFlow += record.send_bytes || 0;
-                        totalRecPackage += record.rec_package || 0;
-                        totalSendPackage += record.send_package || 0;
-                        totalSession += record.session || 0;
                         if (typeof record.time1 === "number")
                             record.time1 = new Date(record.time1).Format("yyyy-MM-dd hh:mm:ss");
                         if (typeof record.time2 === "number")
@@ -102,12 +91,6 @@
                         if (typeof record.rec_bytes === "number")
                             record.rec_bytes = record.rec_bytes.toFixed(1);
                     }
-                    totalFlow = (totalSendFlow + totalRecFlow).toFixed(1);
-                    totalRecFlow = totalRecFlow.toFixed(1);
-                    totalSendFlow = totalSendFlow.toFixed(1);
-                    var list = [{ flow: totalFlow, rec_package: totalRecPackage, send_package: totalSendPackage, rec_bytes: totalRecFlow, send_bytes: totalSendFlow, session: totalSession }];
-                    list[0][$scope.queryType.name] = "总和";
-                    $scope.recordList = list.concat($scope.recordList);
                 }
             });
         };
@@ -145,16 +128,17 @@
         //显示详细流量图
         $scope.showDetailChart = function (record) {
             $("#flow_detail_modal").one("shown.bs.modal", function () {
-                if (record[$scope.queryType.name]) {
-                    $scope.queryDetailName = record[$scope.queryType.name];
+                if (record[$scope.queryType.fieldName]) {
+                    $scope.queryDetailName = record[$scope.queryType.fieldName];
                     var params = {};
-                    if (record[$scope.queryType.name] !== "总和")
-                        params[$scope.queryType.name] = record[$scope.queryType.name];
+                    if (record[$scope.queryType.fieldName] !== "总和")
+                        params[$scope.queryType.conditionName] = record[$scope.queryType.fieldName];
                     if ($scope.startDate && $scope.startTime) {
-                        params.endTime = $scope.startDate + " " + $scope.startTime;
-                        var endTime = new Date(params.endTime.replace(/-/g, "/"));
-                        endTime.setSeconds(endTime.getSeconds() - 600);
-                        params.startTime = endTime.Format("yyyy-MM-dd hh:mm:ss");
+                        var time = new Date(($scope.startDate + " " + $scope.startTime).replace(/-/g, "/"));
+                        time.setSeconds(time.getSeconds() + 300);
+                        params.endTime = time.Format("yyyy-MM-dd hh:mm:ss");
+                        time.setSeconds(time.getSeconds() - 600);
+                        params.startTime = time.Format("yyyy-MM-dd hh:mm:ss");
                     }
                     flowService[$scope.queryType.name + "FlowChart"].call(this, params, function (data) {
                         if (data && data.data) {
@@ -241,7 +225,7 @@
         $scope.doQuery();
         //无日期条件每秒查询实时数据
         if (!$scope.startTime) {
-            $scope.queryTimer = $interval($scope.doQuery, 3000);
+            $scope.queryTimer = $interval($scope.doQuery, 60000);
         }
     });
 });

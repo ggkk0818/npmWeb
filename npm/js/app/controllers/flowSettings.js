@@ -122,6 +122,8 @@
                     params.alias = $scope.nameInput;
                 if ($scope.attentionInput)
                     params.is_attention = $scope.attentionInput;
+                else
+                    params.is_attention = false;
                 flowService.settingsUpdate(params, function (data) {
                     if (data && data.status == 200) {
                         $("#saveModal").modal("hide");

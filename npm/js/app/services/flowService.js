@@ -22,6 +22,20 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
+        this.ipIntranet = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'statistics/ip/intranet/detail',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
         this.mac = function (params, callback) {
             $http({
                 method: 'GET',
@@ -68,6 +82,20 @@ function (angular, $, _, config) {
             $http({
                 method: 'GET',
                 url: 'statistics/ip/flow',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        this.ipIntranetFlowChart = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'statistics/ip/intranet/flow',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {
@@ -292,6 +320,20 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
+        this.followIntranet = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'ip/intranet/follow',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
         this.followDetail = function (params, callback) {
             $http({
                 method: 'GET',
@@ -310,6 +352,20 @@ function (angular, $, _, config) {
             $http({
                 method: 'GET',
                 url: 'ip/unfollow',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        this.unfollowIntranet = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'ip/intranet/unfollow',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {

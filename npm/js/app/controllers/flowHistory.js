@@ -4,8 +4,10 @@
     module.controller('FlowHistoryCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, dateTimeService, flowService) {
         //初始化变量
         $scope.QUERY_TYPE = [
-            { name: "follow", displayName: "关注" },
-            { name: "normal", displayName: "其他" }
+            { name: "followIntranet", displayName: "关注（内网）", detailFuncName: "followDetail" },
+            { name: "follow", displayName: "关注（外网）", detailFuncName: "followDetail" },
+            { name: "unfollowIntranet", displayName: "其他（内网）", detailFuncName: "unfollowDetail" },
+            { name: "unfollow", displayName: "其他（外网）", detailFuncName: "unfollowDetail" }
         ];
         $scope.queryType = $scope.QUERY_TYPE[0];
         $scope.pageNum = 1;
@@ -103,10 +105,7 @@
             if ($scope.keyword) {
                 params.ip = $scope.keyword;
             }
-            if ($scope.queryType.name == $scope.QUERY_TYPE[0].name)
-                flowService.follow(params, $scope.doQueryDone);
-            else
-                flowService.unfollow(params, $scope.doQueryDone);
+            flowService[$scope.queryType.name].call(this, params, $scope.doQueryDone);
         };
         $scope.doQueryDone = function (data) {
             $scope.success = data && data.status == 200 ? true : false;
@@ -151,10 +150,7 @@
                 }
                 catch (e) { }
             }
-            if ($scope.queryType.name == $scope.QUERY_TYPE[0].name)
-                flowService.followDetail(params, $scope.doDetailQueryDone);
-            else
-                flowService.unfollowDetail(params, $scope.doDetailQueryDone);
+            flowService[$scope.queryType.detailFuncName].call(this, params, $scope.doDetailQueryDone);
         };
         $scope.doDetailQueryDone = function (data) {
             if ($scope.recordList && $scope.recordList.length) {

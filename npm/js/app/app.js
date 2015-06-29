@@ -116,6 +116,10 @@
                 templateUrl: 'js/app/partials/flowHistory.html',
                 controller: 'FlowHistoryCtrl'
             })
+            .when('/flow/histroyTrend', {
+                templateUrl: 'js/app/partials/flowHistoryTrend.html',
+                controller: 'FlowHistoryTrendCtrl'
+            })
             .otherwise({
                 redirectTo: '/'
             });

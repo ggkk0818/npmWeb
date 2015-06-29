@@ -173,12 +173,16 @@ function (angular, app, _) {
                           echarts.init(elem.find("div[data-chart=package]").get(0), "blue").setOption(option_package, true);
                       }
                       if (elem.find("div[data-chart=session]").length) {
-                          echarts.init(elem.find("div[data-chart=session]").get(0), "blue").setOption(option_session, true).on(echarts.config.EVENT.CLICK, function (e) {
-                              if (typeof e.seriesIndex != 'undefined') {
-                                  var data = option_session.series[e.seriesIndex].data[e.dataIndex];
-                                  if ($scope.$parent && typeof ($scope.$parent.showSessionModal) === "function") {
-                                      $scope.$parent.showSessionModal(data.record);
-                                  }
+                          echarts.init(elem.find("div[data-chart=session]").get(0), "blue").setOption(option_session, true).on(echarts.config.EVENT.CLICK, function (e) {});
+                          elem.find("div[data-chart=session]").off("click").on("click", function () {
+                              var record = null;
+                              if (option_session.series.length > 0 && option_session.series[0].data.length > 0) {
+                                  record = option_session.series[0].data[0].record;
+                              }
+                              if (record && $scope.$parent && typeof ($scope.$parent.showSessionModal) === "function") {
+                                  app.safeApply($scope, function () {
+                                      $scope.$parent.showSessionModal(record);
+                                  });
                               }
                           });
                       }

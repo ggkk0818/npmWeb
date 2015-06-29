@@ -206,6 +206,18 @@
                                 if (detail.ip === record.ip) {
                                     record.os = detail.os;
                                     record.osVersion = detail.osVersion;
+                                    if (detail.uptimeMins) {
+                                        record.hasUpTimes = true;
+                                        record.uptimeMins = detail.uptimeMins;
+                                        if (record.uptimeMins >= 60) {
+                                            record.uptimeHours = Math.floor(record.uptimeMins / 60);
+                                            record.uptimeMins = record.uptimeMins % 60;
+                                        }
+                                        if (record.uptimeHours >= 24) {
+                                            record.uptimeDays = Math.floor(record.uptimeHours / 24);
+                                            record.uptimeHours = record.uptimeMins % 24;
+                                        }
+                                    }
                                     break;
                                 }
                             }
@@ -271,7 +283,6 @@
         $scope.showSessionModal = function (record) {
             if (!record)
                 return;
-            record.timeStr = new Date(record.time).Format("yyyy-MM-dd hh:mm:ss");
             $scope.currentSessionRecord = record;
             if ($scope.recordList && $scope.recordList.length) {
                 for (var i = 0; i < $scope.recordList.length; i++) {
@@ -279,23 +290,18 @@
                         for (var j = 0; j < $scope.recordList[i].detailList.length; j++) {
                             var detail = $scope.recordList[i].detailList[j];
                             if (detail.port == record.port && detail.protocol == record.protocol) {
-                                for (var k = 0; k < detail.ipDetailResults.length; k++) {
-                                    if (detail.ipDetailResults[k].time == record.time) {
-                                        $scope.currentSessionRecord.connDetails = detail.ipDetailResults[k].connDetails;
-                                        if ($scope.currentSessionRecord.connDetails && $scope.currentSessionRecord.connDetails.length) {
-                                            for (var l = 0; l < $scope.currentSessionRecord.connDetails.length; l++) {
-                                                var session = $scope.currentSessionRecord.connDetails[l];
-                                                if (session.connectionString) {
-                                                    var strArr = session.connectionString.split(":");
-                                                    session.ip1 = strArr.length > 0 ? strArr[0] : null;
-                                                    session.port1 = strArr.length > 1 ? strArr[1] : null;
-                                                    session.ip2 = strArr.length > 2 ? strArr[2] : null;
-                                                    session.port2 = strArr.length > 3 ? strArr[3] : null;
-                                                    session.totalBytes = session.totalBytes ? (session.totalBytes * 8 / 1024).toFixed(1) : 0;
-                                                }
-                                            }
+                                $scope.currentSessionRecord.connDetails = detail.connDetails;
+                                if ($scope.currentSessionRecord.connDetails && $scope.currentSessionRecord.connDetails.length) {
+                                    for (var l = 0; l < $scope.currentSessionRecord.connDetails.length; l++) {
+                                        var session = $scope.currentSessionRecord.connDetails[l];
+                                        if (session.connectionString) {
+                                            var strArr = session.connectionString.split(":");
+                                            session.ip1 = strArr.length > 0 ? strArr[0] : null;
+                                            session.port1 = strArr.length > 1 ? strArr[1] : null;
+                                            session.ip2 = strArr.length > 2 ? strArr[2] : null;
+                                            session.port2 = strArr.length > 3 ? strArr[3] : null;
+                                            session.totalBytes = session.totalBytes ? (session.totalBytes * 8 / 1024).toFixed(1) : 0;
                                         }
-                                        break;
                                     }
                                 }
                             }

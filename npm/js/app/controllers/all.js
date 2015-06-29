@@ -13,5 +13,6 @@
     "./flowSummary",
     "./flowPcap",
     "./flowSettings",
-    "./flowHistory"
+    "./flowHistory",
+    "./flowHistoryTrend"
 ], function () { });

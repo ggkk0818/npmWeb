@@ -18,6 +18,7 @@
                 { name: "总览", href: "#/flow/summary", icon: "glyphicon-equalizer" },
                 { name: "详情", href: "#/flow/detail", icon: "glyphicon-equalizer" },
                 { name: "历史", href: "#/flow/histroy", icon: "glyphicon-equalizer" },
+                { name: "历史趋势", href: "#/flow/histroyTrend", icon: "glyphicon-equalizer" },
                 { name: "PCAP包下载", href: "#/flow/pcap", icon: "glyphicon-equalizer" },
             ]
         });

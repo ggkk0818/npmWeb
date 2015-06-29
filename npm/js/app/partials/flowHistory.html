@@ -36,7 +36,10 @@
                 </thead>
                 <tbody>
                     <tr class="flow-history-record" ng-repeat="record in recordList">
-                        <td><a href="javascript:void(0);" ng-click="showDetail(record)" data-toggle="tooltip" data-placement="bottom" title="{{record.os ? record.os + ' ' + record.osVersion : null}}">{{record.ip||"暂无"}}</a></td>
+                        <td>
+                            <a href="javascript:void(0);" ng-click="showDetail(record)" data-toggle="tooltip" data-placement="bottom" data-html="true"
+                               title="{{record.os ? record.os + ' ' + record.osVersion : ''}}{{record.os && record.hasUpTimes ? '&lt;br /&gt;' : ''}}{{record.hasUpTimes ? '在线' + (record.uptimeDays ? record.uptimeDays + '天' : '') + (record.uptimeHours ? record.uptimeHours + '小时' : '') + (record.uptimeMins ? record.uptimeMins + '分钟' : '') : null}}">{{record.ip||"暂无"}}</a>
+                        </td>
                         <td>{{record.alias}}</td>
                         <td><div data-chart="flow" style="height:50px;"></div></td>
                         <td><div data-chart="package" style="height:50px;"></div></td>
@@ -92,7 +95,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">会话详情({{currentSessionRecord.ip}}{{currentSessionRecord.port ? ":" + currentSessionRecord.port : null}}){{currentSessionRecord.timeStr ? " - " + currentSessionRecord.timeStr : null}}</h4>
+                <h4 class="modal-title">会话详情({{currentSessionRecord.ip}}{{currentSessionRecord.port ? ":" + currentSessionRecord.port : null}})</h4>
             </div>
             <div class="modal-body">
                 <table class="table">

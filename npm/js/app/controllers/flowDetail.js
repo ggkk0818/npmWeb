@@ -104,6 +104,9 @@
                 $scope.startTime = null;
             else
                 $scope.startTime = $scope.startTimeInput;
+            if ($scope.queryType.name == "ip" && !isNaN(new Date(($scope.startDate + " " + $scope.startTime).replace(/-/g, "/")))) {
+                $scope.startTime = $scope.startTimeInput = new Date(($scope.startDate + " " + $scope.startTime).replace(/-/g, "/")).Format("hh:mm:00")
+            }
             $scope.show();
         };
         //表单输入框按键事件

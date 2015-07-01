@@ -1,0 +1,58 @@
+﻿<div class="row" style="padding-top:25px;">
+    <div class="col-md-12">
+        <div class="pull-left">
+            <form class="form-inline">
+                <input type="text" class="form-control datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN" data-min-view="2" placeholder="日期" ng-model="startDateInput" ng-keypress="formKeypressHandler($event)">
+                <button class="btn btn-info" type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
+            </form>
+        </div>
+        <div class="pull-right">
+            <button class="btn btn-info" type="button" ng-click="addDay(-1)" data-toggle="tooltip" data-placement="bottom" title="前一天"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span></button>
+            <button class="btn btn-info" type="button" ng-click="addDay(1)" data-toggle="tooltip" data-placement="bottom" title="后一天"><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:20px;">
+    <div class="col-xs-12">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="active" role="presentation"><a href="javascript:void(0);" role="tab">波形异常</a></li>
+        </ul>
+        <div style="margin-top:20px;" ng-show="recordList">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>开始时间</th>
+                        <th>结束时间</th>
+                        <th>波形种类</th>
+                        <th>波形图</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="record in recordList">
+                        <td>{{record.start_time}}</td>
+                        <td>{{record.end_time}}</td>
+                        <td>{{record.type}}</td>
+                        <td>
+                            <img src="data:image/png;base64,{{record.imageCode}}" ng-if="record.imageCode" />
+                            <div ng-if="!record.imageCode">
+                                <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>暂无图像
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <nav class="text-center" style="position:relative;">
+                <div class="pull-right" style="line-height:34px;position:absolute;top:0;right:0;">
+                    <span style="padding-right:10px;">匹配的记录 {{recordSize||0}} 笔</span>
+                    <span style="padding-right:10px;">第 {{pageNum||0}} 页</span>
+                    <span>共 {{pageTotal||0}} 页</span>
+                </div>
+                <ul class="pagination" style="margin:0 auto;" data-page-click="show"></ul>
+            </nav>
+        </div>
+        <div ng-hide="recordList" style="margin-top: 20px; text-align: center;">
+            <span class="glyphicon glyphicon-hourglass warn-center-loading" aria-hidden="true"></span>正在加载...
+        </div>
+
+    </div>
+</div>

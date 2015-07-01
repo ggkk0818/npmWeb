@@ -64,9 +64,13 @@
     };
     app.config(function ($routeProvider, $controllerProvider, $compileProvider, $filterProvider, $provide) {
         $routeProvider
+            //.when('/', {
+            //    templateUrl: 'js/app/partials/index.html',
+            //    controller: 'IndexCtrl'
+            //})
             .when('/', {
-                templateUrl: 'js/app/partials/index.html',
-                controller: 'IndexCtrl'
+                templateUrl: 'js/app/partials/warnCenter.html',
+                controller: 'WarnCenterCtrl'
             })
             .when('/settings', {
                 templateUrl: 'js/app/partials/settings.html',

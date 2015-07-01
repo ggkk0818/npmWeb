@@ -8,7 +8,8 @@
             name: "全景视图",
             href: null,
             children: [
-                { name: "实时监控", href: "#/", icon: "glyphicon-eye-open" }
+                //{ name: "实时监控", href: "#/", icon: "glyphicon-eye-open" },
+                { name: "告警中心", href: "#/", icon: "glyphicon-eye-open" }
             ]
         });
         sidebarNav.push({

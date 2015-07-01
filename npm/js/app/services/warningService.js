@@ -38,5 +38,20 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
+        //告警中心
+        this.curve = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'warning/curve',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
     });
 });

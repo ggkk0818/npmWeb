@@ -14,5 +14,6 @@
     "./flowPcap",
     "./flowSettings",
     "./flowHistory",
-    "./flowHistoryTrend"
+    "./flowHistoryTrend",
+    "./warnCenter"
 ], function () { });

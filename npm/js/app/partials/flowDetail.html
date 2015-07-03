@@ -23,12 +23,12 @@
                 <thead>
                     <tr>
                         <th>{{queryType.displayName||queryType.name}}</th>
-                        <th>流量（kbps）</th>
-                        <th>数据包（pps）</th>
-                        <th>接收数据包（pps）</th>
-                        <th>发送数据包（pps）</th>
-                        <th>接收流量（kbps）</th>
-                        <th>发送流量（kbps）</th>
+                        <th>流量（{{queryType.name=="ip" ? "kbpm" : "kbps"}}）</th>
+                        <th>数据包（{{queryType.name=="ip" ? "ppm" : "pps"}}）</th>
+                        <th>接收数据包（{{queryType.name=="ip" ? "ppm" : "pps"}}）</th>
+                        <th>发送数据包（{{queryType.name=="ip" ? "ppm" : "pps"}}）</th>
+                        <th>接收流量（{{queryType.name=="ip" ? "kbpm" : "kbps"}}）</th>
+                        <th>发送流量（{{queryType.name=="ip" ? "kbpm" : "kbps"}}）</th>
                         <th>会话数</th>
                         <th>&nbsp;</th>
                     </tr>

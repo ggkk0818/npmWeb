@@ -21,6 +21,11 @@
                 { name: "!=", displayName: "不等于" },
                 { name: "><", displayName: "介于" }
             ],
+            "Integer": [
+                { name: "=", displayName: "等于" },
+                { name: "!=", displayName: "不等于" },
+                { name: "><", displayName: "介于" }
+            ],
             "Byte": [
                 { name: "=", displayName: "等于" },
                 { name: "!=", displayName: "不等于" }

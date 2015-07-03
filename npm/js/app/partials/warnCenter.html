@@ -18,22 +18,24 @@
             <li class="active" role="presentation"><a href="javascript:void(0);" role="tab">波形异常</a></li>
         </ul>
         <div style="margin-top:20px;" ng-show="recordList">
-            <table class="table">
+            <table class="table warn-center-table">
                 <thead>
                     <tr>
                         <th>开始时间</th>
                         <th>结束时间</th>
                         <th>波形种类</th>
-                        <th>波形图</th>
+                        <th style="width:30%;">波形图</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="record in recordList">
                         <td>{{record.start_time}}</td>
                         <td>{{record.end_time}}</td>
-                        <td>{{record.type}}</td>
+                        <td>{{CURVE_TYPE[record.type] ? CURVE_TYPE[record.type].name : "未知(" + record.type + ")"}}</td>
                         <td>
-                            <img src="data:image/png;base64,{{record.imageCode}}" ng-if="record.imageCode" />
+                            <a href="javascript:void(0);" ng-click="showImageModal(record)" title="点击放大">
+                                <img src="data:image/png;base64,{{record.imageCode}}" ng-if="record.imageCode" />
+                            </a>
                             <div ng-if="!record.imageCode">
                                 <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>暂无图像
                             </div>
@@ -56,3 +58,18 @@
 
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="warn_center_image_modal" tabindex="-1" role="dialog" aria-labelledby="warn_center_image_modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width:1200px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">波形图</h4>
+            </div>
+            <div class="modal-body">
+                <img src="data:image/png;base64,{{currentRecord.imageCode}}" style="width:100%;" />
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->

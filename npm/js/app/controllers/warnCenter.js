@@ -3,9 +3,12 @@
     var module = angular.module('app.controllers');
     module.controller('WarnCenterCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, dateTimeService, warningService) {
         //初始化变量
+        $scope.CURVE_TYPE = {
+            1: { id: 1, name: "总流量" }
+        };
         $scope.pageNum = 1;
         $scope.pageTotal = 1;
-        $scope.pageSize = 5;
+        $scope.pageSize = 20;
         $scope.recordSize = 0;
         $scope.recordList = null;
         $scope.startDate = null;
@@ -88,6 +91,13 @@
             date.setDate(date.getDate() + num);
             $scope.startDateInput = $scope.startDate = date.Format("yyyy-MM-dd");
             $scope.show(1);
+        };
+        //显示放大波形图
+        $scope.showImageModal = function (record) {
+            if (record) {
+                $scope.currentRecord = record;
+                $("#warn_center_image_modal").modal("show");
+            }
         };
 
         $scope.init();

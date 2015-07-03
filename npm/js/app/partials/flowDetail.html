@@ -30,6 +30,7 @@
                         <th>接收流量（{{queryType.name=="ip" ? "kbpm" : "kbps"}}）</th>
                         <th>发送流量（{{queryType.name=="ip" ? "kbpm" : "kbps"}}）</th>
                         <th>会话数</th>
+                        <th>重传率(%)</th>
                         <th>&nbsp;</th>
                     </tr>
                 </thead>
@@ -43,6 +44,7 @@
                         <td>{{record.rec_bytes}}</td>
                         <td>{{record.send_bytes}}</td>
                         <td>{{record.session}}</td>
+                        <td>{{record.retransferRatio}}</td>
                         <td><a href="javascript:void(0);" ng-click="showDetailChart(record)">流量趋势</a></td>
                     </tr>
                 </tbody>

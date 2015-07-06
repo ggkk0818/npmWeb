@@ -87,9 +87,14 @@
         };
         //前一天
         $scope.addDay = function (num) {
-            var date = new Date($scope.startDate.replace(/-/g, "/"));
-            date.setDate(date.getDate() + num);
-            $scope.startDateInput = $scope.startDate = date.Format("yyyy-MM-dd");
+            if (typeof num === "number") {
+                var date = new Date($scope.startDate.replace(/-/g, "/"));
+                date.setDate(date.getDate() + num);
+                $scope.startDateInput = $scope.startDate = date.Format("yyyy-MM-dd");
+            }
+            else {
+                $scope.startDateInput = $scope.startDate = dateTimeService.serverTime.Format("yyyy-MM-dd");
+            }
             $scope.show(1);
         };
         //显示放大波形图

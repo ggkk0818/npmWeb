@@ -4,7 +4,9 @@
     module.controller('WarnCenterCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, dateTimeService, warningService) {
         //初始化变量
         $scope.CURVE_TYPE = {
-            1: { id: 1, name: "总流量" }
+            1: { id: 1, name: "总流量异常" },
+            2: { id: 2, name: "每日流量对比" },
+            3: { id: 3, name: "每日ip对比" }
         };
         $scope.pageNum = 1;
         $scope.pageTotal = 1;

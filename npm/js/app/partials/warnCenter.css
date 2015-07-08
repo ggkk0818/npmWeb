@@ -10,3 +10,28 @@
 .warn-center-table tr td img{
     width:100%;
 }
+.warn-center-row{
+    margin:0;
+    padding:15px 0;
+    border-bottom:1px solid #f6f6f6 ;
+}
+.warn-center-row .col-xs-3{
+    border-right:3px solid #2d85ca;
+}
+.warn-center-row:hover .col-xs-3{
+    border-right-color:#31b0d5;
+}
+.warn-center-row h4{
+    /*margin-top:0;*/
+}
+.warn-center-row .warn-image{
+    display:block;
+}
+.warn-center-row .warn-image img{
+    max-width:100%;
+    max-height:100px;
+}
+.warn-center-row .no-image{
+    margin-top:30px;
+    text-align:center;
+}

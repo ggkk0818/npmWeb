@@ -65,6 +65,11 @@
             flowService[$scope.queryType.name].call(this, params, function (data) {
                 $scope.recordList = data && data.data ? data.data : [];
                 $scope.queryTimeStr = data && data.qtime ? data.qtime : null;
+                if (!$scope.startDate && !$scope.startTime && $scope.queryTimeStr) {
+                    var timeStrArr = $scope.queryTimeStr.split(" ");
+                    $scope.startDateInput = timeStrArr.length ? timeStrArr[0] : null;
+                    $scope.startTimeInput = timeStrArr.length > 1 ? timeStrArr[1] : null;
+                }
                 if ($scope.recordList && $scope.recordList.length) {
                     $scope.recordList[0][$scope.queryType.fieldName] = "总和";
                     for (var i = 0; i < $scope.recordList.length; i++) {

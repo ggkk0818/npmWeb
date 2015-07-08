@@ -18,7 +18,7 @@
         <ul class="nav nav-tabs" role="tablist">
             <li class="active" role="presentation"><a href="javascript:void(0);" role="tab">波形异常</a></li>
         </ul>
-        <div style="margin-top:20px;" ng-show="recordList">
+        <div style="margin-top:20px;" ng-show="recordList" ng-if="false">
             <table class="table warn-center-table">
                 <thead>
                     <tr>
@@ -53,6 +53,29 @@
                 <ul class="pagination" style="margin:0 auto;" data-page-click="show"></ul>
             </nav>
         </div>
+        <div class="row warn-center-row" ng-repeat="record in recordList">
+            <div class="col-xs-3">
+                <h4>{{CURVE_TYPE[record.type] ? CURVE_TYPE[record.type].name : "未知(" + record.type + ")"}}</h4>
+                <h4>{{record.start_time}}</h4>
+                <h4>{{record.end_time}}</h4>
+            </div>
+            <div class="col-xs-9">
+                <a class="warn-image" href="javascript:void(0);" ng-click="showImageModal(record)" title="点击放大" ng-if="record.imageCode">
+                    <img src="data:image/png;base64,{{record.imageCode}}" />
+                </a>
+                <div class="no-image" ng-if="!record.imageCode">
+                    <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>暂无图像
+                </div>
+            </div>
+        </div>
+        <nav class="text-center" style="position:relative;margin-top:20px;" ng-show="recordList">
+            <div class="pull-right" style="line-height:34px;position:absolute;top:0;right:0;">
+                <span style="padding-right:10px;">匹配的记录 {{recordSize||0}} 笔</span>
+                <span style="padding-right:10px;">第 {{pageNum||0}} 页</span>
+                <span>共 {{pageTotal||0}} 页</span>
+            </div>
+            <ul class="pagination" style="margin:0 auto;" data-page-click="show"></ul>
+        </nav>
         <div ng-hide="recordList" style="margin-top: 20px; text-align: center;">
             <span class="glyphicon glyphicon-hourglass warn-center-loading" aria-hidden="true"></span>正在加载...
         </div>

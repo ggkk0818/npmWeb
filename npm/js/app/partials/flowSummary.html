@@ -1,4 +1,19 @@
-﻿<div class="row">
+﻿<div class="row" style="padding-top:25px;">
+    <div class="col-md-12">
+        <div class="pull-left">
+            <form class="form-inline">
+                <input type="text" class="form-control datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN" data-min-view="2" placeholder="日期" ng-model="startDateInput" ng-keypress="formKeypressHandler($event)">
+                <button class="btn btn-info" type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
+            </form>
+        </div>
+        <div class="pull-right">
+            <button class="btn btn-info" type="button" ng-click="addDay(-1)" data-toggle="tooltip" data-placement="bottom" title="前一天"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span></button>
+            <button class="btn btn-info" type="button" ng-click="addDay()" data-toggle="tooltip" data-placement="bottom" title="今天"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span></button>
+            <button class="btn btn-info" type="button" ng-click="addDay(1)" data-toggle="tooltip" data-placement="bottom" title="后一天"><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:20px;">
     <div class="col-xs-12">
         <div id="flowChart" style="height:400px;"></div>
     </div>

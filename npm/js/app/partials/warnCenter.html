@@ -55,9 +55,9 @@
         </div>
         <div class="row warn-center-row" ng-repeat="record in recordList">
             <div class="col-xs-3">
-                <h4>{{CURVE_TYPE[record.type] ? CURVE_TYPE[record.type].name : "未知(" + record.type + ")"}}</h4>
-                <h4>{{record.start_time}}</h4>
-                <h4>{{record.end_time}}</h4>
+                <h3>{{CURVE_TYPE[record.type] ? CURVE_TYPE[record.type].name : "未知(" + record.type + ")"}}</h3>
+                <h4><span class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="开始时间"></span>{{record.start_time}}</h4>
+                <h4><span class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="结束时间"></span>{{record.end_time}}</h4>
             </div>
             <div class="col-xs-9">
                 <a class="warn-image" href="javascript:void(0);" ng-click="showImageModal(record)" title="点击放大" ng-if="record.imageCode">

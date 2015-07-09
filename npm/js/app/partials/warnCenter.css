@@ -16,6 +16,7 @@
     border-bottom:1px solid #f6f6f6 ;
 }
 .warn-center-row .col-xs-3{
+    min-height:200px;
     border-right:3px solid #2d85ca;
 }
 .warn-center-row:hover .col-xs-3{
@@ -24,12 +25,16 @@
 .warn-center-row h4{
     /*margin-top:0;*/
 }
+.warn-center-row h4 span.glyphicon{
+    color:#398cc3;
+    margin-right:5px;
+}
 .warn-center-row .warn-image{
     display:block;
 }
 .warn-center-row .warn-image img{
     max-width:100%;
-    max-height:100px;
+    max-height:200px;
 }
 .warn-center-row .no-image{
     margin-top:30px;

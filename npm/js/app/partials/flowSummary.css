@@ -1,0 +1,14 @@
+﻿.flowSummary-chart-container{
+    position:relative;
+}
+.flowSummary-chart-container .btn{
+    position:absolute;
+    left:45px;
+    bottom:8px;
+    color:#337ab7;
+}
+.flowSummary-chart-container .btn.locked{
+    border-color:#2d85ca;
+    background-color:#2d85ca;
+    color:#fff;
+}

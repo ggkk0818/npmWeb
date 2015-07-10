@@ -1,4 +1,4 @@
-﻿define(['angular', 'lodash', 'jquery', 'services/all', 'css!partials/statisticSearch.css'], function (angular, _, $) {
+﻿define(['angular', 'lodash', 'jquery', 'services/all', 'css!partials/flowSummary.css'], function (angular, _, $) {
     "use strict";
     var module = angular.module('app.controllers');
     module.controller('FlowSummaryCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, dateTimeService, flowService) {
@@ -8,6 +8,7 @@
         $scope.chartFlow = null;
         $scope.chartIp = null;
         $scope.chartProtocol = null;
+        $scope.isConnect = true;
         //表单数据
         $scope.startDateInput = $scope.startDate = dateTimeService.serverTime.Format("yyyy-MM-dd");
         $scope.init = function () {
@@ -16,6 +17,8 @@
                 $scope.chartPackage = echarts.init($("#packageChart").get(0), "blue").showLoading({ effect: "dynamicLine" });
                 $scope.chartIp = echarts.init($("#ipChart").get(0), "blue").showLoading({ effect: "dynamicLine" });
                 $scope.chartProtocol = echarts.init($("#protocolChart").get(0), "blue").showLoading({ effect: "dynamicLine" });
+                $scope.chartFlow.connect($scope.chartPackage);
+                $scope.chartPackage.connect($scope.chartFlow);
             });
             $scope.setSearchParams();
             $scope.doQuery();
@@ -55,35 +58,61 @@
             flowService.timeFlow(params, function (data) {
                 if (data && data.data) {
                     var internetFlowData = [], intranetFlowData = [], totalFlowData = [],
-                        internetPackageData = [], intranetPackageData = [], totalPackageData = [];
+                        internetPackageData = [], intranetPackageData = [], totalPackageData = [],
+                        categoryData = [];
                     if (data.data.length) {
                         for (var i = 0; i < data.data.length; i++) {
                             var d = data.data[i],
-                                datetime = d.datetime,
+                                datetime = new Date(d.datetime).Format("hh:mm:ss"),
                                 internet_bytes = (d.internet_send_bytes || 0) + (d.internet_rec_bytes || 0),
                                 intranet_bytes = (d.intranet_send_bytes || 0) + (d.intranet_rec_bytes || 0),
                                 internet_package = (d.internet_send_package || 0) + (d.internet_rec_package || 0),
                                 intranet_package = (d.intranet_send_package || 0) + (d.intranet_rec_package || 0);
-                            internetFlowData.push({ value: [datetime, (internet_bytes * 8 / 1024).toFixed(1)] });
-                            intranetFlowData.push({ value: [datetime, (intranet_bytes * 8 / 1024).toFixed(1)] });
-                            totalFlowData.push({ value: [datetime, ((internet_bytes + intranet_bytes) * 8 / 1024).toFixed(1)] });
-                            internetPackageData.push({ value: [datetime, internet_package] });
-                            intranetPackageData.push({ value: [datetime, intranet_package] });
-                            totalPackageData.push({ value: [datetime, internet_package + intranet_package] });
+                            categoryData.push(datetime);
+                            //internetFlowData.push({ value: [datetime, (internet_bytes * 8 / 1024).toFixed(1)] });
+                            //intranetFlowData.push({ value: [datetime, (intranet_bytes * 8 / 1024).toFixed(1)] });
+                            //totalFlowData.push({ value: [datetime, ((internet_bytes + intranet_bytes) * 8 / 1024).toFixed(1)] });
+                            //internetPackageData.push({ value: [datetime, internet_package] });
+                            //intranetPackageData.push({ value: [datetime, intranet_package] });
+                            //totalPackageData.push({ value: [datetime, internet_package + intranet_package] });
+                            internetFlowData.push((internet_bytes * 8 / 1024).toFixed(1));
+                            intranetFlowData.push((intranet_bytes * 8 / 1024).toFixed(1));
+                            totalFlowData.push(((internet_bytes + intranet_bytes) * 8 / 1024).toFixed(1));
+                            internetPackageData.push(internet_package);
+                            intranetPackageData.push(intranet_package);
+                            totalPackageData.push(internet_package + intranet_package);
                         }
                     }
-                    //else if (!option_flow.series[0].data.length && !option_package.series[0].data.length) {
+                    //else if (!$scope.option_flow.series[0].data.length && !$scope.option_package.series[0].data.length) {
                     //    return;
                     //}
-                    option_flow.series[0].data = totalFlowData;
-                    option_flow.series[1].data = intranetFlowData;
-                    option_flow.series[2].data = internetFlowData;
-                    option_package.series[0].data = totalPackageData;
-                    option_package.series[1].data = intranetPackageData;
-                    option_package.series[2].data = internetPackageData;
+                    $scope.option_flow.xAxis[0].data = categoryData;
+                    $scope.option_flow.series[0].data = totalFlowData;
+                    $scope.option_flow.series[1].data = intranetFlowData;
+                    $scope.option_flow.series[2].data = internetFlowData;
+                    $scope.option_package.xAxis[0].data = categoryData;
+                    $scope.option_package.series[0].data = totalPackageData;
+                    $scope.option_package.series[1].data = intranetPackageData;
+                    $scope.option_package.series[2].data = internetPackageData;
+                    if (!$scope.startDate || $scope.startDate == dateTimeService.serverTime.Format("yyyy-MM-dd")) {
+                        var endPoint = Math.round((dateTimeService.serverTime.getHours() * 60 + dateTimeService.serverTime.getMinutes()) * 100 / (24 * 60));
+                        if (endPoint < 50) {
+                            endPoint = 50;
+                        }
+                        $scope.option_flow.dataZoom.end = endPoint;
+                        $scope.option_flow.dataZoom.start = endPoint - 50;
+                        $scope.option_package.dataZoom.end = endPoint;
+                        $scope.option_package.dataZoom.start = endPoint - 50;
+                    }
+                    else {
+                        $scope.option_flow.dataZoom.end = 100;
+                        $scope.option_flow.dataZoom.start = 50;
+                        $scope.option_package.dataZoom.end = 100;
+                        $scope.option_package.dataZoom.start = 50;
+                    }
                 }
-                $scope.chartFlow.hideLoading().setOption(option_flow, true);
-                $scope.chartPackage.hideLoading().setOption(option_package, true);
+                $scope.chartFlow.hideLoading().setOption($scope.option_flow, true);
+                $scope.chartPackage.hideLoading().setOption($scope.option_package, true);
             });
             flowService.ipChart(params, function (data) {
                 if (data && data.data) {
@@ -160,7 +189,7 @@
         };
 
         // 折线图
-        var option_flow = {
+        $scope.option_flow = {
             animation: false,
             title: {
                 text: '流量（kbpm）'
@@ -168,11 +197,18 @@
             tooltip: {
                 trigger: 'axis',
                 formatter: function (params) {
-                    var date = new Date(params.value[0]).Format("yyyy-MM-dd hh:mm:ss");
-                    return params.seriesName
-                        + params.value[1] + '(' +
-                        date
-                        + ')<br/>'
+                    var str = null;
+                    if (params && params.length) {
+                        str = params[0].name + "<br />";
+                        for (var i = 0; i < params.length; i++) {
+                            var data = params[i];
+                            str += data.seriesName + ":" + data.value + "kbpm<br />";
+                        }
+                    }
+                    else {
+                        str = "暂无信息";
+                    }
+                    return str;
                 }
             },
             legend: {
@@ -198,11 +234,10 @@
             grid: {
                 y2: 80
             },
-            xAxis: [
-                {
-                    type: 'time'
-                }
-            ],
+            xAxis: [{
+                type: 'category',
+                data: []
+            }],
             yAxis: [{
                 type: 'value'
             }],
@@ -230,7 +265,7 @@
             }]
         };
         // 数据包折线图
-        var option_package = {
+        $scope.option_package = {
             animation: false,
             title: {
                 text: '数据包（ppm）'
@@ -238,11 +273,18 @@
             tooltip: {
                 trigger: 'axis',
                 formatter: function (params) {
-                    var date = new Date(params.value[0]).Format("yyyy-MM-dd hh:mm:ss");
-                    return params.seriesName
-                        + params.value[1] + '(' +
-                        date
-                        + ')<br/>'
+                    var str = null;
+                    if (params && params.length) {
+                        str = params[0].name + "<br />";
+                        for (var i = 0; i < params.length; i++) {
+                            var data = params[i];
+                            str += data.seriesName + ":" + data.value + "ppm<br />";
+                        }
+                    }
+                    else {
+                        str = "暂无信息";
+                    }
+                    return str;
                 }
             },
             legend: {
@@ -268,14 +310,11 @@
             grid: {
                 y2: 80
             },
-            xAxis: [
-                {
-                    type: 'time'
-                }
-            ],
+            xAxis: [{
+                type: 'category',
+                data: []
+            }],
             yAxis: [{
-                type: 'value'
-            }, {
                 type: 'value'
             }],
             series: [{
@@ -400,6 +439,20 @@
                 data: []
             }]
         };
+
+        $scope.toggleChartConnect = function () {
+            if ($scope.isConnect) {
+                $scope.chartFlow.disConnect($scope.chartPackage);
+                $scope.chartPackage.disConnect($scope.chartFlow);
+                $scope.isConnect = false;
+            }
+            else {
+                $scope.chartFlow.connect($scope.chartPackage);
+                $scope.chartPackage.connect($scope.chartFlow);
+                $scope.isConnect = true;
+            }
+        };
+        
         $scope.init();
         //离开该页事件
         $scope.$on("$routeChangeStart", function () {

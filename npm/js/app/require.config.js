@@ -1,7 +1,7 @@
 ﻿'use strict';
 require.config({
     baseUrl: 'js/app',
-    urlArgs: "v=65",
+    urlArgs: "v=70",
     paths: {
         config: './app-config',
         css: '../vendor/require/css',

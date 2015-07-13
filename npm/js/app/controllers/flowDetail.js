@@ -179,7 +179,7 @@
         var option_flow = {
             animation: true,
             title: {
-                text: '总流量（' + ($scope.queryType.name == "ip" ? "kbpm" : "kbps") + '）'
+                text: '总流量（kbps）'
             },
             tooltip: {
                 trigger: 'axis',

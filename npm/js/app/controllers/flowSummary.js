@@ -192,7 +192,7 @@
         $scope.option_flow = {
             animation: false,
             title: {
-                text: '流量（kbpm）'
+                text: '流量（kbps）'
             },
             tooltip: {
                 trigger: 'axis',
@@ -202,7 +202,7 @@
                         str = params[0].name + "<br />";
                         for (var i = 0; i < params.length; i++) {
                             var data = params[i];
-                            str += data.seriesName + ":" + data.value + "kbpm<br />";
+                            str += data.seriesName + ":" + data.value + "kbps<br />";
                         }
                     }
                     else {
@@ -268,7 +268,7 @@
         $scope.option_package = {
             animation: false,
             title: {
-                text: '数据包（ppm）'
+                text: '数据包（pps）'
             },
             tooltip: {
                 trigger: 'axis',
@@ -278,7 +278,7 @@
                         str = params[0].name + "<br />";
                         for (var i = 0; i < params.length; i++) {
                             var data = params[i];
-                            str += data.seriesName + ":" + data.value + "ppm<br />";
+                            str += data.seriesName + ":" + data.value + "pps<br />";
                         }
                     }
                     else {

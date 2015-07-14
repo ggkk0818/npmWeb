@@ -16,11 +16,15 @@
         $scope.recordList = null;
         $scope.startDate = null;
         $scope.queryTimer = null;
+        $scope.isToday = false;
         //表单数据
         $scope.startDateInput = $scope.startDate = dateTimeService.serverTime.Format("yyyy-MM-dd");
         $scope.init = function () {
             $scope.setSearchParams();
             $scope.doQuery();
+            if ($scope.startDate == dateTimeService.serverTime.Format("yyyy-MM-dd")) {
+                $scope.isToday = true;
+            }
         };
         //获取查询参数
         $scope.getSearchParams = function () {

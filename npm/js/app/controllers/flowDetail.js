@@ -17,9 +17,20 @@
         $scope.queryTimeStr = null;
         $scope.queryTimer = null;
         $scope.queryDetailName = null;
+        $scope.isToday = false;
         //表单数据
         $scope.startDateInput = null;
         $scope.startTimeInput = null;
+        $scope.init = function () {
+            //获取url查询参数
+            $scope.setSearchParams();
+            $scope.doQuery();
+            //无日期条件每秒查询实时数据
+            if (!$scope.startTime) {
+                $scope.queryTimer = $interval($scope.doQuery, 60000);
+                $scope.isToday = true;
+            }
+        };
         //获取查询参数
         $scope.getSearchParams = function () {
             var params = {};
@@ -228,12 +239,7 @@
             if ($scope.queryTimer)
                 $interval.cancel($scope.queryTimer);
         });
-        //获取url查询参数
-        $scope.setSearchParams();
-        $scope.doQuery();
-        //无日期条件每秒查询实时数据
-        if (!$scope.startTime) {
-            $scope.queryTimer = $interval($scope.doQuery, 60000);
-        }
+
+        $scope.init();
     });
 });

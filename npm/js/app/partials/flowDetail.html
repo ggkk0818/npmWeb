@@ -5,7 +5,7 @@
                 <input type="text" class="form-control datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN" data-min-view="2" placeholder="日期" ng-model="startDateInput" ng-keypress="formKeypressHandler($event)">
                 <input type="text" class="form-control datetime" data-date-format="hh:ii:ss" data-date-language="zh-CN" data-max-view="1" data-start-view="1" placeholder="时间" ng-model="startTimeInput" ng-keypress="formKeypressHandler($event)">
                 <button class="btn btn-info" type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
-                <button class="btn btn-info" type="button" ng-click="reset()" data-toggle="tooltip" data-placement="bottom" title="实时数据"><span class="glyphicon glyphicon-play" aria-hidden="true"></span></button>
+                <button class="btn btn-info" type="button" ng-click="reset()" ng-class="{'disabled': isToday}" data-toggle="tooltip" data-placement="bottom" title="实时数据"><span class="glyphicon glyphicon-play" aria-hidden="true"></span></button>
             </form>
         </div>
         <div class="pull-right" ng-if="false">

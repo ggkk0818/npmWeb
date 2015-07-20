@@ -4,10 +4,10 @@
     module.controller('FlowDetailCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, flowService) {
         //初始化变量
         $scope.QUERY_TYPE = [
-            { name: "ip", displayName: "IP（外网）", conditionName: "ip", fieldName: "ip" },
             { name: "ipIntranet", displayName: "IP（内网）", conditionName: "ip", fieldName: "ip" },
-            { name: "mac", displayName: "MAC", conditionName: "mac", fieldName: "mac" },
-            { name: "protocol", displayName: "协议", conditionName: "protocol", fieldName: "protocol" },
+            { name: "ip", displayName: "IP（外网）", conditionName: "ip", fieldName: "ip" },
+            { name: "mac", displayName: "MAC", conditionName: "mac", fieldName: "mac", tooltipFieldName: "manufacturers" },
+            { name: "protocol", displayName: "协议", conditionName: "protocol", fieldName: "protocol", tooltipFieldName: "desc" },
             { name: "port", displayName: "端口", conditionName: "port", fieldName: "port" }
         ];
         $scope.recordList = 0;
@@ -83,8 +83,12 @@
                 }
                 if ($scope.recordList && $scope.recordList.length) {
                     $scope.recordList[0][$scope.queryType.fieldName] = "总和";
+                    var totalFlow = ($scope.recordList[0].rec_bytes || 0) + ($scope.recordList[0].send_bytes || 0);
                     for (var i = 0; i < $scope.recordList.length; i++) {
                         var record = $scope.recordList[i];
+                        record.flowRatio = (((record.rec_bytes || 0) + (record.send_bytes || 0)) * 100 / totalFlow).toFixed(2);
+                        record.rec_bytes = record.rec_bytes ? record.rec_bytes * 8 / 1024 : 0;
+                        record.send_bytes = record.send_bytes ? record.send_bytes * 8 / 1024 : 0;
                         if (typeof record.time1 === "number")
                             record.time1 = new Date(record.time1).Format("yyyy-MM-dd hh:mm:ss");
                         if (typeof record.time2 === "number")

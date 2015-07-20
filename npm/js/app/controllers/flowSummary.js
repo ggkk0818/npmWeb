@@ -4,6 +4,8 @@
     module.controller('FlowSummaryCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, dateTimeService, flowService) {
         //初始化变量
         $scope.startDate = null;
+        $scope.startTime = null;
+        $scope.endTime = null;
         $scope.queryTimer = null;
         $scope.chartFlow = null;
         $scope.chartIp = null;
@@ -32,7 +34,7 @@
         $scope.getSearchParams = function () {
             var params = {};
             if ($scope.startDate)
-                params.startTime = $scope.startDate;
+                params.startDate = $scope.startDate;
             return params;
         };
         //从url获取查询参数设置变量
@@ -40,10 +42,14 @@
             var params = $location.search();
             if (!params)
                 return;
-            if (params.startTime) {
-                $scope.startDate = params.startTime;
-                $scope.startDateInput = params.startTime;
+            if (params.startDate) {
+                $scope.startDate = params.startDate;
+                $scope.startDateInput = params.startDate;
             }
+            if (params.startTime)
+                $scope.startTime = params.startTime;
+            if (params.endTime)
+                $scope.endTime = params.endTime;
         };
         //显示信息
         $scope.show = function () {
@@ -82,9 +88,9 @@
                             internetFlowData.push((internet_bytes * 8 / 1024).toFixed(1));
                             intranetFlowData.push((intranet_bytes * 8 / 1024).toFixed(1));
                             totalFlowData.push(((internet_bytes + intranet_bytes) * 8 / 1024).toFixed(1));
-                            internetPackageData.push(internet_package);
-                            intranetPackageData.push(intranet_package);
-                            totalPackageData.push(internet_package + intranet_package);
+                            internetPackageData.push(internet_package.toFixed(1));
+                            intranetPackageData.push(intranet_package.toFixed(1));
+                            totalPackageData.push((internet_package + intranet_package).toFixed(1));
                         }
                     }
                     //else if (!$scope.option_flow.series[0].data.length && !$scope.option_package.series[0].data.length) {
@@ -98,7 +104,31 @@
                     $scope.option_package.series[0].data = totalPackageData;
                     $scope.option_package.series[1].data = intranetPackageData;
                     $scope.option_package.series[2].data = internetPackageData;
-                    if (!$scope.startDate || $scope.startDate == dateTimeService.serverTime.Format("yyyy-MM-dd")) {
+                    if ($scope.startTime || $scope.endTime) {
+                        var startPoint = null,
+                            endPoint = null;
+                        if ($scope.startTime) {
+                            var time = new Date($scope.startDate + " " + $scope.startTime);
+                            if (!isNaN(time)) {
+                                startPoint = (time.getHours() * 60 + time.getMinutes()) * 100 / (24 * 60);
+                            }
+                        }
+                        if ($scope.endTime) {
+                            var time = new Date($scope.startDate + " " + $scope.endTime);
+                            if (!isNaN(time)) {
+                                endPoint = (time.getHours() * 60 + time.getMinutes()) * 100 / (24 * 60);
+                            }
+                        }
+                        if (!startPoint)
+                            startPoint = endPoint >= 50 ? endPoint - 50 : 0;
+                        else if (!endPoint)
+                            endPoint = startPoint <= 50 ? startPoint + 50 : 100;
+                        $scope.option_flow.dataZoom.end = endPoint;
+                        $scope.option_flow.dataZoom.start = startPoint;
+                        $scope.option_package.dataZoom.end = endPoint;
+                        $scope.option_package.dataZoom.start = startPoint;
+                    }
+                    else if (!$scope.startDate || $scope.startDate == dateTimeService.serverTime.Format("yyyy-MM-dd")) {
                         var endPoint = Math.round((dateTimeService.serverTime.getHours() * 60 + dateTimeService.serverTime.getMinutes()) * 100 / (24 * 60));
                         if (endPoint < 50) {
                             endPoint = 50;

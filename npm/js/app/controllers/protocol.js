@@ -135,7 +135,6 @@
             $scope.queryFieldList = {};
             $scope.groupFieldList = {};
             $scope.groupFieldCount = 0;
-            $scope.displayFieldList = {};
         };
         //普通查询
         $scope.doQuery = function (pageNum) {

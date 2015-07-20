@@ -16,7 +16,7 @@
 <div class="row" style="margin-top:20px;">
     <div class="col-xs-12">
         <ul class="nav nav-tabs" role="tablist">
-            <li class="active" role="presentation"><a href="javascript:void(0);" role="tab">波形异常</a></li>
+            <li class="active" role="presentation"><a href="javascript:void(0);" role="tab">趋势异常</a></li>
         </ul>
         <div style="margin-top:20px;" ng-show="recordList" ng-if="false">
             <table class="table warn-center-table">
@@ -34,7 +34,7 @@
                         <td>{{record.end_time}}</td>
                         <td>{{CURVE_TYPE[record.type] ? CURVE_TYPE[record.type].name : "未知(" + record.type + ")"}}</td>
                         <td>
-                            <a href="javascript:void(0);" ng-click="showImageModal(record)" title="点击放大">
+                            <a href="javascript:void(0);" ng-click="showFlowSummary(record)" title="在总览中查看">
                                 <img src="data:image/png;base64,{{record.imageCode}}" ng-if="record.imageCode" />
                             </a>
                             <div ng-if="!record.imageCode">
@@ -60,7 +60,7 @@
                 <h4><span class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="结束时间"></span>{{record.end_time}}</h4>
             </div>
             <div class="col-xs-9">
-                <a class="warn-image" href="javascript:void(0);" ng-click="showImageModal(record)" title="点击放大" ng-if="record.imageCode">
+                <a class="warn-image" href="javascript:void(0);" ng-click="showFlowSummary(record)" title="在总览中查看" ng-if="record.imageCode">
                     <img src="data:image/png;base64,{{record.imageCode}}" />
                 </a>
                 <div class="no-image" ng-if="!record.imageCode">

@@ -111,6 +111,19 @@
                 $("#warn_center_image_modal").modal("show");
             }
         };
+        //跳转到总览
+        $scope.showFlowSummary = function (record) {
+            if (record && record.start_time && record.end_time) {
+                var startDate = record.start_time.split(" ")[0],
+                    startTime = record.start_time.split(" ")[1],
+                    endTime = record.end_time.split(" ")[1];
+                $location.path("/flow/summary").search({
+                    startDate: startDate,
+                    startTime: startTime,
+                    endTime: endTime
+                });
+            }
+        };
 
         $scope.init();
         //离开该页事件

@@ -4,10 +4,10 @@
     module.controller('FlowHistoryCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, dateTimeService, flowService) {
         //初始化变量
         $scope.QUERY_TYPE = [
-            { name: "followIntranet", displayName: "关注（内网）", detailFuncName: "followDetail" },
-            { name: "follow", displayName: "关注（外网）", detailFuncName: "followDetail" },
-            { name: "unfollowIntranet", displayName: "其他（内网）", detailFuncName: "unfollowDetail" },
-            { name: "unfollow", displayName: "其他（外网）", detailFuncName: "unfollowDetail" }
+            { name: "followIntranet", displayName: "关注（内网）", detailFuncName: "followDetail", queryDoneFuncName: "doQueryDone" },
+            { name: "follow", displayName: "关注（外网）", detailFuncName: "followDetail", queryDoneFuncName: "doQueryDoneInternet" },
+            { name: "unfollowIntranet", displayName: "其他（内网）", detailFuncName: "unfollowDetail", queryDoneFuncName: "doQueryDone" },
+            { name: "unfollow", displayName: "其他（外网）", detailFuncName: "unfollowDetail", queryDoneFuncName: "doQueryDone" }
         ];
         $scope.queryType = $scope.QUERY_TYPE[0];
         $scope.pageNum = 1;
@@ -105,7 +105,7 @@
             if ($scope.keyword) {
                 params.ip = $scope.keyword;
             }
-            flowService[$scope.queryType.name].call(this, params, $scope.doQueryDone);
+            flowService[$scope.queryType.name].call(this, params, $scope[$scope.queryType.queryDoneFuncName]);
         };
         $scope.doQueryDone = function (data) {
             $scope.success = data && data.status == 200 ? true : false;
@@ -118,6 +118,26 @@
                     var record = { ip: ip, ipStatisticses: $scope.recordList[ip] };
                     if (record.ipStatisticses && record.ipStatisticses.length)
                         record.alias = record.ipStatisticses[0].alias;
+                    recordList.push(record);
+                }
+                $scope.recordList = recordList;
+                $scope.doDetailQuery();
+                $scope.doSystemQuery();
+            }
+        };
+        $scope.doQueryDoneInternet = function (data) {
+            $scope.success = data && data.status == 200 ? true : false;
+            $scope.recordList = data && data.data ? data.data : [];
+            $scope.recordSize = data && data.count ? data.count : 0;
+            $scope.pageTotal = Math.floor($scope.recordSize / $scope.pageSize) + ($scope.recordSize % $scope.pageSize > 0 ? 1 : 0);
+            if ($scope.recordList) {
+                var recordList = [];
+                for (var ip in $scope.recordList) {
+                    var record = $scope.recordList[ip];
+                    record.ip = ip;
+                    if (record.ipStatisticses && record.ipStatisticses.length) {
+                        record.alias = record.ipStatisticses[0].alias;
+                    }
                     recordList.push(record);
                 }
                 $scope.recordList = recordList;

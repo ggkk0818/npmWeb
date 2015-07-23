@@ -16,7 +16,7 @@
         $scope.startDateInput = $scope.startDate = dateTimeService.serverTime.Format("yyyy-MM-dd");
         $scope.init = function () {
             $timeout(function () {
-                $scope.chartFlow = echarts.init($("#flowChart").get(0), "blue").showLoading({ effect: "dynamicLine" });
+                $scope.chartFlow = echarts.init($("#flowChart").get(0), "blue").showLoading({ effect: "dynamicLine" }).on(echarts.config.EVENT.DATA_ZOOM, onChartZoom);
                 $scope.chartPackage = echarts.init($("#packageChart").get(0), "blue").showLoading({ effect: "dynamicLine" });
                 $scope.chartIp = echarts.init($("#ipChart").get(0), "blue").showLoading({ effect: "dynamicLine" });
                 $scope.chartProtocol = echarts.init($("#protocolChart").get(0), "blue").showLoading({ effect: "dynamicLine" });
@@ -148,6 +148,9 @@
                 $scope.chartFlow.hideLoading().setOption($scope.option_flow, true);
                 $scope.chartPackage.hideLoading().setOption($scope.option_package, true);
             });
+        };
+
+        $scope.doQueryTop10 = function (params) {
             flowService.ipChart(params, function (data) {
                 if (data && data.data) {
                     var axisData = [],
@@ -484,6 +487,21 @@
                 $scope.chartFlow.connect($scope.chartPackage);
                 $scope.chartPackage.connect($scope.chartFlow);
                 $scope.isConnect = true;
+            }
+        };
+
+        //图表缩放
+        var onChartZoom = function (e) {
+            var zoom = e.zoom;
+            if ($scope.option_flow.series[0].data.length) {
+                var start = Math.round(zoom.start / 100 * $scope.option_flow.series[0].data.length),
+                    end = Math.floor(zoom.end / 100 * $scope.option_flow.series[0].data.length),
+                    startTime = $scope.startDate + " " +  $scope.option_flow.xAxis[0].data[start],
+                    endTime = $scope.startDate + " " + $scope.option_flow.xAxis[0].data[end];
+                $scope.doQueryTop10({
+                    startTime: startTime,
+                    endTime: endTime
+                });
             }
         };
         

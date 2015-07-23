@@ -10,6 +10,7 @@
             { name: "port", displayName: "端口" }
         ];
         $scope.queryType = $scope.QUERY_TYPE[0];
+        $scope.isLoading = false;
         //表单数据
         $scope.startDateInput = null;
         $scope.startTimeInput = null;
@@ -132,13 +133,18 @@
                 params.dstMac = $scope.destMacInput;
             if ($scope.queryTypeInput)
                 params.searchType = $scope.queryTypeInput;
+            $scope.isLoading = true;
             flowService.pcapSearch(params, function (data) {
                 if (data && data.fileName) {
                     $scope.fileName = data.fileName;
                 }
+                else if (data && data.status == 500) {
+                    $scope.msg = "查询失败";
+                }
                 else {
                     $scope.msg = "暂无结果";
                 }
+                $scope.isLoading = false;
             });
         };
 

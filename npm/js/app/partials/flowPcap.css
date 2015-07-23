@@ -1,3 +1,12 @@
 ﻿.flowPcapCondition .form-inline > * {
     margin-top:5px;
 }
+.flow-pcap-loading{
+    -webkit-animation:hourglass-loading infinite;
+    -moz-animation:hourglass-loading infinite;
+    animation:hourglass-loading infinite;
+    -webkit-animation-duration:2s;
+    -moz-animation-duration:2s;
+    animation-duration:2s;
+    margin-right:5px;
+}

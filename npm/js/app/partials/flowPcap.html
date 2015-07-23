@@ -41,6 +41,9 @@
             <a href="javascript:void(0);" ng-click="doDownload()">{{fileName}}</a>
         </div>
         <div ng-show="msg">{{msg}}</div>
+        <div ng-show="isLoading" style="margin-top: 20px; text-align: center;">
+            <span class="glyphicon glyphicon-hourglass flow-pcap-loading" aria-hidden="true"></span>正在加载...
+        </div>
     </div>
 </div>
 

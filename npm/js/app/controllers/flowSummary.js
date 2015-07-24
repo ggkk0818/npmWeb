@@ -11,15 +11,28 @@
         $scope.chartIp = null;
         $scope.chartProtocol = null;
         $scope.isConnect = true;
+        $scope.defaultChartZoomSize = 12.5;
         $scope.isToday = false;
+        $scope.startTimeTop10 = null;
+        $scope.endTimeTop10 = null;
+        $scope.startTimeTop10Temp = null;
+        $scope.endTimeTop10Temp = null;
         //表单数据
         $scope.startDateInput = $scope.startDate = dateTimeService.serverTime.Format("yyyy-MM-dd");
         $scope.init = function () {
             $timeout(function () {
-                $scope.chartFlow = echarts.init($("#flowChart").get(0), "blue").showLoading({ effect: "dynamicLine" }).on(echarts.config.EVENT.DATA_ZOOM, onChartZoom);
-                $scope.chartPackage = echarts.init($("#packageChart").get(0), "blue").showLoading({ effect: "dynamicLine" });
-                $scope.chartIp = echarts.init($("#ipChart").get(0), "blue").showLoading({ effect: "dynamicLine" });
-                $scope.chartProtocol = echarts.init($("#protocolChart").get(0), "blue").showLoading({ effect: "dynamicLine" });
+                $scope.chartFlow = echarts.init($("#flowChart").get(0), "blue").showLoading({ effect: "ring" }).on(echarts.config.EVENT.DATA_ZOOM, onChartZoom);
+                $scope.chartPackage = echarts.init($("#packageChart").get(0), "blue").showLoading({ effect: "ring" }).on(echarts.config.EVENT.DATA_ZOOM, onChartZoom);
+                $scope.chartIpFlow = echarts.init($("#ipChartFlow").get(0), "blue").showLoading({ effect: "ring" });
+                $scope.chartIpPackage = echarts.init($("#ipChartPackage").get(0), "blue").showLoading({ effect: "ring" });
+                $scope.chartIpIntranetFlow = echarts.init($("#ipIntranetChartFlow").get(0), "blue").showLoading({ effect: "ring" });
+                $scope.chartIpIntranetPackage = echarts.init($("#ipIntranetChartPackage").get(0), "blue").showLoading({ effect: "ring" });
+                $scope.chartProtocolFlow = echarts.init($("#protocolChartFlow").get(0), "blue").showLoading({ effect: "ring" });
+                $scope.chartProtocolPackage = echarts.init($("#protocolChartPackage").get(0), "blue").showLoading({ effect: "ring" });
+                $scope.chartPortFlow = echarts.init($("#portChartFlow").get(0), "blue").showLoading({ effect: "ring" });
+                $scope.chartPortPackage = echarts.init($("#portChartPackage").get(0), "blue").showLoading({ effect: "ring" });
+                $scope.chartMacFlow = echarts.init($("#macChartFlow").get(0), "blue").showLoading({ effect: "ring" });
+                $scope.chartMacPackage = echarts.init($("#macChartPackage").get(0), "blue").showLoading({ effect: "ring" });
                 $scope.chartFlow.connect($scope.chartPackage);
                 $scope.chartPackage.connect($scope.chartFlow);
             });
@@ -120,9 +133,9 @@
                             }
                         }
                         if (!startPoint)
-                            startPoint = endPoint >= 50 ? endPoint - 50 : 0;
+                            startPoint = endPoint >= $scope.defaultChartZoomSize ? endPoint - $scope.defaultChartZoomSize : 0;
                         else if (!endPoint)
-                            endPoint = startPoint <= 50 ? startPoint + 50 : 100;
+                            endPoint = startPoint + $scope.defaultChartZoomSize <= 100 ? startPoint + $scope.defaultChartZoomSize : 100;
                         $scope.option_flow.dataZoom.end = endPoint;
                         $scope.option_flow.dataZoom.start = startPoint;
                         $scope.option_package.dataZoom.end = endPoint;
@@ -130,72 +143,234 @@
                     }
                     else if (!$scope.startDate || $scope.startDate == dateTimeService.serverTime.Format("yyyy-MM-dd")) {
                         var endPoint = Math.round((dateTimeService.serverTime.getHours() * 60 + dateTimeService.serverTime.getMinutes()) * 100 / (24 * 60));
-                        if (endPoint < 50) {
-                            endPoint = 50;
+                        if (endPoint < $scope.defaultChartZoomSize) {
+                            endPoint = $scope.defaultChartZoomSize;
                         }
                         $scope.option_flow.dataZoom.end = endPoint;
-                        $scope.option_flow.dataZoom.start = endPoint - 50;
+                        $scope.option_flow.dataZoom.start = endPoint - $scope.defaultChartZoomSize;
                         $scope.option_package.dataZoom.end = endPoint;
-                        $scope.option_package.dataZoom.start = endPoint - 50;
+                        $scope.option_package.dataZoom.start = endPoint - $scope.defaultChartZoomSize;
                     }
                     else {
                         $scope.option_flow.dataZoom.end = 100;
-                        $scope.option_flow.dataZoom.start = 50;
+                        $scope.option_flow.dataZoom.start = 100 - $scope.defaultChartZoomSize;
                         $scope.option_package.dataZoom.end = 100;
-                        $scope.option_package.dataZoom.start = 50;
+                        $scope.option_package.dataZoom.start = 100 - $scope.defaultChartZoomSize;
                     }
                 }
                 $scope.chartFlow.hideLoading().setOption($scope.option_flow, true);
                 $scope.chartPackage.hideLoading().setOption($scope.option_package, true);
+                $timeout(function () {
+                    onMouseUp();
+                });
             });
         };
 
         $scope.doQueryTop10 = function (params) {
+            $scope.chartIpFlow.showLoading({ effect: "ring" });
+            $scope.chartIpPackage.showLoading({ effect: "ring" });
+            $scope.chartIpIntranetFlow.showLoading({ effect: "ring" });
+            $scope.chartIpIntranetPackage.showLoading({ effect: "ring" });
+            $scope.chartProtocolFlow.showLoading({ effect: "ring" });
+            $scope.chartProtocolPackage.showLoading({ effect: "ring" });
+            $scope.chartPortFlow.showLoading({ effect: "ring" });
+            $scope.chartPortPackage.showLoading({ effect: "ring" });
+            $scope.chartMacFlow.showLoading({ effect: "ring" });
+            $scope.chartMacPackage.showLoading({ effect: "ring" });
+            //查询外网TOP10
             flowService.ipChart(params, function (data) {
-                if (data && data.data) {
+                if (data && data.data && data.data.length > 0) {
                     var axisData = [],
                         chartData1 = [],
                         chartData2 = [];
-                    if (data.data.length) {
-                        data.data = data.data.reverse();
-                        for (var i = 0; i < data.data.length; i++) {
-                            var d = data.data[i];
+                    if (data.data[0].length) {
+                        data.data[0] = data.data[0].reverse();
+                        for (var i = 0; i < data.data[0].length; i++) {
+                            var d = data.data[0][i];
                             axisData.push(d.srcip);
                             chartData1.push({ name: d.srcip, value: d.sendFlow ? (d.sendFlow * 8 / 1024).toFixed(1) : 0 });
                             chartData2.push({ name: d.srcip, value: d.recFlow ? (d.recFlow * 8 / 1024).toFixed(1) : 0 });
                         }
                     }
-                    else if (!option_ip.series[0].data.length) {
-                        return;
-                    }
-                    option_ip.yAxis[0].data = axisData;
-                    option_ip.series[0].data = chartData1;
-                    option_ip.series[1].data = chartData2;
+                    option_ip_flow.yAxis[0].data = axisData;
+                    option_ip_flow.series[0].data = chartData1;
+                    option_ip_flow.series[1].data = chartData2;
                 }
-                $scope.chartIp.hideLoading().setOption(option_ip, true);
-            });
-            flowService.protocolChart(params, function (data) {
-                if (data && data.data) {
+                $scope.chartIpFlow.hideLoading().setOption(option_ip_flow, true);
+                if (data && data.data && data.data.length > 1) {
                     var axisData = [],
                         chartData1 = [],
                         chartData2 = [];
-                    if (data.data.length) {
-                        data.data = data.data.reverse();
-                        for (var i = 0; i < data.data.length; i++) {
-                            var d = data.data[i];
+                    if (data.data[1].length) {
+                        data.data[1] = data.data[1].reverse();
+                        for (var i = 0; i < data.data[1].length; i++) {
+                            var d = data.data[1][i];
+                            axisData.push(d.srcip);
+                            chartData1.push({ name: d.srcip, value: d.sendPackage ? d.sendPackage.toFixed(1) : 0 });
+                            chartData2.push({ name: d.srcip, value: d.recPackage ? d.recPackage.toFixed(1) : 0 });
+                        }
+                    }
+                    option_ip_package.yAxis[0].data = axisData;
+                    option_ip_package.series[0].data = chartData1;
+                    option_ip_package.series[1].data = chartData2;
+                }
+                $scope.chartIpPackage.hideLoading().setOption(option_ip_package, true);
+            });
+            //查询内网TOP10
+            flowService.ipIntranetChart(params, function (data) {
+                if (data && data.data && data.data.length > 0) {
+                    var axisData = [],
+                        chartData1 = [],
+                        chartData2 = [];
+                    if (data.data[0].length) {
+                        data.data[0] = data.data[0].reverse();
+                        for (var i = 0; i < data.data[0].length; i++) {
+                            var d = data.data[0][i];
+                            axisData.push(d.srcip);
+                            chartData1.push({ name: d.srcip, value: d.sendFlow ? (d.sendFlow * 8 / 1024).toFixed(1) : 0 });
+                            chartData2.push({ name: d.srcip, value: d.recFlow ? (d.recFlow * 8 / 1024).toFixed(1) : 0 });
+                        }
+                    }
+                    option_ipIntranet_flow.yAxis[0].data = axisData;
+                    option_ipIntranet_flow.series[0].data = chartData1;
+                    option_ipIntranet_flow.series[1].data = chartData2;
+                }
+                $scope.chartIpIntranetFlow.hideLoading().setOption(option_ipIntranet_flow, true);
+                if (data && data.data && data.data.length > 1) {
+                    var axisData = [],
+                        chartData1 = [],
+                        chartData2 = [];
+                    if (data.data[1].length) {
+                        data.data[1] = data.data[1].reverse();
+                        for (var i = 0; i < data.data[1].length; i++) {
+                            var d = data.data[1][i];
+                            axisData.push(d.srcip);
+                            chartData1.push({ name: d.srcip, value: d.sendPackage ? d.sendPackage.toFixed(1) : 0 });
+                            chartData2.push({ name: d.srcip, value: d.recPackage ? d.recPackage.toFixed(1) : 0 });
+                        }
+                    }
+                    option_ipIntranet_package.yAxis[0].data = axisData;
+                    option_ipIntranet_package.series[0].data = chartData1;
+                    option_ipIntranet_package.series[1].data = chartData2;
+                }
+                $scope.chartIpIntranetPackage.hideLoading().setOption(option_ipIntranet_package, true);
+            });
+            //查询协议TOP10
+            flowService.protocolChart(params, function (data) {
+                if (data && data.data && data.data.length > 0) {
+                    var axisData = [],
+                        chartData1 = [],
+                        chartData2 = [];
+                    if (data.data[0].length) {
+                        data.data[0] = data.data[0].reverse();
+                        for (var i = 0; i < data.data[0].length; i++) {
+                            var d = data.data[0][i];
                             axisData.push(d.protocol);
                             chartData1.push({ name: d.protocol, value: d.sendFlow ? (d.sendFlow * 8 / 1024).toFixed(1) : 0 });
                             chartData2.push({ name: d.protocol, value: d.recFlow ? (d.recFlow * 8 / 1024).toFixed(1) : 0 });
                         }
                     }
-                    else if (!option_protocol.series[0].data.length) {
-                        return;
-                    }
-                    option_protocol.yAxis[0].data = axisData;
-                    option_protocol.series[0].data = chartData1;
-                    option_protocol.series[1].data = chartData2;
+                    option_protocol_flow.yAxis[0].data = axisData;
+                    option_protocol_flow.series[0].data = chartData1;
+                    option_protocol_flow.series[1].data = chartData2;
                 }
-                $scope.chartProtocol.hideLoading().setOption(option_protocol, true);
+                $scope.chartProtocolFlow.hideLoading().setOption(option_protocol_flow, true);
+                if (data && data.data && data.data.length > 1) {
+                    var axisData = [],
+                        chartData1 = [],
+                        chartData2 = [];
+                    if (data.data[1].length) {
+                        data.data[1] = data.data[1].reverse();
+                        for (var i = 0; i < data.data[1].length; i++) {
+                            var d = data.data[1][i];
+                            axisData.push(d.protocol);
+                            chartData1.push({ name: d.protocol, value: d.sendPackage ? d.sendPackage.toFixed(1) : 0 });
+                            chartData2.push({ name: d.protocol, value: d.recPackage ? d.recPackage.toFixed(1) : 0 });
+                        }
+                    }
+                    option_protocol_package.yAxis[0].data = axisData;
+                    option_protocol_package.series[0].data = chartData1;
+                    option_protocol_package.series[1].data = chartData2;
+                }
+                $scope.chartProtocolPackage.hideLoading().setOption(option_protocol_package, true);
+            });
+            //查询端口TOP10
+            flowService.portChart(params, function (data) {
+                if (data && data.data && data.data.length > 0) {
+                    var axisData = [],
+                        chartData1 = [],
+                        chartData2 = [];
+                    if (data.data[0].length) {
+                        data.data[0] = data.data[0].reverse();
+                        for (var i = 0; i < data.data[0].length; i++) {
+                            var d = data.data[0][i];
+                            axisData.push(d.port);
+                            chartData1.push({ name: d.port, value: d.sendFlow ? (d.sendFlow * 8 / 1024).toFixed(1) : 0 });
+                            chartData2.push({ name: d.port, value: d.recFlow ? (d.recFlow * 8 / 1024).toFixed(1) : 0 });
+                        }
+                    }
+                    option_port_flow.yAxis[0].data = axisData;
+                    option_port_flow.series[0].data = chartData1;
+                    option_port_flow.series[1].data = chartData2;
+                }
+                $scope.chartPortFlow.hideLoading().setOption(option_port_flow, true);
+                if (data && data.data && data.data.length > 1) {
+                    var axisData = [],
+                        chartData1 = [],
+                        chartData2 = [];
+                    if (data.data[1].length) {
+                        data.data[1] = data.data[1].reverse();
+                        for (var i = 0; i < data.data[1].length; i++) {
+                            var d = data.data[1][i];
+                            axisData.push(d.port);
+                            chartData1.push({ name: d.port, value: d.sendPackage ? d.sendPackage.toFixed(1) : 0 });
+                            chartData2.push({ name: d.port, value: d.recPackage ? d.recPackage.toFixed(1) : 0 });
+                        }
+                    }
+                    option_port_package.yAxis[0].data = axisData;
+                    option_port_package.series[0].data = chartData1;
+                    option_port_package.series[1].data = chartData2;
+                }
+                $scope.chartPortPackage.hideLoading().setOption(option_port_package, true);
+            });
+            //查询MAC TOP10
+            flowService.macChart(params, function (data) {
+                if (data && data.data && data.data.length > 0) {
+                    var axisData = [],
+                        chartData1 = [],
+                        chartData2 = [];
+                    if (data.data[0].length) {
+                        data.data[0] = data.data[0].reverse();
+                        for (var i = 0; i < data.data[0].length; i++) {
+                            var d = data.data[0][i];
+                            axisData.push(d.mac);
+                            chartData1.push({ name: d.mac, value: d.sendFlow ? (d.sendFlow * 8 / 1024).toFixed(1) : 0 });
+                            chartData2.push({ name: d.mac, value: d.recFlow ? (d.recFlow * 8 / 1024).toFixed(1) : 0 });
+                        }
+                    }
+                    option_mac_flow.yAxis[0].data = axisData;
+                    option_mac_flow.series[0].data = chartData1;
+                    option_mac_flow.series[1].data = chartData2;
+                }
+                $scope.chartMacFlow.hideLoading().setOption(option_mac_flow, true);
+                if (data && data.data && data.data.length > 1) {
+                    var axisData = [],
+                        chartData1 = [],
+                        chartData2 = [];
+                    if (data.data[1].length) {
+                        data.data[1] = data.data[1].reverse();
+                        for (var i = 0; i < data.data[1].length; i++) {
+                            var d = data.data[1][i];
+                            axisData.push(d.mac);
+                            chartData1.push({ name: d.mac, value: d.sendPackage ? d.sendPackage.toFixed(1) : 0 });
+                            chartData2.push({ name: d.mac, value: d.recPackage ? d.recPackage.toFixed(1) : 0 });
+                        }
+                    }
+                    option_mac_package.yAxis[0].data = axisData;
+                    option_mac_package.series[0].data = chartData1;
+                    option_mac_package.series[1].data = chartData2;
+                }
+                $scope.chartMacPackage.hideLoading().setOption(option_mac_package, true);
             });
         };
         //搜索
@@ -377,17 +552,17 @@
                 data: []
             }]
         };
-        //IP TOP10
-        var option_ip = {
+        //外网 TOP10
+        var option_ip_flow = {
             animation: false,
             title: {
-                text: 'IP top 10',
-                subtext: '近10分钟流量之和（kb）'
+                text: '外网 top 10',
+                subtext: '流量（kb）'
             },
             tooltip: {
                 trigger: 'axis'
             },
-            grid: {x:120},
+            grid: { x: 120 },
             legend: {
                 data: ['发送', '接收']
             },
@@ -427,12 +602,402 @@
                 data: []
             }]
         };
-        //IP TOP10
-        var option_protocol = {
+        var option_ip_package = {
+            animation: false,
+            title: {
+                text: '外网 top 10',
+                subtext: '数据包'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            grid: { x: 120 },
+            legend: {
+                data: ['发送', '接收']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: false },
+                    dataView: { show: false, readOnly: false },
+                    magicType: { show: false, type: ['line', 'bar'] },
+                    restore: { show: false },
+                    saveAsImage: { show: true }
+                }
+            },
+            calculable: true,
+            xAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'category',
+                    data: []
+                }
+            ],
+            series: [{
+                name: '发送',
+                type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                data: []
+            }, {
+                name: '接收',
+                type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                data: []
+            }]
+        };
+        //内网 TOP10
+        var option_ipIntranet_flow = {
+            animation: false,
+            title: {
+                text: '内网 top 10',
+                subtext: '流量（kb）'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            grid: { x: 120 },
+            legend: {
+                data: ['发送', '接收']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: false },
+                    dataView: { show: false, readOnly: false },
+                    magicType: { show: false, type: ['line', 'bar'] },
+                    restore: { show: false },
+                    saveAsImage: { show: true }
+                }
+            },
+            calculable: true,
+            xAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'category',
+                    data: []
+                }
+            ],
+            series: [{
+                name: '发送',
+                type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                data: []
+            }, {
+                name: '接收',
+                type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                data: []
+            }]
+        };
+        var option_ipIntranet_package = {
+            animation: false,
+            title: {
+                text: '内网 top 10',
+                subtext: '数据包'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            grid: { x: 120 },
+            legend: {
+                data: ['发送', '接收']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: false },
+                    dataView: { show: false, readOnly: false },
+                    magicType: { show: false, type: ['line', 'bar'] },
+                    restore: { show: false },
+                    saveAsImage: { show: true }
+                }
+            },
+            calculable: true,
+            xAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'category',
+                    data: []
+                }
+            ],
+            series: [{
+                name: '发送',
+                type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                data: []
+            }, {
+                name: '接收',
+                type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                data: []
+            }]
+        };
+        //协议 TOP10
+        var option_protocol_flow = {
             animation: false,
             title: {
                 text: '协议 top 10',
-                subtext: '近10分钟流量之和（kb）'
+                subtext: '流量（kb）'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['发送', '接收']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: false },
+                    dataView: { show: false, readOnly: false },
+                    magicType: { show: false, type: ['line', 'bar'] },
+                    restore: { show: false },
+                    saveAsImage: { show: true }
+                }
+            },
+            calculable: true,
+            xAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'category',
+                    data: []
+                }
+            ],
+            series: [{
+                name: '发送',
+                type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                data: []
+            }, {
+                name: '接收',
+                type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                data: []
+            }]
+        };
+        var option_protocol_package = {
+            animation: false,
+            title: {
+                text: '协议 top 10',
+                subtext: '数据包'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['发送', '接收']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: false },
+                    dataView: { show: false, readOnly: false },
+                    magicType: { show: false, type: ['line', 'bar'] },
+                    restore: { show: false },
+                    saveAsImage: { show: true }
+                }
+            },
+            calculable: true,
+            xAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'category',
+                    data: []
+                }
+            ],
+            series: [{
+                name: '发送',
+                type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                data: []
+            }, {
+                name: '接收',
+                type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                data: []
+            }]
+        };
+        //端口 TOP10
+        var option_port_flow = {
+            animation: false,
+            title: {
+                text: '端口 top 10',
+                subtext: '流量（kb）'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['发送', '接收']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: false },
+                    dataView: { show: false, readOnly: false },
+                    magicType: { show: false, type: ['line', 'bar'] },
+                    restore: { show: false },
+                    saveAsImage: { show: true }
+                }
+            },
+            calculable: true,
+            xAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'category',
+                    data: []
+                }
+            ],
+            series: [{
+                name: '发送',
+                type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                data: []
+            }, {
+                name: '接收',
+                type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                data: []
+            }]
+        };
+        var option_port_package = {
+            animation: false,
+            title: {
+                text: '端口 top 10',
+                subtext: '数据包'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['发送', '接收']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: false },
+                    dataView: { show: false, readOnly: false },
+                    magicType: { show: false, type: ['line', 'bar'] },
+                    restore: { show: false },
+                    saveAsImage: { show: true }
+                }
+            },
+            calculable: true,
+            xAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'category',
+                    data: []
+                }
+            ],
+            series: [{
+                name: '发送',
+                type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                data: []
+            }, {
+                name: '接收',
+                type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                data: []
+            }]
+        };
+        //MAC TOP10
+        var option_mac_flow = {
+            animation: false,
+            title: {
+                text: 'MAC top 10',
+                subtext: '流量（kb）'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['发送', '接收']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: false },
+                    dataView: { show: false, readOnly: false },
+                    magicType: { show: false, type: ['line', 'bar'] },
+                    restore: { show: false },
+                    saveAsImage: { show: true }
+                }
+            },
+            calculable: true,
+            xAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'category',
+                    data: []
+                }
+            ],
+            series: [{
+                name: '发送',
+                type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                data: []
+            }, {
+                name: '接收',
+                type: 'bar',
+                stack: '总量',
+                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                data: []
+            }]
+        };
+        var option_mac_package = {
+            animation: false,
+            title: {
+                text: 'MAC top 10',
+                subtext: '数据包'
             },
             tooltip: {
                 trigger: 'axis'
@@ -498,14 +1063,29 @@
                     end = Math.floor(zoom.end / 100 * $scope.option_flow.series[0].data.length),
                     startTime = $scope.startDate + " " +  $scope.option_flow.xAxis[0].data[start],
                     endTime = $scope.startDate + " " + $scope.option_flow.xAxis[0].data[end];
-                $scope.doQueryTop10({
-                    startTime: startTime,
-                    endTime: endTime
-                });
+                $scope.startTimeTop10Temp = startTime;
+                $scope.endTimeTop10Temp = endTime;
             }
+        };
+        var onMouseUp = function () {
+            $scope.$apply(function () {
+                if (($scope.startTimeTop10Temp && $scope.startTimeTop10Temp != $scope.startTimeTop10)
+                    || ($scope.endTimeTop10Temp && $scope.endTimeTop10Temp != $scope.endTimeTop10)) {
+                    $scope.startTimeTop10 = $scope.startTimeTop10Temp;
+                    $scope.endTimeTop10 = $scope.endTimeTop10Temp;
+                    $scope.startTimeTop10Temp = null;
+                    $scope.endTimeTop10Temp = null;
+                    $scope.doQueryTop10({
+                        startTime: $scope.startTimeTop10,
+                        endTime: $scope.endTimeTop10
+                    });
+                }
+            });
         };
         
         $scope.init();
+        //鼠标按键事件
+        $("#flowChart, #packageChart").on("mouseup", onMouseUp);
         //离开该页事件
         $scope.$on("$routeChangeStart", function () {
             if ($scope.queryTimer)

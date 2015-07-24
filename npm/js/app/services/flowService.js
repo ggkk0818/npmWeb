@@ -162,10 +162,52 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
+        this.ipIntranetChart = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'statistics/ip/intranet',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
         this.protocolChart = function (params, callback) {
             $http({
                 method: 'GET',
                 url: 'statistics/protocol',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        this.portChart = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'statistics/port',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        this.macChart = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'statistics/mac',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {

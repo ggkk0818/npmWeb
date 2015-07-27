@@ -408,6 +408,7 @@
             },
             tooltip: {
                 trigger: 'axis',
+                showDelay: 0,
                 formatter: function (params) {
                     var str = null;
                     if (params && params.length) {
@@ -437,14 +438,15 @@
             },
             calculable: true,
             dataZoom: {
-                show: true,
+                show: false,
                 y: 360,
                 realtime: true,
                 start: 50,
                 end: 100
             },
             grid: {
-                y2: 80
+                x2: 20,
+                y2: 10
             },
             xAxis: [{
                 type: 'category',
@@ -484,6 +486,7 @@
             },
             tooltip: {
                 trigger: 'axis',
+                showDelay: 0,
                 formatter: function (params) {
                     var str = null;
                     if (params && params.length) {
@@ -514,12 +517,13 @@
             calculable: true,
             dataZoom: {
                 show: true,
-                y: 360,
-                realtime: true,
+                y: 230,
+                realtime: false,
                 start: 50,
                 end: 100
             },
             grid: {
+                x2: 20,
                 y2: 80
             },
             xAxis: [{
@@ -562,7 +566,10 @@
             tooltip: {
                 trigger: 'axis'
             },
-            grid: { x: 120 },
+            grid: {
+                x: 120,
+                x2: 20
+            },
             legend: {
                 data: ['发送', '接收']
             },
@@ -611,7 +618,10 @@
             tooltip: {
                 trigger: 'axis'
             },
-            grid: { x: 120 },
+            grid: {
+                x: 120,
+                x2: 20
+            },
             legend: {
                 data: ['发送', '接收']
             },
@@ -661,7 +671,10 @@
             tooltip: {
                 trigger: 'axis'
             },
-            grid: { x: 120 },
+            grid: {
+                x: 120,
+                x2: 20
+            },
             legend: {
                 data: ['发送', '接收']
             },
@@ -710,7 +723,10 @@
             tooltip: {
                 trigger: 'axis'
             },
-            grid: { x: 120 },
+            grid: {
+                x: 120,
+                x2: 20
+            },
             legend: {
                 data: ['发送', '接收']
             },
@@ -760,6 +776,9 @@
             tooltip: {
                 trigger: 'axis'
             },
+            grid: {
+                x2: 20
+            },
             legend: {
                 data: ['发送', '接收']
             },
@@ -807,6 +826,9 @@
             },
             tooltip: {
                 trigger: 'axis'
+            },
+            grid: {
+                x2: 20
             },
             legend: {
                 data: ['发送', '接收']
@@ -857,6 +879,9 @@
             tooltip: {
                 trigger: 'axis'
             },
+            grid: {
+                x2: 20
+            },
             legend: {
                 data: ['发送', '接收']
             },
@@ -904,6 +929,9 @@
             },
             tooltip: {
                 trigger: 'axis'
+            },
+            grid: {
+                x2: 20
             },
             legend: {
                 data: ['发送', '接收']
@@ -954,6 +982,9 @@
             tooltip: {
                 trigger: 'axis'
             },
+            grid: {
+                x2: 20
+            },
             legend: {
                 data: ['发送', '接收']
             },
@@ -1001,6 +1032,9 @@
             },
             tooltip: {
                 trigger: 'axis'
+            },
+            grid: {
+                x2: 20
             },
             legend: {
                 data: ['发送', '接收']
@@ -1065,10 +1099,11 @@
                     endTime = $scope.startDate + " " + $scope.option_flow.xAxis[0].data[end];
                 $scope.startTimeTop10Temp = startTime;
                 $scope.endTimeTop10Temp = endTime;
+                onMouseUp();
             }
         };
         var onMouseUp = function () {
-            $scope.$apply(function () {
+            //$scope.$apply(function () {
                 if (($scope.startTimeTop10Temp && $scope.startTimeTop10Temp != $scope.startTimeTop10)
                     || ($scope.endTimeTop10Temp && $scope.endTimeTop10Temp != $scope.endTimeTop10)) {
                     $scope.startTimeTop10 = $scope.startTimeTop10Temp;
@@ -1080,16 +1115,33 @@
                         endTime: $scope.endTimeTop10
                     });
                 }
-            });
+            //});
+        };
+        var onWindowResize = function () {
+            $scope.chartFlow.resize();
+            $scope.chartPackage.resize();
+            $scope.chartIpFlow.resize();
+            $scope.chartIpPackage.resize();
+            $scope.chartIpIntranetFlow.resize();
+            $scope.chartIpIntranetPackage.resize();
+            $scope.chartProtocolFlow.resize();
+            $scope.chartProtocolPackage.resize();
+            $scope.chartPortFlow.resize();
+            $scope.chartPortPackage.resize();
+            $scope.chartMacFlow.resize();
+            $scope.chartMacPackage.resize();
         };
         
         $scope.init();
+        //窗口大小事件
+        $(window).on("resize.flowSummary", onWindowResize);
         //鼠标按键事件
-        $("#flowChart, #packageChart").on("mouseup", onMouseUp);
+        //$("#flowChart, #packageChart").on("mouseup", onMouseUp);
         //离开该页事件
         $scope.$on("$routeChangeStart", function () {
             if ($scope.queryTimer)
                 $interval.cancel($scope.queryTimer);
+            $(window).off("resize.flowSummary");
         });
 
     });

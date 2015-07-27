@@ -164,8 +164,8 @@ define('echarts/echarts', [
     var _idBase = new Date() - 0;
     var _instances = {};
     var DOM_ATTRIBUTE_KEY = '_echarts_instance_';
-    self.version = '2.2.7';
-    self.dependencies = { zrender: '2.1.1' };
+    self.version = '2.2.5';
+    self.dependencies = { zrender: '2.1.0' };
     self.init = function (dom, theme) {
         var zrender = require('zrender');
         if (zrender.version.replace('.', '') - 0 < self.dependencies.zrender.replace('.', '') - 0) {
@@ -1225,7 +1225,6 @@ define('echarts/echarts', [
         CHART_TYPE_FUNNEL: 'funnel',
         CHART_TYPE_EVENTRIVER: 'eventRiver',
         CHART_TYPE_WORDCLOUD: 'wordCloud',
-        CHART_TYPE_HEATMAP: 'heatmap',
         COMPONENT_TYPE_TITLE: 'title',
         COMPONENT_TYPE_LEGEND: 'legend',
         COMPONENT_TYPE_DATARANGE: 'dataRange',
@@ -1363,7 +1362,6 @@ define('echarts/echarts', [
         },
         DRAG_ENABLE_TIME: 120,
         EFFECT_ZLEVEL: 10,
-        effectBlendAlpha: 0.95,
         symbolList: [
             'circle',
             'rectangle',
@@ -1673,7 +1671,7 @@ define('zrender/zrender', [
     var Animation = require('./animation/Animation');
     var _instances = {};
     var zrender = {};
-    zrender.version = '2.1.1';
+    zrender.version = '2.1.0';
     zrender.init = function (dom) {
         var zr = new ZRender(guid(), dom);
         _instances[zr.id] = zr;
@@ -7837,7 +7835,7 @@ define('zrender/zrender', [
     };
     return theme;
 });
-//edit by guoyang 2015-07-27 增加blue主题
+//edit by guoyang 2015-07-10 增加blue主题
 define('echarts/theme/blue', ['require'], function (require) {
 
     var theme = {
@@ -9382,8 +9380,8 @@ define('zrender/dep/excanvas', ['require'], function (require) {
             this._isMouseDown = 0;
             this.dispatch(EVENT.RESIZE, event);
         },
-        click: function (event, manually) {
-            if (!isZRenderElement(event) && !manually) {
+        click: function (event) {
+            if (!isZRenderElement(event)) {
                 return;
             }
             event = this._zrenderEventFixed(event);
@@ -9395,8 +9393,8 @@ define('zrender/dep/excanvas', ['require'], function (require) {
             }
             this._mousemoveHandler(event);
         },
-        dblclick: function (event, manually) {
-            if (!isZRenderElement(event) && !manually) {
+        dblclick: function (event) {
+            if (!isZRenderElement(event)) {
                 return;
             }
             event = event || window.event;
@@ -9409,8 +9407,8 @@ define('zrender/dep/excanvas', ['require'], function (require) {
             }
             this._mousemoveHandler(event);
         },
-        mousewheel: function (event, manually) {
-            if (!isZRenderElement(event) && !manually) {
+        mousewheel: function (event) {
+            if (!isZRenderElement(event)) {
                 return;
             }
             event = this._zrenderEventFixed(event);
@@ -9443,8 +9441,8 @@ define('zrender/dep/excanvas', ['require'], function (require) {
             this._dispatchAgency(this._lastHover, EVENT.MOUSEWHEEL, event);
             this._mousemoveHandler(event);
         },
-        mousemove: function (event, manually) {
-            if (!isZRenderElement(event) && !manually) {
+        mousemove: function (event) {
+            if (!isZRenderElement(event)) {
                 return;
             }
             if (this.painter.isLoading()) {
@@ -9502,8 +9500,8 @@ define('zrender/dep/excanvas', ['require'], function (require) {
                 this.painter.refreshHover();
             }
         },
-        mouseout: function (event, manually) {
-            if (!isZRenderElement(event) && !manually) {
+        mouseout: function (event) {
+            if (!isZRenderElement(event)) {
                 return;
             }
             event = this._zrenderEventFixed(event);
@@ -9529,8 +9527,8 @@ define('zrender/dep/excanvas', ['require'], function (require) {
             }
             this.dispatch(EVENT.GLOBALOUT, event);
         },
-        mousedown: function (event, manually) {
-            if (!isZRenderElement(event) && !manually) {
+        mousedown: function (event) {
+            if (!isZRenderElement(event)) {
                 return;
             }
             this._clickThreshold = 0;
@@ -9546,8 +9544,8 @@ define('zrender/dep/excanvas', ['require'], function (require) {
             this._dispatchAgency(this._lastHover, EVENT.MOUSEDOWN, event);
             this._lastDownButton = event.button;
         },
-        mouseup: function (event, manually) {
-            if (!isZRenderElement(event) && !manually) {
+        mouseup: function (event) {
+            if (!isZRenderElement(event)) {
                 return;
             }
             event = this._zrenderEventFixed(event);
@@ -9558,8 +9556,8 @@ define('zrender/dep/excanvas', ['require'], function (require) {
             this._processDrop(event);
             this._processDragEnd(event);
         },
-        touchstart: function (event, manually) {
-            if (!isZRenderElement(event) && !manually) {
+        touchstart: function (event) {
+            if (!isZRenderElement(event)) {
                 return;
             }
             event = this._zrenderEventFixed(event, true);
@@ -9567,8 +9565,8 @@ define('zrender/dep/excanvas', ['require'], function (require) {
             this._mobileFindFixed(event);
             this._mousedownHandler(event);
         },
-        touchmove: function (event, manually) {
-            if (!isZRenderElement(event) && !manually) {
+        touchmove: function (event) {
+            if (!isZRenderElement(event)) {
                 return;
             }
             event = this._zrenderEventFixed(event, true);
@@ -9577,8 +9575,8 @@ define('zrender/dep/excanvas', ['require'], function (require) {
                 eventTool.stop(event);
             }
         },
-        touchend: function (event, manually) {
-            if (!isZRenderElement(event) && !manually) {
+        touchend: function (event) {
+            if (!isZRenderElement(event)) {
                 return;
             }
             event = this._zrenderEventFixed(event, true);
@@ -9598,9 +9596,9 @@ define('zrender/dep/excanvas', ['require'], function (require) {
             this.painter.clearHover();
         }
     };
-    function bind2Arg(handler, context) {
-        return function (arg1, arg2) {
-            return handler.call(context, arg1, arg2);
+    function bind1Arg(handler, context) {
+        return function (e) {
+            return handler.call(context, e);
         };
     }
     function bind3Arg(handler, context) {
@@ -9612,7 +9610,7 @@ define('zrender/dep/excanvas', ['require'], function (require) {
         var len = domHandlerNames.length;
         while (len--) {
             var name = domHandlerNames[len];
-            instance['_' + name + 'Handler'] = bind2Arg(domHandlers[name], instance);
+            instance['_' + name + 'Handler'] = bind1Arg(domHandlers[name], instance);
         }
     }
     var Handler = function (root, storage, painter) {
@@ -9669,7 +9667,7 @@ define('zrender/dep/excanvas', ['require'], function (require) {
         case EVENT.MOUSEDOWN:
         case EVENT.MOUSEUP:
         case EVENT.MOUSEOUT:
-            this['_' + eventName + 'Handler'](eventArgs, true);
+            this['_' + eventName + 'Handler'](eventArgs);
             break;
         }
     };
@@ -10689,13 +10687,9 @@ define('zrender/dep/excanvas', ['require'], function (require) {
             this._clips.push(clip);
         },
         remove: function (clip) {
-            if (clip.__inStep) {
-                clip.__needsRemove = true;
-            } else {
-                var idx = util.indexOf(this._clips, clip);
-                if (idx >= 0) {
-                    this._clips.splice(idx, 1);
-                }
+            var idx = util.indexOf(this._clips, clip);
+            if (idx >= 0) {
+                this._clips.splice(idx, 1);
             }
         },
         _update: function () {
@@ -10707,16 +10701,14 @@ define('zrender/dep/excanvas', ['require'], function (require) {
             var deferredClips = [];
             for (var i = 0; i < len; i++) {
                 var clip = clips[i];
-                clip.__inStep = true;
                 var e = clip.step(time);
-                clip.__inStep = false;
                 if (e) {
                     deferredEvents.push(e);
                     deferredClips.push(clip);
                 }
             }
             for (var i = 0; i < len;) {
-                if (clips[i].__needsRemove) {
+                if (clips[i]._needsRemove) {
                     clips[i] = clips[len - 1];
                     clips.pop();
                     len--;
@@ -13261,7 +13253,7 @@ define('zrender/dep/excanvas', ['require'], function (require) {
                     this.restart();
                     return 'restart';
                 }
-                this.__needsRemove = true;
+                this._needsRemove = true;
                 return 'destroy';
             }
             return null;
@@ -13270,7 +13262,7 @@ define('zrender/dep/excanvas', ['require'], function (require) {
             var time = new Date().getTime();
             var remainder = (time - this._startTime) % this._life;
             this._startTime = new Date().getTime() - remainder + this.gap;
-            this.__needsRemove = false;
+            this._needsRemove = false;
         },
         fire: function (eventType, arg) {
             for (var i = 0, len = this._targetPool.length; i < len; i++) {
@@ -14587,7 +14579,7 @@ define('zrender/dep/excanvas', ['require'], function (require) {
             if (this.canvasSupported) {
                 this.zr.modLayer(zlevel, {
                     motionBlur: true,
-                    lastFrameAlpha: this.option.effectBlendAlpha || ecConfig.effectBlendAlpha
+                    lastFrameAlpha: 0.95
                 });
             }
             var shape;
@@ -17861,9 +17853,7 @@ define('zrender/dep/excanvas', ['require'], function (require) {
         this._tDom = document.createElement('div');
         this._textArea = document.createElement('textArea');
         this._buttonRefresh = document.createElement('button');
-        this._buttonRefresh.setAttribute('type', 'button');
         this._buttonClose = document.createElement('button');
-        this._buttonClose.setAttribute('type', 'button');
         this._hasShow = false;
         this._zrHeight = zr.getHeight();
         this._zrWidth = zr.getWidth();
@@ -29816,10 +29806,8 @@ define('zrender/dep/excanvas', ['require'], function (require) {
     'zrender/shape/Line',
     'zrender/shape/Polygon',
     'zrender/shape/Ellipse',
-    'zrender/shape/Image',
     '../component/dataRange',
     '../component/roamController',
-    '../layer/heatmap',
     '../config',
     '../util/ecData',
     'zrender/tool/util',
@@ -29840,10 +29828,8 @@ define('zrender/dep/excanvas', ['require'], function (require) {
     var LineShape = require('zrender/shape/Line');
     var PolygonShape = require('zrender/shape/Polygon');
     var EllipseShape = require('zrender/shape/Ellipse');
-    var ZrImage = require('zrender/shape/Image');
     require('../component/dataRange');
     require('../component/roamController');
-    var HeatmapLayer = require('../layer/heatmap');
     var ecConfig = require('../config');
     ecConfig.map = {
         zlevel: 0,
@@ -30057,7 +30043,6 @@ define('zrender/dep/excanvas', ['require'], function (require) {
                     self.addShapeList();
                     self.zr.refreshNextFrame();
                 }
-                self._buildHeatmap(mt);
             };
         },
         _clearSelected: function () {
@@ -30479,71 +30464,6 @@ define('zrender/dep/excanvas', ['require'], function (require) {
                 this.buildMark(sIdx);
             }
         },
-        _buildHeatmap: function (mapType) {
-            var series = this.series;
-            for (var i = 0, l = series.length; i < l; i++) {
-                if (series[i].heatmap) {
-                    var data = series[i].heatmap.data;
-                    if (series[i].heatmap.needsTransform === false) {
-                        var geo = [];
-                        for (var j = 0, len = data.length; j < len; ++j) {
-                            geo.push([
-                                data[j][3],
-                                data[j][4],
-                                data[j][2]
-                            ]);
-                        }
-                        var pos = [
-                            0,
-                            0
-                        ];
-                    } else {
-                        var geoData = series[i].heatmap._geoData;
-                        if (geoData === undefined) {
-                            series[i].heatmap._geoData = [];
-                            for (var j = 0, len = data.length; j < len; ++j) {
-                                series[i].heatmap._geoData[j] = data[j];
-                            }
-                            geoData = series[i].heatmap._geoData;
-                        }
-                        var len = data.length;
-                        for (var id = 0; id < len; ++id) {
-                            data[id] = this.geo2pos(mapType, [
-                                geoData[id][0],
-                                geoData[id][1]
-                            ]);
-                        }
-                        var pos = [
-                            this._mapDataMap[mapType].transform.left,
-                            this._mapDataMap[mapType].transform.top
-                        ];
-                    }
-                    var layer = new HeatmapLayer(series[i].heatmap);
-                    var canvas = layer.getCanvas(data[0][3] ? geo : data, this.zr.getWidth(), this.zr.getHeight());
-                    var image = new ZrImage({
-                        zlevel: this.getZlevelBase(),
-                        z: this.getZBase() + 1,
-                        position: pos,
-                        scale: [
-                            1,
-                            1
-                        ],
-                        hoverable: false,
-                        style: {
-                            x: 0,
-                            y: 0,
-                            image: canvas,
-                            width: canvas.width,
-                            height: canvas.height
-                        }
-                    });
-                    image.type = 'heatmap';
-                    image._mapType = mapType;
-                    this.shapeList.push(image);
-                    this.zr.addShape(image);
-                }
-            }
-        },
         getMarkCoord: function (seriesIndex, mpData) {
             return mpData.geoCoord || _geoCoord[mpData.name] ? this.geo2pos(this._seriesIndexToMapType[seriesIndex], mpData.geoCoord || _geoCoord[mpData.name]) : [
                 0,
@@ -30691,7 +30611,6 @@ define('zrender/dep/excanvas', ['require'], function (require) {
                             case 'polygon':
                             case 'line':
                             case 'ellipse':
-                            case 'heatmap':
                                 shape.scale[0] *= delta;
                                 shape.scale[1] *= delta;
                                 break;
@@ -31785,112 +31704,6 @@ define('zrender/dep/excanvas', ['require'], function (require) {
     zrUtil.inherits(RoamController, Base);
     require('../component').define('roamController', RoamController);
     return RoamController;
-});define('echarts/layer/heatmap', ['require'], function (require) {
-    var defaultOptions = {
-        blurSize: 30,
-        gradientColors: [
-            'blue',
-            'cyan',
-            'lime',
-            'yellow',
-            'red'
-        ],
-        minAlpha: 0.05,
-        valueScale: 1,
-        opacity: 1
-    };
-    var BRUSH_SIZE = 20;
-    var GRADIENT_LEVELS = 256;
-    function Heatmap(opt) {
-        this.option = opt;
-        if (opt) {
-            for (var i in defaultOptions) {
-                if (opt[i] !== undefined) {
-                    this.option[i] = opt[i];
-                } else {
-                    this.option[i] = defaultOptions[i];
-                }
-            }
-        } else {
-            this.option = defaultOptions;
-        }
-    }
-    Heatmap.prototype = {
-        getCanvas: function (data, width, height) {
-            var brush = this._getBrush();
-            var gradient = this._getGradient();
-            var r = BRUSH_SIZE + this.option.blurSize;
-            var canvas = document.createElement('canvas');
-            canvas.width = width;
-            canvas.height = height;
-            var ctx = canvas.getContext('2d');
-            var len = data.length;
-            for (var i = 0; i < len; ++i) {
-                var p = data[i];
-                var x = p[0];
-                var y = p[1];
-                var value = p[2];
-                var alpha = Math.min(1, Math.max(value * this.option.valueScale || this.option.minAlpha, this.option.minAlpha));
-                ctx.globalAlpha = alpha;
-                ctx.drawImage(brush, x - r, y - r);
-            }
-            var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            var pixels = imageData.data;
-            var len = pixels.length / 4;
-            while (len--) {
-                var id = len * 4 + 3;
-                var alpha = pixels[id] / 256;
-                var colorOffset = Math.floor(alpha * (GRADIENT_LEVELS - 1));
-                pixels[id - 3] = gradient[colorOffset * 4];
-                pixels[id - 2] = gradient[colorOffset * 4 + 1];
-                pixels[id - 1] = gradient[colorOffset * 4 + 2];
-                pixels[id] *= this.option.opacity;
-            }
-            ctx.putImageData(imageData, 0, 0);
-            return canvas;
-        },
-        _getBrush: function () {
-            if (!this._brushCanvas) {
-                this._brushCanvas = document.createElement('canvas');
-                var r = BRUSH_SIZE + this.option.blurSize;
-                var d = r * 2;
-                this._brushCanvas.width = d;
-                this._brushCanvas.height = d;
-                var ctx = this._brushCanvas.getContext('2d');
-                ctx.shadowOffsetX = d;
-                ctx.shadowBlur = this.option.blurSize;
-                ctx.shadowColor = 'black';
-                ctx.beginPath();
-                ctx.arc(-r, r, BRUSH_SIZE, 0, Math.PI * 2, true);
-                ctx.closePath();
-                ctx.fill();
-            }
-            return this._brushCanvas;
-        },
-        _getGradient: function () {
-            if (!this._gradientPixels) {
-                var levels = GRADIENT_LEVELS;
-                var canvas = document.createElement('canvas');
-                canvas.width = 1;
-                canvas.height = levels;
-                var ctx = canvas.getContext('2d');
-                var gradient = ctx.createLinearGradient(0, 0, 0, levels);
-                var len = this.option.gradientColors.length;
-                for (var i = 0; i < len; ++i) {
-                    if (typeof this.option.gradientColors[i] === 'string') {
-                        gradient.addColorStop((i + 1) / len, this.option.gradientColors[i]);
-                    } else {
-                        gradient.addColorStop(this.option.gradientColors[i].offset, this.option.gradientColors[i].color);
-                    }
-                }
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, 1, levels);
-                this._gradientPixels = ctx.getImageData(0, 0, 1, levels).data;
-            }
-            return this._gradientPixels;
-        }
-    };
-    return Heatmap;
 });define('echarts/util/mapData/params', ['require'], function (require) {
     function decode(json) {
         if (!json.UTF8Encoding) {
@@ -47662,7 +47475,7 @@ define('zrender/dep/excanvas', ['require'], function (require) {
     return EventRiver;
 });define('echarts/layout/eventRiver', ['require'], function (require) {
     function eventRiverLayout(series, intervalX, area) {
-        var space = 4;
+        var space = 5;
         var scale = intervalX;
         function importanceSort(a, b) {
             var x = a.importance;
@@ -47715,128 +47528,112 @@ define('zrender/dep/excanvas', ['require'], function (require) {
                 }
             }
         }
-        minTime = ~~minTime;
-        maxTime = ~~maxTime;
-        var flagForOffset = function () {
-            var length = maxTime - minTime + 1 + ~~intervalX;
-            if (length <= 0) {
-                return [0];
-            }
-            var result = [];
-            while (length--) {
-                result.push(0);
-            }
-            return result;
-        }();
-        var flagForPos = flagForOffset.slice(0);
-        var bubbleData = [];
-        var totalMaxy = 0;
-        var totalOffset = 0;
+        var root = segmentTreeBuild(Math.floor(minTime), Math.ceil(maxTime));
+        var totalMaxY = 0;
         for (var i = 0; i < series.length; i++) {
             for (var j = 0; j < series[i].data.length; j++) {
                 var e = series[i].data[j];
                 e.time = [];
                 e.value = [];
-                var tmp;
-                var maxy = 0;
                 for (var k = 0; k < series[i].data[j].evolution.length; k++) {
-                    tmp = series[i].data[j].evolution[k];
-                    e.time.push(tmp.timeScale);
-                    e.value.push(tmp.valueScale);
-                    maxy = Math.max(maxy, tmp.valueScale);
+                    e.time.push(series[i].data[j].evolution[k].timeScale);
+                    e.value.push(series[i].data[j].evolution[k].valueScale);
                 }
-                bubbleBound(e, intervalX, minTime);
-                e.y = findLocation(flagForPos, e, function (e, index) {
-                    return e.ypx[index];
-                });
-                e._offset = findLocation(flagForOffset, e, function () {
-                    return space;
-                });
-                totalMaxy = Math.max(totalMaxy, e.y + maxy);
-                totalOffset = Math.max(totalOffset, e._offset);
-                bubbleData.push(e);
+                var mxIndex = indexOf(e.value, Math.max.apply(Math, e.value));
+                var maxY = segmentTreeQuery(root, e.time[mxIndex], e.time[mxIndex + 1]);
+                var k = 0;
+                e.y = maxY + e.value[mxIndex] / 2 + space;
+                for (k = 0; k < e.time.length - 1; k++) {
+                    var curMaxY = segmentTreeQuery(root, e.time[k], e.time[k + 1]);
+                    if (e.y - e.value[k] / 2 - space < curMaxY) {
+                        e.y = curMaxY + e.value[k] / 2 + space;
+                    }
+                }
+                var curMaxY = segmentTreeQuery(root, e.time[k], e.time[k] + scale);
+                if (e.y - e.value[k] / 2 - space < curMaxY) {
+                    e.y = curMaxY + e.value[k] / 2 + space;
+                }
+                series[i].y = e.y;
+                totalMaxY = Math.max(totalMaxY, e.y + e.value[mxIndex] / 2);
+                for (k = 0; k < e.time.length - 1; k++) {
+                    segmentTreeInsert(root, e.time[k], e.time[k + 1], e.y + e.value[k] / 2);
+                }
+                segmentTreeInsert(root, e.time[k], e.time[k] + scale, e.y + e.value[k] / 2);
             }
         }
-        scaleY(bubbleData, area, totalMaxy, totalOffset);
+        scaleY(series, area, totalMaxY, space);
     }
-    function scaleY(bubbleData, area, maxY, offset) {
-        var height = area.height;
-        var offsetScale = offset / height > 0.5 ? 0.5 : 1;
+    function scaleY(series, area, maxY, space) {
         var yBase = area.y;
-        var yScale = (area.height - offset) / maxY;
-        for (var i = 0, length = bubbleData.length; i < length; i++) {
-            var e = bubbleData[i];
-            e.y = yBase + yScale * e.y + e._offset * offsetScale;
-            delete e.time;
-            delete e.value;
-            delete e.xpx;
-            delete e.ypx;
-            delete e._offset;
-            var evolutionList = e.evolution;
-            for (var k = 0, klen = evolutionList.length; k < klen; k++) {
-                evolutionList[k].valueScale *= yScale;
+        var yScale = (area.height - space) / maxY;
+        for (var i = 0; i < series.length; i++) {
+            series[i].y = series[i].y * yScale + yBase;
+            var eventList = series[i].data;
+            for (var j = 0; j < eventList.length; j++) {
+                eventList[j].y = eventList[j].y * yScale + yBase;
+                var evolutionList = eventList[j].evolution;
+                for (var k = 0; k < evolutionList.length; k++) {
+                    evolutionList[k].valueScale *= yScale * 1;
+                }
             }
         }
     }
-    function line(x0, y0, x1, y1) {
-        if (x0 === x1) {
-            throw new Error('x0 is equal with x1!!!');
-        }
-        if (y0 === y1) {
-            return function () {
-                return y0;
-            };
-        }
-        var k = (y0 - y1) / (x0 - x1);
-        var b = (y1 * x0 - y0 * x1) / (x0 - x1);
-        return function (x) {
-            return k * x + b;
+    function segmentTreeBuild(left, right) {
+        var root = {
+            'left': left,
+            'right': right,
+            'leftChild': null,
+            'rightChild': null,
+            'maxValue': 0
         };
+        if (left + 1 < right) {
+            var mid = Math.round((left + right) / 2);
+            root.leftChild = segmentTreeBuild(left, mid);
+            root.rightChild = segmentTreeBuild(mid, right);
+        }
+        return root;
     }
-    function bubbleBound(e, intervalX, minX) {
-        var space = ~~intervalX;
-        var length = e.time.length;
-        e.xpx = [];
-        e.ypx = [];
-        var i = 0;
-        var x0 = 0;
-        var x1 = 0;
-        var y0 = 0;
-        var y1 = 0;
-        var newline;
-        for (; i < length; i++) {
-            x0 = ~~e.time[i];
-            y0 = e.value[i] / 2;
-            if (i === length - 1) {
-                x1 = x0 + space;
-                y1 = 0;
-            } else {
-                x1 = ~~e.time[i + 1];
-                y1 = e.value[i + 1] / 2;
-            }
-            newline = line(x0, y0, x1, y1);
-            for (var x = x0; x < x1; x++) {
-                e.xpx.push(x - minX);
-                e.ypx.push(newline(x));
-            }
+    function segmentTreeQuery(root, left, right) {
+        if (right - left < 1) {
+            return 0;
         }
-        e.xpx.push(x1 - minX);
-        e.ypx.push(y1);
+        var mid = Math.round((root.left + root.right) / 2);
+        var result = 0;
+        if (left == root.left && right == root.right) {
+            result = root.maxValue;
+        } else if (right <= mid && root.leftChild != null) {
+            result = segmentTreeQuery(root.leftChild, left, right);
+        } else if (left >= mid && root.rightChild != null) {
+            result = segmentTreeQuery(root.rightChild, left, right);
+        } else {
+            var leftValue = 0;
+            var rightValue = 0;
+            if (root.leftChild != null) {
+                leftValue = segmentTreeQuery(root.leftChild, left, mid);
+            }
+            if (root.rightChild != null) {
+                rightValue = segmentTreeQuery(root.rightChild, mid, right);
+            }
+            result = leftValue > rightValue ? leftValue : rightValue;
+        }
+        return result;
     }
-    function findLocation(flags, e, yvalue) {
-        var pos = 0;
-        var length = e.xpx.length;
-        var i = 0;
-        var y;
-        for (; i < length; i++) {
-            y = yvalue(e, i);
-            pos = Math.max(pos, y + flags[e.xpx[i]]);
+    function segmentTreeInsert(root, left, right, value) {
+        if (root == null) {
+            return;
         }
-        for (i = 0; i < length; i++) {
-            y = yvalue(e, i);
-            flags[e.xpx[i]] = pos + y;
+        var mid = Math.round((root.left + root.right) / 2);
+        root.maxValue = root.maxValue > value ? root.maxValue : value;
+        if (Math.floor(left * 10) == Math.floor(root.left * 10) && Math.floor(right * 10) == Math.floor(root.right * 10)) {
+            return;
+        } else if (right <= mid) {
+            segmentTreeInsert(root.leftChild, left, right, value);
+        } else if (left >= mid) {
+            segmentTreeInsert(root.rightChild, left, right, value);
+        } else {
+            segmentTreeInsert(root.leftChild, left, mid, value);
+            segmentTreeInsert(root.rightChild, mid, right, value);
         }
-        return pos;
     }
     return eventRiverLayout;
 });define('echarts/chart/venn', [
@@ -49975,79 +49772,6 @@ define('zrender/dep/excanvas', ['require'], function (require) {
         }
     };
     return ZeroArray;
-});define('echarts/chart/heatmap', [
-    'require',
-    './base',
-    '../layer/heatmap',
-    '../config',
-    '../util/ecData',
-    'zrender/tool/util',
-    'zrender/tool/color',
-    'zrender/shape/Image',
-    '../chart'
-], function (require) {
-    var ChartBase = require('./base');
-    var HeatmapLayer = require('../layer/heatmap');
-    var ecConfig = require('../config');
-    var ecData = require('../util/ecData');
-    var zrUtil = require('zrender/tool/util');
-    var zrColor = require('zrender/tool/color');
-    var zrImage = require('zrender/shape/Image');
-    ecConfig.heatmap = {
-        zlevel: 0,
-        z: 2,
-        clickable: true
-    };
-    function Heatmap(ecTheme, messageCenter, zr, option, myChart) {
-        ChartBase.call(this, ecTheme, messageCenter, zr, option, myChart);
-        this.refresh(option);
-    }
-    Heatmap.prototype = {
-        type: ecConfig.CHART_TYPE_HEATMAP,
-        refresh: function (newOption) {
-            this.clear();
-            if (newOption) {
-                this.option = newOption;
-                this.series = newOption.series;
-            }
-            this._init();
-        },
-        _init: function () {
-            var series = this.series;
-            this.backupShapeList();
-            var len = series.length;
-            for (var i = 0; i < len; ++i) {
-                if (series[i].type === ecConfig.CHART_TYPE_HEATMAP) {
-                    series[i] = this.reformOption(series[i]);
-                    var layer = new HeatmapLayer(series[i]);
-                    var canvas = layer.getCanvas(series[i].data, this.zr.getWidth(), this.zr.getHeight());
-                    var image = new zrImage({
-                        position: [
-                            0,
-                            0
-                        ],
-                        scale: [
-                            1,
-                            1
-                        ],
-                        hoverable: this.option.hoverable,
-                        style: {
-                            x: 0,
-                            y: 0,
-                            image: canvas,
-                            width: canvas.width,
-                            height: canvas.height
-                        }
-                    });
-                    this.shapeList.push(image);
-                }
-            }
-            this.addShapeList();
-        }
-    };
-    zrUtil.inherits(Heatmap, ChartBase);
-    require('../chart').define('heatmap', Heatmap);
-    return Heatmap;
 });
 var zrender = require('zrender');
 zrender.tool = {
@@ -50105,8 +49829,6 @@ require("echarts/chart/treemap");
 require("echarts/chart/tree");
 
 require("echarts/chart/wordCloud");
-
-require("echarts/chart/heatmap");
 
 _global['echarts'] = echarts;
 _global['zrender'] = zrender;

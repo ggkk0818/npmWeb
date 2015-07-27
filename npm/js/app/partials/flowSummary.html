@@ -15,16 +15,16 @@
 </div>
 <div class="row" style="margin-top:20px;">
     <div class="col-xs-12 flowSummary-chart-container">
-        <div id="flowChart" style="height:400px;"></div>
-        <a class="btn btn-default" href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" title="联动" ng-class="{'locked': isConnect}" ng-click="toggleChartConnect()" ng-show="option_flow.series[0].data.length">
+        <div id="flowChart" style="height:200px;"></div>
+        <a class="btn btn-default" href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" title="联动" ng-class="{'locked': isConnect}" ng-click="toggleChartConnect()" ng-show="option_flow.series[0].data.length" ng-if="false">
             <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
         </a>
     </div>
 </div>
 <div class="row" style="margin-top: 20px;">
     <div class="col-xs-12 flowSummary-chart-container">
-        <div id="packageChart" style="height:400px;"></div>
-        <a class="btn btn-default" href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" title="联动" ng-class="{'locked': isConnect}" ng-click="toggleChartConnect()" ng-show="option_package.series[0].data.length">
+        <div id="packageChart" style="height:270px;"></div>
+        <a class="btn btn-default" href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" title="联动" ng-class="{'locked': isConnect}" ng-click="toggleChartConnect()" ng-show="option_package.series[0].data.length" ng-if="false">
             <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
         </a>
     </div>

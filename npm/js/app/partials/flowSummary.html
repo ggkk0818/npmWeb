@@ -3,13 +3,22 @@
         <div class="pull-left">
             <form class="form-inline">
                 <input type="text" class="form-control datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN" data-min-view="2" placeholder="日期" ng-model="startDateInput" ng-keypress="formKeypressHandler($event)">
+                <div class="form-group hour-selector" ng-show="durationType.id=='hour'">
+                    <button class="btn btn-default" type="button">{{startHour|numberFormat:2}}</button>
+                    <div class="btn-group">
+                        <button class="btn btn-default" type="button" ng-repeat="h in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-class="{'active':startHour==h}" ng-click="changeHour(h)">{{h|numberFormat:2}}</button>
+                    </div>
+                </div>
                 <button class="btn btn-info" type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
             </form>
         </div>
         <div class="pull-right">
-            <button class="btn btn-info" type="button" ng-click="addDay(-1)" data-toggle="tooltip" data-placement="bottom" title="前一天"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span></button>
-            <button class="btn btn-info" type="button" ng-click="addDay()" ng-class="{'disabled': isToday}" data-toggle="tooltip" data-placement="bottom" title="今天"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span></button>
-            <button class="btn btn-info" type="button" ng-click="addDay(1)" data-toggle="tooltip" data-placement="bottom" title="后一天"><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button>
+            <div class="form-group btn-group" style="margin:0 10px 0 0;">
+                <button class="btn btn-info" type="button" ng-repeat="t in DURATION_TYPE" ng-class="{'active':durationType.id==t.id}" ng-click="changeDurationType(t)">{{t.name}}</button>
+            </div>
+            <button class="btn btn-info" type="button" ng-click="addDay(-1)" data-toggle="tooltip" data-placement="bottom" title="前一{{durationType.name}}"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span></button>
+            <button class="btn btn-info" type="button" ng-click="addDay()" ng-class="{'disabled': isToday}" data-toggle="tooltip" data-placement="bottom" title="现在"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span></button>
+            <button class="btn btn-info" type="button" ng-click="addDay(1)" data-toggle="tooltip" data-placement="bottom" title="后一{{durationType.name}}"><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button>
         </div>
     </div>
 </div>

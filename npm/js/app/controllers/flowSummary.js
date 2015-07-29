@@ -3,7 +3,12 @@
     var module = angular.module('app.controllers');
     module.controller('FlowSummaryCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, dateTimeService, flowService) {
         //初始化变量
+        $scope.DURATION_TYPE = [
+            { id: "hour", name: "小时" },
+            { id: "day", name: "天" }
+        ];
         $scope.startDate = null;
+        $scope.startHour = null;
         $scope.startTime = null;
         $scope.endTime = null;
         $scope.queryTimer = null;
@@ -17,8 +22,10 @@
         $scope.endTimeTop10 = null;
         $scope.startTimeTop10Temp = null;
         $scope.endTimeTop10Temp = null;
+        $scope.durationType = $scope.DURATION_TYPE[1];
         //表单数据
         $scope.startDateInput = $scope.startDate = dateTimeService.serverTime.Format("yyyy-MM-dd");
+        $scope.startHourInput = $scope.startHour = dateTimeService.serverTime.getHours();
         $scope.init = function () {
             $timeout(function () {
                 $scope.chartFlow = echarts.init($("#flowChart").get(0), "blue").showLoading({ effect: "ring" }).on(echarts.config.EVENT.DATA_ZOOM, onChartZoom);
@@ -35,12 +42,16 @@
                 $scope.chartMacPackage = echarts.init($("#macChartPackage").get(0), "blue").showLoading({ effect: "ring" });
                 $scope.chartFlow.connect($scope.chartPackage);
                 $scope.chartPackage.connect($scope.chartFlow);
+                //小时选择控件
+                $(".hour-selector").mouseenter(hourSelectorHover).mouseleave(hourSelectorLeave).find(".btn-group .btn").on("click.hourSelector", hourSelectorBtnClick);
             });
             $scope.setSearchParams();
             $scope.doQuery();
             $scope.queryTimer = $interval($scope.doQuery, 10 * 60 * 1000);
             if ($scope.startDate == dateTimeService.serverTime.Format("yyyy-MM-dd")) {
-                $scope.isToday = true;
+                if ($scope.durationType.id == "day" || $scope.startHour == dateTimeService.serverTime.getHours()) {
+                    $scope.isToday = true;
+                }
             }
         };
         //获取查询参数
@@ -48,6 +59,10 @@
             var params = {};
             if ($scope.startDate)
                 params.startDate = $scope.startDate;
+            if ($scope.startHour)
+                params.startHour = $scope.startHour;
+            if ($scope.durationType)
+                params.durationType = $scope.durationType.id;
             return params;
         };
         //从url获取查询参数设置变量
@@ -59,10 +74,40 @@
                 $scope.startDate = params.startDate;
                 $scope.startDateInput = params.startDate;
             }
-            if (params.startTime)
+            if (params.startHour) {
+                $scope.startHour = parseInt(params.startHour);
+                $scope.startHourInput = parseInt(params.startHour);
+                if ($scope.startHour < 0) {
+                    $scope.startHour = 0;
+                    $scope.startHourInput = 0;
+                }
+                else if ($scope.startHour > 23) {
+                    $scope.startHour = 23;
+                    $scope.startHourInput = 23;
+                }
+            }
+            if (params.startTime) {
                 $scope.startTime = params.startTime;
+                var time = new Date($scope.startDate + " " + $scope.startTime);
+                if (!isNaN(time)) {
+                    $scope.startHour = time.getHours();
+                    $scope.startHourInput = time.getHours();
+                }
+            }
             if (params.endTime)
                 $scope.endTime = params.endTime;
+            if (params.durationType) {
+                for (var i = 0; i < $scope.DURATION_TYPE.length; i++) {
+                    if (params.durationType == $scope.DURATION_TYPE[i].id)
+                        $scope.durationType = $scope.DURATION_TYPE[i];
+                }
+            }
+            if ($scope.durationType.id == "hour" && !params.startHour && params.startTime) {
+                var pos = params.startTime.indexOf(":");
+                if (pos > 0) {
+                    $scope.startHour = parseInt(params.startTime.substring(0, pos));
+                }
+            }
         };
         //显示信息
         $scope.show = function () {
@@ -74,9 +119,17 @@
         //查询数据
         $scope.doQuery = function () {
             var params = {};
+            if ($scope.durationType)
+                params.timeType = $scope.durationType.id;
             if ($scope.startDate) {
-                params.startTime = $scope.startDate + " 00:00:00";
-                params.endTime = $scope.startDate + " 23:59:59";
+                var hour = null;
+                if($scope.durationType.id == "hour" ){
+                    hour = $scope.startHour.toString() || "0";
+                    if (hour.length == 1)
+                        hour = "0" + hour;
+                }
+                params.startTime = $scope.startDate + " " + (hour? hour : "00") + ":00:00";
+                params.endTime = $scope.startDate + " " + (hour? hour : "23") + ":59:59";
             }
             flowService.timeFlow(params, function (data) {
                 if (data && data.data) {
@@ -123,13 +176,26 @@
                         if ($scope.startTime) {
                             var time = new Date($scope.startDate + " " + $scope.startTime);
                             if (!isNaN(time)) {
-                                startPoint = (time.getHours() * 60 + time.getMinutes()) * 100 / (24 * 60);
+                                if ($scope.durationType.id == "day") {
+                                    startPoint = (time.getHours() * 60 + time.getMinutes()) * 100 / (24 * 60);
+                                }
+                                else {
+                                    startPoint = time.getMinutes() * 100 / 60;
+                                }
                             }
                         }
                         if ($scope.endTime) {
                             var time = new Date($scope.startDate + " " + $scope.endTime);
                             if (!isNaN(time)) {
-                                endPoint = (time.getHours() * 60 + time.getMinutes()) * 100 / (24 * 60);
+                                if ($scope.durationType.id == "day") {
+                                    endPoint = (time.getHours() * 60 + time.getMinutes()) * 100 / (24 * 60);
+                                }
+                                else if ($scope.durationType.id == "hour") {
+                                    if ($scope.startHour == time.getHours())
+                                        endPoint = time.getMinutes() * 100 / 60;
+                                    else
+                                        endPoint = 100;
+                                }
                             }
                         }
                         if (!startPoint)
@@ -141,8 +207,18 @@
                         $scope.option_package.dataZoom.end = endPoint;
                         $scope.option_package.dataZoom.start = startPoint;
                     }
-                    else if (!$scope.startDate || $scope.startDate == dateTimeService.serverTime.Format("yyyy-MM-dd")) {
+                    else if (!$scope.startDate || $scope.durationType.id == "day" && $scope.startDate == dateTimeService.serverTime.Format("yyyy-MM-dd")) {
                         var endPoint = Math.round((dateTimeService.serverTime.getHours() * 60 + dateTimeService.serverTime.getMinutes()) * 100 / (24 * 60));
+                        if (endPoint < $scope.defaultChartZoomSize) {
+                            endPoint = $scope.defaultChartZoomSize;
+                        }
+                        $scope.option_flow.dataZoom.end = endPoint;
+                        $scope.option_flow.dataZoom.start = endPoint - $scope.defaultChartZoomSize;
+                        $scope.option_package.dataZoom.end = endPoint;
+                        $scope.option_package.dataZoom.start = endPoint - $scope.defaultChartZoomSize;
+                    }
+                    else if ($scope.durationType.id == "hour" && $scope.startDate == dateTimeService.serverTime.Format("yyyy-MM-dd") && dateTimeService.serverTime.getHours() == $scope.startHour) {
+                        var endPoint = dateTimeService.serverTime.getMinutes() * 100 / 60;
                         if (endPoint < $scope.defaultChartZoomSize) {
                             endPoint = $scope.defaultChartZoomSize;
                         }
@@ -158,11 +234,23 @@
                         $scope.option_package.dataZoom.start = 100 - $scope.defaultChartZoomSize;
                     }
                 }
+                else {
+                    $scope.chartIpFlow.hideLoading();
+                    $scope.chartIpPackage.hideLoading();
+                    $scope.chartIpIntranetFlow.hideLoading();
+                    $scope.chartIpIntranetPackage.hideLoading();
+                    $scope.chartProtocolFlow.hideLoading();
+                    $scope.chartProtocolPackage.hideLoading();
+                    $scope.chartPortFlow.hideLoading();
+                    $scope.chartPortPackage.hideLoading();
+                    $scope.chartMacFlow.hideLoading();
+                    $scope.chartMacPackage.hideLoading();
+                }
                 $scope.chartFlow.hideLoading().setOption($scope.option_flow, true);
                 $scope.chartPackage.hideLoading().setOption($scope.option_package, true);
-                $timeout(function () {
-                    onMouseUp();
-                });
+                //$timeout(function () {
+                //    onMouseUp();
+                //});
             });
         };
 
@@ -391,12 +479,28 @@
         $scope.addDay = function (num) {
             if (typeof num === "number") {
                 var date = new Date($scope.startDate.replace(/-/g, "/"));
-                date.setDate(date.getDate() + num);
+                if ($scope.durationType.id == "day") {
+                    date.setDate(date.getDate() + num);
+                }
+                else if (typeof $scope.startHour === "number") {
+                    date.setHours($scope.startHour + num);
+                }
                 $scope.startDateInput = $scope.startDate = date.Format("yyyy-MM-dd");
+                $scope.startHourInput = $scope.startHour = date.getHours();
             }
             else {
                 $scope.startDateInput = $scope.startDate = dateTimeService.serverTime.Format("yyyy-MM-dd");
+                $scope.startHourInput = $scope.startHour = dateTimeService.serverTime.getHours();
             }
+            $scope.show();
+        };
+        //更改小时
+        $scope.changeHour = function (h) {
+            $scope.startHour = parseInt(h);
+        };
+        //更改时间类型
+        $scope.changeDurationType = function (t) {
+            $scope.durationType = t;
             $scope.show();
         };
 
@@ -409,6 +513,7 @@
             tooltip: {
                 trigger: 'axis',
                 showDelay: 0,
+                position: { x: 20, y: 50 },
                 formatter: function (params) {
                     var str = null;
                     if (params && params.length) {
@@ -1094,7 +1199,7 @@
             var zoom = e.zoom;
             if ($scope.option_flow.series[0].data.length) {
                 var start = Math.round(zoom.start / 100 * $scope.option_flow.series[0].data.length),
-                    end = Math.floor(zoom.end / 100 * $scope.option_flow.series[0].data.length),
+                    end = Math.round(zoom.end / 100 * $scope.option_flow.series[0].data.length) - 1,
                     startTime = $scope.startDate + " " +  $scope.option_flow.xAxis[0].data[start],
                     endTime = $scope.startDate + " " + $scope.option_flow.xAxis[0].data[end];
                 $scope.startTimeTop10Temp = startTime;
@@ -1130,6 +1235,41 @@
             $scope.chartPortPackage.resize();
             $scope.chartMacFlow.resize();
             $scope.chartMacPackage.resize();
+        };
+
+        //小时选择控件事件
+        var hourSelectorTimer = null;
+        var hourSelectorHover = function () {
+            var $hourSelector = $(this),
+                $btnGroup = $hourSelector.children(".btn-group");
+            if (!$btnGroup.hasClass("active")) {
+                var width = $hourSelector.outerWidth(),
+                    offsetLeft = $hourSelector.offset().left,
+                    offsetRight = $(window).width() - offsetLeft - width,
+                    max = (offsetLeft - 10) / width,
+                    min = 23 - (offsetRight - 10) / width,
+                    leftUnit = $scope.startHour > max ? max : $scope.startHour < min ? min : $scope.startHour;
+                $scope.$apply(function () {
+                    $btnGroup.addClass("active").css({ left: "calc(-" + leftUnit * 100 + "% + " + leftUnit + "px)" });
+                });
+            }
+            if (hourSelectorTimer) {
+                clearTimeout(hourSelectorTimer);
+                hourSelectorTimer = null;
+            }
+        };
+        var hourSelectorLeave = function () {
+            if (!hourSelectorTimer) {
+                hourSelectorTimer = setTimeout(hourSelectorHide, 800);
+            }
+        };
+        var hourSelectorHide = function () {
+            var $hourSelector = $(".hour-selector"),
+                $btnGroup = $hourSelector.children(".btn-group");
+            $btnGroup.removeClass("active");
+        };
+        var hourSelectorBtnClick = function () {
+            hourSelectorHide();
         };
         
         $scope.init();

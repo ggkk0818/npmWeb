@@ -136,7 +136,7 @@
     });
 
     var apps_deps = ['ngSanitize', 'ngCookies', 'ngRoute', 'app'];
-    _.each('controllers directives factories services'.split(' '), function (type) {
+    _.each('controllers directives factories services filters'.split(' '), function (type) {
         var module_name = 'app.' + type;
         // create the module
         app.useModule(angular.module(module_name, []));
@@ -145,7 +145,7 @@
     });
 
     // load the core components
-    require(['controllers/all', 'directives/all'], function () {
+    require(['controllers/all', 'directives/all', 'filters/all'], function () {
         // bootstrap the app
         angular.element(document).ready(function () {
             $('html').attr('ng-controller', 'MainCtrl');

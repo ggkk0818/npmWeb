@@ -118,6 +118,7 @@
                     startTime = record.start_time.split(" ")[1],
                     endTime = record.end_time.split(" ")[1];
                 $location.path("/flow/summary").search({
+                    durationType: "hour",
                     startDate: startDate,
                     startTime: startTime,
                     endTime: endTime

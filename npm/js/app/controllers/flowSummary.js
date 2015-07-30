@@ -513,14 +513,18 @@
             tooltip: {
                 trigger: 'axis',
                 showDelay: 0,
-                position: { x: 20, y: 50 },
+                transitionDuration: 0,
+                position: [80, 30],
+                padding: [5, 0, 5, 0],
+                backgroundColor: "rgba(255,255,255,1)",
+                textStyle:{color:"#333"},
                 formatter: function (params) {
                     var str = null;
                     if (params && params.length) {
-                        str = params[0].name + "<br />";
+                        str = params[0].name + " ";
                         for (var i = 0; i < params.length; i++) {
                             var data = params[i];
-                            str += data.seriesName + ":" + data.value + "kbps<br />";
+                            str += data.seriesName + ":" + data.value + "kbps ";
                         }
                     }
                     else {
@@ -592,13 +596,18 @@
             tooltip: {
                 trigger: 'axis',
                 showDelay: 0,
+                transitionDuration: 0,
+                position: [80, 30],
+                padding: [5, 0, 5, 0],
+                backgroundColor: "rgba(255,255,255,1)",
+                textStyle: { color: "#333" },
                 formatter: function (params) {
                     var str = null;
                     if (params && params.length) {
-                        str = params[0].name + "<br />";
+                        str = params[0].name + " ";
                         for (var i = 0; i < params.length; i++) {
                             var data = params[i];
-                            str += data.seriesName + ":" + data.value + "pps<br />";
+                            str += data.seriesName + ":" + data.value + "kbps ";
                         }
                     }
                     else {

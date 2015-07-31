@@ -266,15 +266,15 @@
             $scope.chartMacFlow.showLoading({ effect: "ring" });
             $scope.chartMacPackage.showLoading({ effect: "ring" });
             //查询外网TOP10
-            flowService.ipChart(params, function (data) {
-                if (data && data.data && data.data.length > 0) {
+            flowService.ipChart($.extend({}, params, { queryType: "FLOW" }), function (data) {
+                if (data && data.data) {
                     var axisData = [],
                         chartData1 = [],
                         chartData2 = [];
-                    if (data.data[0].length) {
-                        data.data[0] = data.data[0].reverse();
-                        for (var i = 0; i < data.data[0].length; i++) {
-                            var d = data.data[0][i];
+                    if (data.data.length) {
+                        data.data = data.data.reverse();
+                        for (var i = 0; i < data.data.length; i++) {
+                            var d = data.data[i];
                             axisData.push(d.srcip);
                             chartData1.push({ name: d.srcip, value: d.sendFlow ? (d.sendFlow * 8 / 1024).toFixed(1) : 0 });
                             chartData2.push({ name: d.srcip, value: d.recFlow ? (d.recFlow * 8 / 1024).toFixed(1) : 0 });
@@ -285,14 +285,16 @@
                     option_ip_flow.series[1].data = chartData2;
                 }
                 $scope.chartIpFlow.hideLoading().setOption(option_ip_flow, true);
-                if (data && data.data && data.data.length > 1) {
+            });
+            flowService.ipChart($.extend({}, params, { queryType: "PACKAGE" }), function (data) {
+                if (data && data.data) {
                     var axisData = [],
                         chartData1 = [],
                         chartData2 = [];
-                    if (data.data[1].length) {
-                        data.data[1] = data.data[1].reverse();
-                        for (var i = 0; i < data.data[1].length; i++) {
-                            var d = data.data[1][i];
+                    if (data.data.length) {
+                        data.data = data.data.reverse();
+                        for (var i = 0; i < data.data.length; i++) {
+                            var d = data.data[i];
                             axisData.push(d.srcip);
                             chartData1.push({ name: d.srcip, value: d.sendPackage ? d.sendPackage.toFixed(1) : 0 });
                             chartData2.push({ name: d.srcip, value: d.recPackage ? d.recPackage.toFixed(1) : 0 });
@@ -305,15 +307,15 @@
                 $scope.chartIpPackage.hideLoading().setOption(option_ip_package, true);
             });
             //查询内网TOP10
-            flowService.ipIntranetChart(params, function (data) {
-                if (data && data.data && data.data.length > 0) {
+            flowService.ipIntranetChart($.extend({}, params, {queryType:"FLOW"}), function (data) {
+                if (data && data.data) {
                     var axisData = [],
                         chartData1 = [],
                         chartData2 = [];
-                    if (data.data[0].length) {
-                        data.data[0] = data.data[0].reverse();
-                        for (var i = 0; i < data.data[0].length; i++) {
-                            var d = data.data[0][i];
+                    if (data.data.length) {
+                        data.data = data.data.reverse();
+                        for (var i = 0; i < data.data.length; i++) {
+                            var d = data.data[i];
                             axisData.push(d.srcip);
                             chartData1.push({ name: d.srcip, value: d.sendFlow ? (d.sendFlow * 8 / 1024).toFixed(1) : 0 });
                             chartData2.push({ name: d.srcip, value: d.recFlow ? (d.recFlow * 8 / 1024).toFixed(1) : 0 });
@@ -324,14 +326,16 @@
                     option_ipIntranet_flow.series[1].data = chartData2;
                 }
                 $scope.chartIpIntranetFlow.hideLoading().setOption(option_ipIntranet_flow, true);
-                if (data && data.data && data.data.length > 1) {
+            });
+            flowService.ipIntranetChart($.extend({}, params, { queryType: "PACKAGE" }), function (data) {
+                if (data && data.data) {
                     var axisData = [],
                         chartData1 = [],
                         chartData2 = [];
-                    if (data.data[1].length) {
-                        data.data[1] = data.data[1].reverse();
-                        for (var i = 0; i < data.data[1].length; i++) {
-                            var d = data.data[1][i];
+                    if (data.data.length) {
+                        data.data = data.data.reverse();
+                        for (var i = 0; i < data.data.length; i++) {
+                            var d = data.data[i];
                             axisData.push(d.srcip);
                             chartData1.push({ name: d.srcip, value: d.sendPackage ? d.sendPackage.toFixed(1) : 0 });
                             chartData2.push({ name: d.srcip, value: d.recPackage ? d.recPackage.toFixed(1) : 0 });

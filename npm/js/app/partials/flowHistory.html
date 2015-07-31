@@ -57,8 +57,11 @@
                 <ul class="pagination" style="margin:0 auto;" data-page-click="show"></ul>
             </nav>
         </div>
-        <div ng-hide="recordList" style="margin-top: 20px; text-align: center;">
+        <div style="margin-top: 20px; text-align: center;" ng-hide="recordList || (queryType.name=='other' && !keyword)">
             <span class="glyphicon glyphicon-hourglass flow-histroy-loading" aria-hidden="true"></span>正在加载...
+        </div>
+        <div style="margin-top: 20px; text-align: center;" ng-show="queryType.name=='other' && !keyword">
+            填写IP条件以查询非关注信息
         </div>
     </div>
 </div>

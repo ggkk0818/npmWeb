@@ -6,8 +6,7 @@
         $scope.QUERY_TYPE = [
             { name: "followIntranet", displayName: "关注（内网）", detailFuncName: "followDetail", queryDoneFuncName: "doQueryDone" },
             { name: "follow", displayName: "关注（外网）", detailFuncName: "followDetail", queryDoneFuncName: "doQueryDoneInternet" },
-            { name: "unfollowIntranet", displayName: "其他（内网）", detailFuncName: "unfollowDetail", queryDoneFuncName: "doQueryDone" },
-            { name: "unfollow", displayName: "其他（外网）", detailFuncName: "unfollowDetail", queryDoneFuncName: "doQueryDone" }
+            { name: "other", displayName: "其他", detailFuncName: "unfollowDetail", queryDoneFuncName: "doQueryDone" }
         ];
         $scope.queryType = $scope.QUERY_TYPE[0];
         $scope.pageNum = 1;
@@ -84,6 +83,8 @@
         };
 
         $scope.doQuery = function () {
+            if ($scope.queryType.name == "other" && !$scope.keyword)
+                return;
             var params = {
                 start: ($scope.pageNum - 1) * $scope.pageSize,
                 limit: $scope.pageSize
@@ -246,6 +247,88 @@
                 }
             });
         };
+        //ip精确查询
+        $scope.searchQuery = function () {
+            $scope.recordList = null;
+            var params = {
+                ip: $scope.keyword
+            };
+            if ($scope.startDate && $scope.startTime) {
+                params.startTime = $scope.startDate + " " + $scope.startTime;
+            }
+            if (params.startTime && $scope.durationInput) {
+                try {
+                    var duration = parseInt($scope.duration, 10),
+                        startTime = new Date(params.startTime.replace(/-/g, "/"));
+                    if (!isNaN(duration)) {
+                        startTime.setSeconds(startTime.getSeconds() + duration);
+                        params.endTime = startTime.Format("yyyy-MM-dd hh:mm:ss");
+                    }
+                }
+                catch (e) { }
+            }
+            flowService.other(params, function (data) {
+                //内网
+                $scope.QUERY_TYPE[0].recordList = data && data["f-intra"] ? data["f-intra"] : [];
+                if ($scope.QUERY_TYPE[0].recordList) {
+                    var recordList = [];
+                    for (var ip in $scope.QUERY_TYPE[0].recordList) {
+                        var record = { ip: ip, ipStatisticses: $scope.QUERY_TYPE[0].recordList[ip] };
+                        if (record.ipStatisticses && record.ipStatisticses.length)
+                            record.alias = record.ipStatisticses[0].alias;
+                        recordList.push(record);
+                    }
+                    $scope.QUERY_TYPE[0].recordList = recordList;
+                }
+                $scope.QUERY_TYPE[0].recordSize = $scope.QUERY_TYPE[0].recordList ? $scope.QUERY_TYPE[0].recordList.length : 0;
+                $scope.QUERY_TYPE[0].pageTotal = Math.floor($scope.QUERY_TYPE[0].recordSize / $scope.QUERY_TYPE[0].pageSize) + ($scope.QUERY_TYPE[0].recordSize % $scope.pageSize > 0 ? 1 : 0);
+                //外网
+                $scope.QUERY_TYPE[1].recordList = data && data["f-inter"] ? data["f-inter"] : [];
+                if ($scope.QUERY_TYPE[1].recordList) {
+                    var recordList = [];
+                    for (var ip in $scope.QUERY_TYPE[1].recordList) {
+                        var record = $scope.QUERY_TYPE[1].recordList[ip];
+                        record.ip = ip;
+                        if (record.ipStatisticses && record.ipStatisticses.length) {
+                            record.alias = record.ipStatisticses[0].alias;
+                        }
+                        recordList.push(record);
+                    }
+                    $scope.QUERY_TYPE[1].recordList = recordList;
+                }
+                $scope.QUERY_TYPE[1].recordSize = $scope.QUERY_TYPE[1].recordList ? $scope.QUERY_TYPE[1].recordList.length : 0;
+                $scope.QUERY_TYPE[1].pageTotal = Math.floor($scope.QUERY_TYPE[1].recordSize / $scope.QUERY_TYPE[1].pageSize) + ($scope.QUERY_TYPE[1].recordSize % $scope.pageSize > 0 ? 1 : 0);
+                //其他
+                $scope.QUERY_TYPE[2].recordList = data && data["other"] ? data["other"] : [];
+                if ($scope.QUERY_TYPE[2].recordList) {
+                    var recordList = [];
+                    for (var ip in $scope.QUERY_TYPE[2].recordList) {
+                        var record = { ip: ip, ipStatisticses: $scope.QUERY_TYPE[2].recordList[ip] };
+                        if (record.ipStatisticses && record.ipStatisticses.length)
+                            record.alias = record.ipStatisticses[0].alias;
+                        recordList.push(record);
+                    }
+                    $scope.QUERY_TYPE[2].recordList = recordList;
+                }
+                $scope.QUERY_TYPE[2].recordSize = $scope.QUERY_TYPE[2].recordList ? $scope.QUERY_TYPE[2].recordList.length : 0;
+                $scope.QUERY_TYPE[2].pageTotal = Math.floor($scope.QUERY_TYPE[2].recordSize / $scope.QUERY_TYPE[2].pageSize) + ($scope.QUERY_TYPE[2].recordSize % $scope.pageSize > 0 ? 1 : 0);
+                //查询详细信息
+                if ($scope.queryType.recordList && $scope.queryType.recordList.length) {
+                    $scope.changeTab($scope.queryType);
+                }
+                else {
+                    for (var i = 0; i < $scope.QUERY_TYPE.length; i++) {
+                        if ($scope.QUERY_TYPE[i].recordList && $scope.QUERY_TYPE[i].recordList.length) {
+                            $scope.changeTab($scope.QUERY_TYPE[i]);
+                            break;
+                        }
+                    }
+                    if (!$scope.recordList) {
+                        $scope.recordList = [];
+                    }
+                }
+            });
+        };
         //搜索
         $scope.search = function () {
             if (typeof $scope.startDateInput == "undefined" || $scope.startDateInput == null || $scope.startDateInput.length == 0)
@@ -276,7 +359,18 @@
         $scope.changeTab = function (tab) {
             if (tab) {
                 $scope.queryType = tab;
-                $scope.show(1);
+                if (!$scope.keyword) {
+                    $scope.show(1);
+                }
+                else {
+                    $scope.recordList = $scope.queryType.recordList || [];
+                    $scope.recordSize = $scope.queryType.recordSize || 0;
+                    $scope.pageTotal = $scope.queryType.pageTotal || 0;
+                    $scope.currentRecord = null;
+                    $scope.currentSessionRecord = null;
+                    $scope.doDetailQuery();
+                    $scope.doSystemQuery();
+                }
             }
         };
         //点击表格ip
@@ -333,7 +427,12 @@
         };
         //获取url查询参数
         $scope.setSearchParams();
-        $scope.doQuery();
+        if ($scope.keyword) {
+            $scope.searchQuery();
+        }
+        else {
+            $scope.doQuery();
+        }
 
     });
 });

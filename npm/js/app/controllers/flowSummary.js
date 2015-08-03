@@ -1101,6 +1101,7 @@
                 trigger: 'axis'
             },
             grid: {
+                x: 120,
                 x2: 20
             },
             legend: {
@@ -1152,6 +1153,7 @@
                 trigger: 'axis'
             },
             grid: {
+                x: 120,
                 x2: 20
             },
             legend: {

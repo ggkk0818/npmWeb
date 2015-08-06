@@ -38,7 +38,7 @@
                     <tr class="flow-history-record" ng-repeat="record in recordList">
                         <td>
                             <a href="javascript:void(0);" ng-click="showDetail(record)" data-toggle="tooltip" data-placement="bottom" data-html="true"
-                               title="{{record.os ? record.os + ' ' + record.osVersion : ''}}{{record.os && record.hasUpTimes ? '&lt;br /&gt;' : ''}}{{record.hasUpTimes ? '在线' + (record.uptimeDays ? record.uptimeDays + '天' : '') + (record.uptimeHours ? record.uptimeHours + '小时' : '') + (record.uptimeMins ? record.uptimeMins + '分钟' : '') : null}}{{(record.os || record.hasUpTimes) && record.country ? '&lt;br /&gt;' + record.country + ' ' + record.city : ''}}">{{record.ip||"暂无"}}</a>
+                               title="{{record.os ? record.os + ' ' + record.osVersion : ''}}{{record.hasUpTimes ? (record.os ? '&lt;br /&gt;' : '') + '在线' + (record.uptimeDays ? record.uptimeDays + '天' : '') + (record.uptimeHours ? record.uptimeHours + '小时' : '') + (record.uptimeMins ? record.uptimeMins + '分钟' : '') : null}}{{record.country ? (record.os || record.hasUpTimes ? '&lt;br /&gt;' : '') + record.country + ' ' + record.city : ''}}{{record.latitude || record.longitude ? (record.os || record.hasUpTimes || record.country ? '&lt;br /&gt;' : '') + (record.longitude ? '经度:' + record.longitude : '') + (record.latitude ? '纬度:' + record.latitude : '') : ''}}">{{record.ip||"暂无"}}</a>
                         </td>
                         <td>{{record.alias}}</td>
                         <td><div data-chart="flow" style="height:50px;"></div></td>

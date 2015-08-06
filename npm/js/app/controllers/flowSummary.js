@@ -611,7 +611,7 @@
                         str = params[0].name + " ";
                         for (var i = 0; i < params.length; i++) {
                             var data = params[i];
-                            str += data.seriesName + ":" + data.value + "kbps ";
+                            str += data.seriesName + ":" + data.value + "pps ";
                         }
                     }
                     else {

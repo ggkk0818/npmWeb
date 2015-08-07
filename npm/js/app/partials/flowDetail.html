@@ -46,7 +46,9 @@
                         <td>{{record.rec_package+record.send_package}}</td>
                         <td>{{record.rec_package}}</td>
                         <td>{{record.send_package}}</td>
-                        <td>{{record.session}}</td>
+                        <td>
+                            <span style="display:block;" data-toggle="tooltip" data-placement="left" data-html="true" title="{{record.tcp_connection_count > -1 && record.udp_connection_count > -1 ? 'TCP:' + record.tcp_connection_count + '&lt;br /&gt;UDP:' + record.udp_connection_count : '' }}">{{(record.tcp_connection_count || 0) + (record.udp_connection_count || 0)}}</span>
+                        </td>
                         <td>{{record.retransferRatio}}</td>
                         <td>{{record.flowRatio}}</td>
                         <td><a href="javascript:void(0);" ng-click="showDetailChart(record)">流量趋势</a></td>

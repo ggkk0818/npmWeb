@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+	<meta charset="utf-8" />
+    <link href="js/vendor/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="js/vendor/metricsgraphics/metricsgraphics.css" rel="stylesheet" />
+    <script src="js/vendor/d3/d3.js"></script>
+    <script src="js/vendor/jquery/jquery-1.11.2.js"></script>
+    <script src="js/vendor/metricsgraphics/metricsgraphics.js"></script>
+</head>
+<body>
+    <div id="chart" style="height:400px;"></div>
+    <script type="text/javascript">
+        var initChart = function () {
+            MG.data_graphic({
+                title: "UFO Sightings",
+                description: "Yearly UFO sightings from the year 1945 to 2010.",
+                data: [
+                    { year: 1964, sightings: 2 },
+                    { year: 1965, sightings: 5 }
+                ],
+                //animate_on_load: false,
+                transition_on_update: false,
+                markers: [{ 'year': 1964, 'label': '"The Creeping Terror" released' }],
+                full_width: false,
+                full_height: false,
+                width: $("#chart").width(),
+                height: $("#chart").height(),
+                target: $("#chart").get(0),
+                x_accessor: 'year',
+                y_accessor: 'sightings'
+            });
+        };
+        $(window).resize(initChart).resize();
+    </script>
+</body>
+</html>

@@ -6,5 +6,6 @@
     "./paginationProtocolGroup",
     "./flowHistoryChart",
     "./flowHistoryDetailChart",
-    "./tooltip"
+    "./tooltip",
+    "./warnCenterChart"
 ], function () { });

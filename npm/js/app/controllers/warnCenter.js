@@ -1,7 +1,7 @@
 ﻿define(['angular', 'lodash', 'jquery', 'services/all', 'css!partials/warnCenter.css'], function (angular, _, $) {
     "use strict";
     var module = angular.module('app.controllers');
-    module.controller('WarnCenterCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, dateTimeService, warningService) {
+    module.controller('WarnCenterCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, dateTimeService, warningService, flowService) {
         //初始化变量
         $scope.CURVE_TYPE = {
             0: { id: 0, name: "内网流量异常" },
@@ -75,7 +75,25 @@
                         record.start_time = new Date(record.start_time).Format("yyyy-MM-dd hh:mm:ss");
                     if (typeof record.end_time === "number")
                         record.end_time = new Date(record.end_time).Format("yyyy-MM-dd hh:mm:ss");
+                    if (record.type == 0 || record.type == 1) {
+                        $scope.doQueryDetail(record);
+                    }
                 }
+            });
+        };
+
+        $scope.doQueryDetail = function (record) {
+            record.isLoading = true;
+            var params = {
+                timeType: "hour",
+                startTime: record.start_time,
+                endTime: record.end_time
+            };
+            flowService.timeFlow(params, function (data) {
+                if (data && data.data) {
+                    record.flowData = data.data;
+                }
+                record.isLoading = false;
             });
         };
         //搜索

@@ -24,7 +24,9 @@
     'numeral',
     'numeral-cn',
     'json-format',
-    'echarts'
+    'echarts',
+    'd3',
+    'metricsgraphics'
 ], function (angular, $, _, appLevelRequire) {
     "use strict";
     var app = angular.module('app', []),

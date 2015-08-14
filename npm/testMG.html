@@ -6,9 +6,11 @@
 	<meta charset="utf-8" />
     <link href="js/vendor/bootstrap/css/bootstrap.css" rel="stylesheet" />
     <link href="js/vendor/metricsgraphics/metricsgraphics.css" rel="stylesheet" />
+    <link href="js/vendor/metricsgraphics/mg_line_brushing.css" rel="stylesheet" />
     <script src="js/vendor/d3/d3.js"></script>
     <script src="js/vendor/jquery/jquery-1.11.2.js"></script>
     <script src="js/vendor/metricsgraphics/metricsgraphics.js"></script>
+    <script src="js/vendor/metricsgraphics/mg_line_brushing.js"></script>
 </head>
 <body>
     <div id="chart" style="height:400px;"></div>
@@ -19,7 +21,12 @@
                 description: "Yearly UFO sightings from the year 1945 to 2010.",
                 data: [
                     { year: 1964, sightings: 2 },
-                    { year: 1965, sightings: 5 }
+                    { year: 1965, sightings: 5 },
+                    { year: 1966, sightings: 2 },
+                    { year: 1967, sightings: 3 },
+                    { year: 1968, sightings: 2 },
+                    { year: 1969, sightings: 4 },
+                    { year: 1970, sightings: 5 }
                 ],
                 //animate_on_load: false,
                 transition_on_update: false,
@@ -29,6 +36,8 @@
                 width: $("#chart").width(),
                 height: $("#chart").height(),
                 target: $("#chart").get(0),
+                //x_axis: false,
+                //y_axis: false,
                 x_accessor: 'year',
                 y_accessor: 'sightings'
             });

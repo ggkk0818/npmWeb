@@ -47,6 +47,10 @@
     font-weight: 400;
     line-height: 1;
 }
-.warn-center-chart .mg-marker-text:before{
+.warn-center-chart .mg-marker-text:after{
     content: "\e023";
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
 }

@@ -7,7 +7,7 @@
             0: { id: 0, name: "内网流量异常" },
             1: { id: 1, name: "外网流量异常" },
             2: { id: 2, name: "每日流量对比" },
-            3: { id: 3, name: "每日ip对比" }
+            3: { id: 3, name: "每日活跃ip对比" }
         };
         $scope.pageNum = 1;
         $scope.pageTotal = 1;
@@ -78,20 +78,52 @@
                     if (record.type == 0 || record.type == 1) {
                         $scope.doQueryDetail(record);
                     }
-                }
+                    else if (record.type == 2) {
+                        $scope.doQueryFlowComparison(record);
+                    }
+                    else if (record.type == 3) {
+                        $scope.doQueryIpComparison(record);
+                    }
+            }
             });
         };
-
+        //查询图表信息
         $scope.doQueryDetail = function (record) {
             record.isLoading = true;
             var params = {
-                timeType: "hour",
+                timeType: "five_second",
                 startTime: record.start_time,
                 endTime: record.end_time
             };
             flowService.timeFlow(params, function (data) {
                 if (data && data.data) {
                     record.flowData = data.data;
+                }
+                record.isLoading = false;
+            });
+        };
+        $scope.doQueryIpComparison = function (record) {
+            record.isLoading = true;
+            var params = {
+                startTime: record.start_time,
+                endTime: record.end_time
+            };
+            flowService.ipComparison(params, function (data) {
+                if (data && data.data) {
+                    record.comparisonData = data.data;
+                }
+                record.isLoading = false;
+            });
+        };
+        $scope.doQueryFlowComparison = function (record) {
+            record.isLoading = true;
+            var params = {
+                startTime: record.start_time,
+                endTime: record.end_time
+            };
+            flowService.flowComparison(params, function (data) {
+                if (data && data.data) {
+                    record.comparisonData = data.data;
                 }
                 record.isLoading = false;
             });
@@ -136,7 +168,7 @@
                     startTime = record.start_time.split(" ")[1],
                     endTime = record.end_time.split(" ")[1];
                 $location.path("/flow/summary").search({
-                    durationType: "hour",
+                    durationType: record.type < 2 ? "hour" : "day",
                     startDate: startDate,
                     startTime: startTime,
                     endTime: endTime

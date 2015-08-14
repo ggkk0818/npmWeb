@@ -462,5 +462,34 @@ function (angular, $, _, config) {
             });
         };
 
+        this.ipComparison = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'statistics/ip/comparison',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        this.flowComparison = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'statistics/flow/comparison',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+
     });
 });

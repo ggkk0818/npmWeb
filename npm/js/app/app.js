@@ -26,7 +26,8 @@
     'json-format',
     'echarts',
     'd3',
-    'metricsgraphics'
+    'MG',
+    //'MG-brushing'
 ], function (angular, $, _, appLevelRequire) {
     "use strict";
     var app = angular.module('app', []),

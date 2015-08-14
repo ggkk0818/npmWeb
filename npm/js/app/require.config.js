@@ -1,7 +1,7 @@
 ﻿'use strict';
 require.config({
     baseUrl: 'js/app',
-    urlArgs: "v=84",
+    urlArgs: "v=87",
     paths: {
         config: './app-config',
         css: '../vendor/require/css',
@@ -36,7 +36,8 @@ require.config({
         'json-format': '../vendor/JSONFormat',
         'echarts': '../vendor/echarts/echarts-all-src',
         'd3': '../vendor/d3/d3',
-        'metricsgraphics': '../vendor/metricsgraphics/metricsgraphics'
+        'MG': '../vendor/metricsgraphics/metricsgraphics',
+        'MG-brushing': '../vendor/metricsgraphics/mg_line_brushing'
     },
     shim: {
         angular: {
@@ -68,7 +69,8 @@ require.config({
         'bootstrap-datetimepicker': ['bootstrap', 'jquery'],
         'bootstrap-datetimepicker-zhcn': ['bootstrap-datetimepicker'],
         'numeral-cn': ['numeral'],
-        'metricsgraphics': ['d3', 'jquery']
+        'MG': ['d3', 'jquery'],
+        'MG-brushing': ['MG']
     },
     waitSeconds: 60
 });

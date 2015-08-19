@@ -1,5 +1,7 @@
 ﻿define([
     "./datetimepicker",
     "./popover",
-    "./tooltip"
+    "./tooltip",
+    "./pagination",
+    "./warnCenterChart"
 ], function () { });

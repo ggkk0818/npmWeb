@@ -79,6 +79,10 @@
                 templateUrl: 'js/app/partials/flowDetail.html',
                 controller: 'FlowDetailCtrl'
             })
+            .when('/warn/center', {
+                templateUrl: 'js/app/partials/warnCenter.html',
+                controller: 'WarnCenterCtrl'
+            })
             .otherwise({
                 redirectTo: '/'
             });

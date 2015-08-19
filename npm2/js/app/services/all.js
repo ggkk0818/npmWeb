@@ -1,4 +1,5 @@
 ﻿define([
     "./dateTimeService",
-    "./flowService"
+    "./flowService",
+    "./warningService"
 ], function () { });

@@ -1,50 +1,27 @@
-﻿<div class="row" style="padding-top:25px;">
-    <div class="col-md-12">
-        <div class="pull-left">
-            <form class="form-inline">
-                <input type="text" class="form-control datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN" data-min-view="2" placeholder="日期" ng-model="startDateInput" ng-keypress="formKeypressHandler($event)">
-                <button class="btn btn-info" type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
-            </form>
+﻿<div class="container view-content" id="view_content">
+    <ul class="nav nav-tabs" style="margin-top:20px">
+        <li class="active"><a href="javascript:void(0);">趋势异常</a></li>
+        <li><a href="javascript:void(0);">返回码错误</a></li>
+        <li><a href="javascript:void(0);">安全警告</a></li>
+        <div style="float:right">
+            <input type="text" class="datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN" data-min-view="2" placeholder="日期" ng-model="startDateInput" ng-keypress="formKeypressHandler($event)">
+            <button class="btn btn-default" type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
+            <button class="btn btn-default" type="button" ng-click="addDay(-1)" data-toggle="tooltip" data-placement="bottom" title="前一天"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button>
+            <button class="btn btn-default" type="button" ng-click="addDay()" ng-class="{'disabled': isToday}" data-toggle="tooltip" data-placement="bottom" title="今天"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span></button>
+            <button class="btn btn-default" type="button" ng-click="addDay(1)" data-toggle="tooltip" data-placement="bottom" title="后一天"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
         </div>
-        <div class="pull-right">
-            <button class="btn btn-info" type="button" ng-click="addDay(-1)" data-toggle="tooltip" data-placement="bottom" title="前一天"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span></button>
-            <button class="btn btn-info" type="button" ng-click="addDay()" ng-class="{'disabled': isToday}" data-toggle="tooltip" data-placement="bottom" title="今天"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span></button>
-            <button class="btn btn-info" type="button" ng-click="addDay(1)" data-toggle="tooltip" data-placement="bottom" title="后一天"><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button>
-        </div>
-    </div>
-</div>
-<div class="row" style="margin-top:20px;">
-    <div class="col-xs-12">
-        <ul class="nav nav-tabs" role="tablist">
-            <li class="active" role="presentation"><a href="javascript:void(0);" role="tab">趋势异常</a></li>
-        </ul>
-        <div style="margin-top:20px;" ng-show="recordList" ng-if="false">
-            <table class="table warn-center-table">
-                <thead>
-                    <tr>
-                        <th>开始时间</th>
-                        <th>结束时间</th>
-                        <th>波形种类</th>
-                        <th style="width:30%;">波形图</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="record in recordList">
-                        <td>{{record.start_time}}</td>
-                        <td>{{record.end_time}}</td>
-                        <td>{{CURVE_TYPE[record.type] ? CURVE_TYPE[record.type].name : "未知(" + record.type + ")"}}</td>
-                        <td>
-                            <a href="javascript:void(0);" ng-click="showFlowSummary(record)" title="在总览中查看">
-                                <img src="data:image/png;base64,{{record.imageCode}}" ng-if="record.imageCode" />
-                            </a>
-                            <div ng-if="!record.imageCode">
-                                <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>暂无图像
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <nav class="text-center" style="position:relative;">
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade in active" id="apart1">
+            <div class="container-fluid">
+                <div class="row" style=" margin:10px;">
+                    <div class="col-md-6" ng-repeat="record in recordList">
+                        <p>{{CURVE_TYPE[record.type] ? CURVE_TYPE[record.type].name : "未知(" + record.type + ")"}}</p>
+                        <div class="warn-center-chart" ng-if="record.flowData || record.comparisonData"></div>
+                    </div>
+                </div>
+            </div>
+            <nav class="text-center" style="position:relative;margin-top:20px;" ng-show="recordList">
                 <div class="pull-right" style="line-height:34px;position:absolute;top:0;right:0;">
                     <span style="padding-right:10px;">匹配的记录 {{recordSize||0}} 笔</span>
                     <span style="padding-right:10px;">第 {{pageNum||0}} 页</span>
@@ -53,54 +30,6 @@
                 <ul class="pagination" style="margin:0 auto;" data-page-click="show"></ul>
             </nav>
         </div>
-        <div class="row warn-center-row" ng-repeat="record in recordList">
-            <div class="col-xs-3">
-                <h3>
-                    {{CURVE_TYPE[record.type] ? CURVE_TYPE[record.type].name : "未知(" + record.type + ")"}}
-                    <small ng-if="record.type < 2"><a href="javascript:void(0);" ng-click="showFlowSummary(record)" title="在总览中查看"><span class="glyphicon glyphicon-share" aria-hidden="true"></span></a></small>
-                </h3>
-                <h4><span class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="开始时间"></span>{{record.start_time}}</h4>
-                <h4><span class="glyphicon glyphicon-time" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="结束时间"></span>{{record.end_time}}</h4>
-            </div>
-            <div class="col-xs-9">
-                <a class="warn-image" href="javascript:void(0);" ng-click="showFlowSummary(record)" title="在总览中查看" ng-if="false && record.imageCode">
-                    <img src="data:image/png;base64,{{record.imageCode}}" />
-                </a>
-                <div style="text-align:center;margin-top:95px;" ng-if="record.isLoading">
-                    <span class="glyphicon glyphicon-hourglass warn-center-loading" aria-hidden="true"></span>
-                </div>
-                <div class="warn-center-chart" ng-if="record.flowData || record.comparisonData"></div>
-                <div class="no-image" ng-if="false && !record.imageCode">
-                    <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>暂无图像
-                </div>
-            </div>
-        </div>
-        <nav class="text-center" style="position:relative;margin-top:20px;" ng-show="recordList">
-            <div class="pull-right" style="line-height:34px;position:absolute;top:0;right:0;">
-                <span style="padding-right:10px;">匹配的记录 {{recordSize||0}} 笔</span>
-                <span style="padding-right:10px;">第 {{pageNum||0}} 页</span>
-                <span>共 {{pageTotal||0}} 页</span>
-            </div>
-            <ul class="pagination" style="margin:0 auto;" data-page-click="show"></ul>
-        </nav>
-        <div ng-hide="recordList" style="margin-top: 20px; text-align: center;">
-            <span class="glyphicon glyphicon-hourglass warn-center-loading" aria-hidden="true"></span>正在加载...
-        </div>
+    </div>
+</div>
 
-    </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="warn_center_image_modal" tabindex="-1" role="dialog" aria-labelledby="warn_center_image_modal" aria-hidden="true">
-    <div class="modal-dialog modal-lg" style="width:1200px;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">波形图</h4>
-            </div>
-            <div class="modal-body">
-                <img src="data:image/png;base64,{{currentRecord.imageCode}}" style="width:100%;" />
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal -->

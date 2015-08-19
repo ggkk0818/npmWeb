@@ -1,0 +1,56 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head lang="zh-cn">
+	<meta charset="UTF-8">
+    <title ng-bind-template="{{currentPage.name}} | KnowOps">KnowOps</title>
+    <link href="js/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="js/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link href="js/vendor/metricsgraphics/metricsgraphics.css" rel="stylesheet" />
+    <link href="js/vendor/metricsgraphics/mg_line_brushing.css" rel="stylesheet" />
+    <link href="css/index.css" rel="stylesheet">
+    <script src="js/vendor/require/require.js"></script>
+    <script src="js/app/require.config.js"></script>
+    <script>require(['app'], function () { })</script>
+</head>
+<body>
+    <div class="container-fluid ">
+        <nav class="navbar navbar-default navbar-bgone" role="navigation">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <img class="view-logo" src="img/oneapm.jpg" alt="" />
+                <ul class="nav navbar-nav view-li">
+                    <li ng-repeat="nav in sidebarNav" ng-class="{'active':$parent.currentPage.href==nav.href}">
+                        <a ng-href="{{nav.href}}" class="nav-text"><i class="glyphicon" ng-class="nav.icon"></i>{{nav.name}}</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="javascript:void(0);" class="nav-text">用户中心</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="nav-text"><i class="glyphicon glyphicon-exclamation-sign"></i><span id="alert_icon" class="badge pull-right">5</span>告警中心</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="nav-text">登陆</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="nav-text">注册</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div ng-view></div>
+    </div>
+    <div class="view-footer ">
+        <div class="copyright ">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <span>Copyright © <a href="javascript:void(0);">ONEAPM</a></span> |
+                        <span><a href="http://www.miibeian.gov.cn/" target="_blank">京ICP备号</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

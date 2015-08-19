@@ -1,0 +1,32 @@
+﻿.flowSummary-chart-container{
+    position:relative;
+}
+.flowSummary-chart-container .btn{
+    position:absolute;
+    left:45px;
+    bottom:8px;
+    color:#337ab7;
+}
+.flowSummary-chart-container .btn.locked{
+    border-color:#2d85ca;
+    background-color:#2d85ca;
+    color:#fff;
+}
+.hour-selector{
+    position:relative;
+}
+.hour-selector .btn-group{
+    position:absolute;
+    top:0;
+    left:calc(-600% + 5px);
+    display:none;
+    width:calc(2400% - 23px);
+    z-index:1;
+    -moz-box-shadow:0px 0px 5px #333;
+    -webkit-box-shadow:0px 0px 5px #333;
+    box-shadow:0px 0px 5px #333;
+    border-radius:4px;
+}
+.hour-selector .btn-group.active{
+    display:block;
+}

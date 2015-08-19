@@ -1,0 +1,97 @@
+﻿<div class="container view-content" id="pag_one">
+    <ul id="myTab" class="nav nav-tabs" style="clear:both;margin-top:20px">
+        <li class="active ">
+            <a href="javascript:void(0);">
+                趋势指标
+            </a>
+        </li>
+        <li><a href="#/flow/detail">实时视图</a></li>
+        <li><a href="javascript:void(0);">服务端视图</a></li>
+        <li><a href="javascript:void(0);">PCAP包下载</a></li>
+    </ul>
+
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade in active" id="apart1">
+            <ul class="nav  nav-tabs nav-indent">
+                <li class="active "><a href="javascript:void(0);" data-toggle="tab">流量趋势</a></li>
+                <li><a href="javascript:void(0);" data-toggle="tab">世界地图</a></li>
+                <div style="float:right">
+                    <div class="form-group btn-group">
+                        <button class="btn btn-default" type="button" ng-repeat="t in DURATION_TYPE" ng-class="{'active':durationType.id==t.id}" ng-click="changeDurationType(t)">{{t.name}}</button>
+                    </div>
+                    <input type="text" class="form-control datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN" data-min-view="2" placeholder="日期" ng-model="startDateInput" ng-keypress="formKeypressHandler($event)">
+                    <div class="form-group hour-selector" ng-show="durationType.id=='hour'">
+                        <button class="btn btn-default" type="button">{{startHour|numberFormat:2}}</button>
+                        <div class="btn-group">
+                            <button class="btn btn-default" type="button" ng-repeat="h in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" ng-class="{'active':startHour==h}" ng-click="changeHour(h)">{{h|numberFormat:2}}</button>
+                        </div>
+                    </div>
+                    <button class="btn btn-info" type="button" ng-click="search()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
+                    <a class="btn btn-default" ng-click="addDay(-1)" data-toggle="tooltip" data-placement="bottom" title="前一{{durationType.name}}"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a>
+                    <a class="btn btn-default" ng-click="addDay()" ng-class="{'disabled': isToday}" data-toggle="tooltip" data-placement="bottom" title="现在"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span></a>
+                    <a class="btn btn-default" ng-click="addDay(1)" data-toggle="tooltip" data-placement="bottom" title="后一{{durationType.name}}"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+                </div>
+            </ul>
+            <div class="tab-content wrapp-view">
+                <div class="tab-pane fade in active">
+                    <div class="row" style="margin-top:20px;">
+                        <div class="col-xs-12 flowSummary-chart-container">
+                            <div id="flowChart" style="height:200px;"></div>
+                            <a class="btn btn-default" href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" title="联动" ng-class="{'locked': isConnect}" ng-click="toggleChartConnect()" ng-show="option_flow.series[0].data.length" ng-if="false">
+                                <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 20px;">
+                        <div class="col-xs-12 flowSummary-chart-container">
+                            <div id="packageChart" style="height:270px;"></div>
+                            <a class="btn btn-default" href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" title="联动" ng-class="{'locked': isConnect}" ng-click="toggleChartConnect()" ng-show="option_package.series[0].data.length" ng-if="false">
+                                <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:20px;">
+                        <div class="col-xs-6">
+                            <div id="ipChartFlow" style="height:400px;"></div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div id="ipChartPackage" style="height:400px;"></div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:20px;">
+                        <div class="col-xs-6">
+                            <div id="ipIntranetChartFlow" style="height:400px;"></div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div id="ipIntranetChartPackage" style="height:400px;"></div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:20px;">
+                        <div class="col-xs-6">
+                            <div id="protocolChartFlow" style="height:400px;"></div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div id="protocolChartPackage" style="height:400px;"></div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:20px;">
+                        <div class="col-xs-6">
+                            <div id="portChartFlow" style="height:400px;"></div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div id="portChartPackage" style="height:400px;"></div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:20px;margin-bottom:20px;">
+                        <div class="col-xs-6">
+                            <div id="macChartFlow" style="height:400px;"></div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div id="macChartPackage" style="height:400px;"></div>
+                        </div>
+                    </div>                
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

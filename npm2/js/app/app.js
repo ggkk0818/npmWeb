@@ -20,6 +20,8 @@
     'jquery-outerhtml',
     'jquery-easing',
     'jquery-numberanimate',
+    'jquery-dateRangeSlider',
+    'jquery-dateRangeSlider-withRuler',
     'date-format',
     'numeral',
     'numeral-cn',
@@ -27,7 +29,8 @@
     'echarts',
     'd3',
     'MG',
-    //'MG-brushing'
+    //'MG-brushing',
+    'liquidFillGauge'
 ], function (angular, $, _, appLevelRequire) {
     "use strict";
     var app = angular.module('app', []),
@@ -78,6 +81,10 @@
             .when('/flow/detail', {
                 templateUrl: 'js/app/partials/flowDetail.html',
                 controller: 'FlowDetailCtrl'
+            })
+            .when('/flow/server', {
+                templateUrl: 'js/app/partials/serverView.html',
+                controller: 'ServerViewCtrl'
             })
             .when('/warn/center', {
                 templateUrl: 'js/app/partials/warnCenter.html',

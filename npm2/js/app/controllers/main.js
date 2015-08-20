@@ -12,8 +12,12 @@
         //其他导航页面信息
         var otherNav = [];
         otherNav.push({
-            name: "设置",
-            href: "#/settings"
+            name: "网络总览",
+            href: "#/flow/.*"
+        });
+        otherNav.push({
+            name: "告警中心",
+            href: "#/warn/center"
         });
         var getRoutePath = function (target) {
             var path = null;

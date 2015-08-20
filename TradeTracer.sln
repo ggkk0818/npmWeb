@@ -66,6 +66,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "npm2", "npm2\", "{B8E06E1A-
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "16059"
+		SlnRelativePath = "npm2\"
 		DefaultWebSiteLanguage = "Visual C#"
 	EndProjectSection
 EndProject

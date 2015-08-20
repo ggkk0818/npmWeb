@@ -1,8 +1,8 @@
 ﻿<div class="container view-content" id="pag_one">
     <ul id="myTab" class="nav nav-tabs ">
         <li><a href="#/flow/summary">趋势指标</a></li>
-        <li class="active "><a href="#apart2">实时视图</a></li>
-        <li><a href="javascript:void(0);">服务端视图</a></li>
+        <li class="active"><a href="#apart2">实时视图</a></li>
+        <li><a href="#/flow/server">服务端视图</a></li>
         <li><a href="javascript:void(0);">PCAP包下载</a></li>
     </ul>
     <div id="myTabContent" class="tab-content">
@@ -91,7 +91,10 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td>{{record.flowRatio}}</td>
+                                                <td>
+                                                    <div class="flow-detail-ratio-chart"></div>
+                                                    {{record.flowRatio}}
+                                                </td>
                                                 <td><a href="javascript:void(0);" ng-click="showDetailChart(record)">流量趋势</a></td>
                                             </tr>
                                         </tbody>

@@ -3,5 +3,7 @@
     "./popover",
     "./tooltip",
     "./pagination",
-    "./warnCenterChart"
+    "./warnCenterChart",
+    "./flowDetailRatioChart",
+    "./jqRangeSlider"
 ], function () { });

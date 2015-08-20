@@ -26,6 +26,8 @@ require.config({
         'jquery-outerhtml': '../vendor/jquery/jquery.outerhtml',
         'jquery-easing': '../vendor/jquery/jquery.easing.1.3',
         'jquery-numberanimate': '../vendor/jquery/jquery.numberAnimate',
+        'jquery-dateRangeSlider': '../vendor/jquery/jQDateRangeSlider-min',
+        'jquery-dateRangeSlider-withRuler': '../vendor/jquery/jQEditRangeSlider-withRuler-min',
         bootstrap: '../vendor/bootstrap/js/bootstrap',
         'bootstrap-datetimepicker': '../vendor/bootstrap-datetimepicker/bootstrap-datetimepicker',
         'bootstrap-datetimepicker-zhcn': '../vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN',
@@ -37,7 +39,8 @@ require.config({
         'echarts': '../vendor/echarts/echarts-all-src',
         'd3': '../vendor/d3/d3',
         'MG': '../vendor/metricsgraphics/metricsgraphics',
-        'MG-brushing': '../vendor/metricsgraphics/mg_line_brushing'
+        'MG-brushing': '../vendor/metricsgraphics/mg_line_brushing',
+        'liquidFillGauge': '../vendor/d3/liquidFillGauge'
     },
     shim: {
         angular: {
@@ -57,6 +60,8 @@ require.config({
         'jquery-outerhtml': ['jquery'],
         'jquery-easing': ['jquery'],
         'jquery-numberanimate': ['jquery'],
+        'jquery-dateRangeSlider': ['jquery', 'jquery-ui'],
+        'jquery-dateRangeSlider-withRuler': ['jquery', 'jquery-ui', 'jquery-dateRangeSlider'],
         'angular-sanitize': ['angular'],
         'angular-cookies': ['angular'],
         'angular-loader': ['angular'],
@@ -70,7 +75,8 @@ require.config({
         'bootstrap-datetimepicker-zhcn': ['bootstrap-datetimepicker'],
         'numeral-cn': ['numeral'],
         'MG': ['d3', 'jquery'],
-        'MG-brushing': ['MG']
+        'MG-brushing': ['MG'],
+        'liquidFillGauge': ['d3']
     },
     waitSeconds: 60
 });

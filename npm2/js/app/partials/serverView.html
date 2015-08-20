@@ -1,0 +1,70 @@
+﻿<div class="container view-content" id="pag_one">
+    <ul id="myTab" class="nav nav-tabs" style="clear:both;margin-top:20px">
+        <li><a href="#/flow/summary">趋势指标</a></li>
+        <li><a href="#/flow/detail">实时视图</a></li>
+        <li class="active"><a href="javascript:void(0);">服务端视图</a></li>
+        <li><a href="javascript:void(0);">PCAP包下载</a></li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade in active" id="apart3">
+            <ul class="nav  nav-tabs nav-indent">
+                <li class="active"><a href="#apart1_11">按IP模式</a></li>
+                <li><a href="#apart2_11">按协议模式</a></li>
+                <div style="float:right;">
+
+                    <input type="text" placeholder="2015-08-03" id="input_fir">
+
+                    <button class="btn btn-default" type="button">查询</button>
+
+                    <a href="#" class="btn btn-default ">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+                    <a href="#" class="btn btn-default ">
+                        <span class=" glyphicon glyphicon-stop"></span>
+                    </a>
+                    <a href="#" class="btn btn-default ">
+                        <span class=" glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                </div>
+
+            </ul>
+            <div class="col-md-12" style="margin-top:10px;margin-bottom:10px;">
+                <div class="range-slider" data-type="date" data-min="2015-08-20 00:00:00" data-max="2015-08-20 23:59:59" data-start="2015-08-20 02:00:00" data-end="2015-08-20 05:00:00"></div>
+            </div>
+            <div class="tab-content">
+                <div id="apart1_11" class="tab-pane fade in active">
+                    <div class="row">
+                        <div class="col-md-8" style="margin:10px 20px 10px">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="自定义IP组" style="position:relative">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="	position:absolute">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">自定义IP组</a></li>
+                                    <li><a href="#">192.168.200.82</a></li>
+                                    <li><a href="#">192.168.200.83</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-fluid" style="margin-top:20px">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div style="background-color:#ccc;margin:10px">
+                                    <p><i class="fa fa-lightbulb-o fa-lg" style="margin-right:10px"></i>192.168.200.10</p>
+                                    <p>
+                                        在线时长：2小时;
+                                        操作系统：CentOS release 5.5
+                                    </p>
+                                    <hr />
+                                    <div id="mainmy" style="height:250px;width:250px;margin-top: -20%;margin-left: 10%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

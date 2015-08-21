@@ -84,7 +84,7 @@
                     else if (record.type == 3) {
                         $scope.doQueryIpComparison(record);
                     }
-            }
+                }
             });
         };
         //查询图表信息

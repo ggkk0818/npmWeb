@@ -13,13 +13,13 @@ function (angular, app, _) {
               restrict: 'C',
               link: function ($scope, elem, attr) {
                   var render = function () {
-                      var onValuesChanging = function () {
-                          $scope.$apply(function (e, data) {
+                      var onValuesChanging = function (e, data) {
+                          $scope.$apply(function () {
                               $scope.$emit("rangeSlideValuesChanging", $scope, elem, e, data);
                           });
                       };
-                      var onValuesChanged = function () {
-                          $scope.$apply(function (e, data) {
+                      var onValuesChanged = function (e, data) {
+                          $scope.$apply(function () {
                               $scope.$emit("rangeSlideValuesChanged", $scope, elem, e, data);
                           });
                       };
@@ -35,7 +35,14 @@ function (angular, app, _) {
                                   max: max
                               },
                               formatter: function (val) {
-                                  return val ? val.Format("hh:mm:ss") : null;
+                                  var str = null;
+                                  if (typeof val === "number") {
+                                      str = new Date(val).Format("hh:mm:ss");
+                                  }
+                                  else if (val instanceof Date) {
+                                      str = val.Format("hh:mm:ss");
+                                  }
+                                  return str;
                               }
                           };
                           if (start instanceof Date || end instanceof Date) {

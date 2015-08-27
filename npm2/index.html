@@ -8,17 +8,21 @@
     <link href="js/vendor/metricsgraphics/metricsgraphics.css" rel="stylesheet" />
     <link href="js/vendor/metricsgraphics/mg_line_brushing.css" rel="stylesheet" />
     <link href="css/iThing.css" rel="stylesheet" />
-    <link href="css/index.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/patch.css" rel="stylesheet" />
+    <link href="css/docs.min.css" rel="stylesheet" />
     <script src="js/vendor/require/require.js"></script>
     <script src="js/app/require.config.js"></script>
     <script>require(['app'], function () { })</script>
 </head>
 <body>
-    <div class="container-fluid ">
-        <nav class="navbar navbar-default navbar-bgone" role="navigation">
+    <header>
+        <nav class="navbar-default  navbar-justified" role="navigation">
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <img class="view-logo" src="img/oneapm.jpg" alt="" />
-                <ul class="nav navbar-nav view-li">
+                <ul class="nav navbar-nav navbar-left">
+                    <li>
+                        <a ng-href="#/" style="padding:0;"><img class="view-logo" src="img/oneapm.jpg" alt="" /></a> 
+                    </li>
                     <li ng-repeat="nav in sidebarNav" ng-class="{'active':$parent.currentPage.href==nav.href}">
                         <a ng-href="{{nav.href}}" class="nav-text"><i class="glyphicon" ng-class="nav.icon"></i>{{nav.name}}</a>
                     </li>
@@ -28,7 +32,17 @@
                         <a href="javascript:void(0);" class="nav-text">用户中心</a>
                     </li>
                     <li>
-                        <a href="#/warn/center" class="nav-text"><i class="glyphicon glyphicon-exclamation-sign"></i><span id="alert_icon" class="badge pull-right">5</span>告警中心</a>
+                        <a href="javascript:void(0);" class="">
+                            <i class="glyphicon glyphicon-cog"></i>
+                            设置
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#/warn/center" style="display:inline-block;">
+                            <i class="glyphicon glyphicon-exclamation-sign"></i>
+                            <span class="badge badge-danger pull-right">5</span>
+                            告警中心
+                        </a>
                     </li>
                     <li>
                         <a href="javascript:void(0);" class="nav-text">登陆</a>
@@ -39,16 +53,19 @@
                 </ul>
             </div>
         </nav>
-        <div ng-view></div>
-    </div>
-    <div class="view-footer ">
-        <div class="copyright ">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <span>Copyright © <a href="javascript:void(0);">ONEAPM</a></span> |
-                        <span><a href="http://www.miibeian.gov.cn/" target="_blank">京ICP备号</a></span>
-                    </div>
+    </header>
+    <div ng-view></div>
+    <div class="copyright" ng-if="showFooter">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <span>
+                        Copyright ©
+                        <a href="#/">ONEAPM</a>
+                    </span>
+                    <span>
+                        <a href="http://www.eversec.com/" target="_blank">京ICP备号</a>
+                    </span>
                 </div>
             </div>
         </div>

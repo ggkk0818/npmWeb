@@ -1,9 +1,10 @@
-﻿<div class="bgimg" id="bg_img">
-    <button class="logo-textone">ONEAPM</button>
-    <div class="input-group form-insertone">
-        <input type="text" class="form-control" placeholder="请输入IP信息">
-        <span class="input-group-btn">
-            <button class="btn btn-default" type="button" onclick="jumpall()">Go!</button>
-        </span>
+﻿<div id="bg_img" class="row index_fir">
+    <div class="col-md-4 col-md-offset-1 vertical-center">
+        <div class="input-group input-group-lg">
+            <input type="text" class="form-control" placeholder="请输入IP信息" ng-model="keywordInput" ng-keypress="formKeypressHandler($event)">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button" ng-click="search()">Go!</button>
+            </span>
+        </div>
     </div>
 </div>

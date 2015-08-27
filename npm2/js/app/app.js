@@ -90,6 +90,10 @@
                 templateUrl: 'js/app/partials/warnCenter.html',
                 controller: 'WarnCenterCtrl'
             })
+            .when('/network/perspective', {
+                templateUrl: 'js/app/partials/networkPerspective.html',
+                controller: 'NetworkPerspectiveCtrl'
+            })
             .otherwise({
                 redirectTo: '/'
             });

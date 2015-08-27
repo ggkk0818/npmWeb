@@ -2,10 +2,12 @@
     "use strict";
     var module = angular.module('app.controllers');
     module.controller('MainCtrl', function ($rootScope, $scope, $route, $window, $location) {
+        //初始化变量
+        $scope.showFooter = true;
         //导航信息
         var sidebarNav = [];
         sidebarNav.push({ name: "网络总览", href: "#/flow/summary", icon: "glyphicon-th-large" });
-        sidebarNav.push({ name: "网络透视", href: "#/", icon: "glyphicon-eye-open" });
+        sidebarNav.push({ name: "网络透视", href: "#/", icon: "glyphicon-th-large" });
         sidebarNav.push({ name: "应用透视", href: "#/", icon: "glyphicon-lock" });
         sidebarNav.push({ name: "主动测评", href: "#/", icon: "glyphicon-th" });
         $scope.sidebarNav = sidebarNav;
@@ -14,6 +16,10 @@
         otherNav.push({
             name: "网络总览",
             href: "#/flow/.*"
+        });
+        otherNav.push({
+            name: "网络透视",
+            href: "#/network/.*"
         });
         otherNav.push({
             name: "告警中心",

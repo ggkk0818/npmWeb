@@ -1,0 +1,40 @@
+/* the css of index and  index1  */
+.badge-danger {
+	background-color: #d9534f
+}
+.index_fir {
+	background-image: url(../img/bg8.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+.index_sec {
+	background-image: url(../img/bgimg_2.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+.vertical-center {
+	position: absolute;
+	top: 30%
+}
+/* 网络总览中的group中的图 */
+.con-view{
+	margin-top: 20px;
+	margin-bottom: 10px;
+	overflow: hidden;
+}
+
+svg{
+	margin:0px;
+	padding:0px;
+}
+/* the css of the total of network */
+.copyright {
+    background: #111;
+    font-size: 13px;
+    text-align: center;
+    color: #555555;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    border-top: 1px solid #303030;
+}
+

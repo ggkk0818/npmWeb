@@ -136,7 +136,10 @@
                             for (var j = 0; j < $scope.recordList.length; j++) {
                                 var record = $scope.recordList[j];
                                 if (detail.ip === record.ip) {
-                                    $.extend(record, detail);
+                                    for (var attr in detail) {
+                                        if (detail[attr] != null)
+                                            record[attr] = detail[attr];
+                                    }
                                     if (record.uptimeMins) {
                                         record.hasUpTimes = true;
                                         if (record.uptimeMins >= 60) {
@@ -148,6 +151,23 @@
                                             record.uptimeHours = record.uptimeMins % 24;
                                         }
                                     }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            networkOverviewService.protocol(params, function (data) {
+                if ($scope.recordList && $scope.recordList.length) {
+                    if (data && data.status == 200 && data.data) {
+                        for (var i = 0; i < data.data.length; i++) {
+                            var detail = data.data[i];
+                            for (var j = 0; j < $scope.recordList.length; j++) {
+                                var record = $scope.recordList[j];
+                                if (detail.ip === record.ip) {
+                                    if (detail.flowRatioList)
+                                        record.flowRatioList = detail.flowRatioList;
                                     break;
                                 }
                             }

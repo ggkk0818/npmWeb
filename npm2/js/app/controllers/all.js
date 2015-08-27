@@ -4,5 +4,6 @@
     "./flowSummary",
     "./flowDetail",
     "./warnCenter",
-    "./serverView"
+    "./serverView",
+    "./networkPerspective"
 ], function () { });

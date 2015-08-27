@@ -1,0 +1,544 @@
+﻿<div class="container con-view">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="192.168.200.80">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">查询</button>
+                </span>
+            </div>
+        </div>
+        <div class="col-md-5 col-md-offset-3">
+            <ul class="nav  nav-pills pull-right">
+                <li>
+                    <button type="button" class="btn btn-sm  btn-primary">实时</button>
+                </li>
+                <li>
+                    <input type="text" class="form-control" placeholder="2015-08-03">
+                </li>
+                <li>
+                    <button type="button" class="btn btn-sm  btn-primary">查询</button>
+                </li>
+                <li>
+                    <button type="button" class="btn btn-sm  btn-primary">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </button>
+                </li>
+
+                <li>
+                    <button type="button" class="btn  btn-sm  btn-primary">
+                        <span class=" glyphicon glyphicon-stop"></span>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="btn btn-sm  btn-primary">
+                        <span class=" glyphicon glyphicon-chevron-right"></span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row con-view">
+        <div class="col-md-12 ">
+            <div class="range-slider" data-type="date" data-min="{{::startDate}} 00:00:00" data-max="{{::startDate}} 23:59:59" data-start="{{::startDate + ' ' + startTime}}" data-end="{{::startDate + ' ' + endTime}}"></div>
+        </div>
+    </div>
+    <div class="row con-view">
+        <div class="col-md-2" role="complementary">
+            <nav id="affix" class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix-top">
+                <ul class="nav bs-docs-sidenav">
+
+                    <li class="active">
+                        <a href="javascript:void(0);" data-target="onepart">基础指标</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" data-target="#secondpart">提供服务</a>
+                        <ul class="nav">
+                            <li class="">
+                                <a href="javascript:void(0);" data-target="#onepart_1">HTTP:80</a>
+                            </li>
+                            <li class="">
+                                <a href="javascript:void(0);" data-target="#secondpart_2">HTTP:8080</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#thirdpart">使用服务</a>
+                        <ul class="nav">
+                            <li>
+                                <a href="javascript:void(0);" data-target="#thirdpart_3">HTTP 192.168.200.80:80</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" data-target="#fordpart_4">HTTP 192.168.200.81:80</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <a class="back-to-top" href="javascript:void(0);" data-target="#top">返回顶部</a>
+            </nav>
+        </div>
+        <div class="col-md-10">
+            <div class="row" id="onepart">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading ">基础指标</div>
+                        <div class="panel-body">
+                            <div class="col-md-6">
+
+                                <div id='linked_multi1'></div>
+                                <p class="text-center">流量</p>
+                            </div>
+                            <div class="col-md-6">
+
+                                <div id='linked_multi2'></div>
+                                <p class="text-center">数据包</p>
+                            </div>
+                            <div class="col-md-6">
+
+                                <div id="fake_users1"></div>
+                                <p class="text-center">连接数</p>
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div id="fake_users2"></div>
+                                <p class="text-center">交互数</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="secondpart">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"> 提供的服务</div>
+                        <div class="panel-body">
+                            <div class="row" id="onepart_1">
+                                <div class="col-md-12">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">HTTP:80</div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div id='linked_multi3'></div>
+                                                    <a href="#" data-toggle="modal"
+                                                       data-target="#liuliang" class="text-center" style="display:block">流量</a>
+                                                    <div class="modal fade" id="liuliang" tabindex="-1" role="dialog"
+                                                         aria-labelledby="myModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                    <h5 class="modal-title">流量</h5>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div id="linked_multi9"></div>
+                                                                            <p class="text-center">192.168.200.80</p>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div id="linked_multi10"></div>
+                                                                            <p class="text-center">192.168.200.81</p>
+
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div id="linked_multi11"></div>
+                                                                            <p class="text-center">192.168.200.82</p>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div id="linked_multi12"></div>
+                                                                            <p class="text-center">192.168.200.83</p>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div id="linked_multi13"></div>
+                                                                            <p class="text-center">192.168.200.84</p>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div id="linked_multi14"></div>
+                                                                            <p class="text-center">192.168.200.85</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id='linked_multi4'></div>
+                                                    <p class="text-center">数据包</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users26"></div>
+                                                    <p class="text-center">连接数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users27"></div>
+                                                    <p class="text-center">交互个数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users28"></div>
+                                                    <p class="text-center">交互率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users29"></div>
+                                                    <p class="text-center">连接持续时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users30"></div>
+                                                    <p class="text-center">连接建立时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users31"></div>
+                                                    <p class="text-center">第一字节时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users32"></div>
+                                                    <p class="text-center">连接建立成功个数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users34"></div>
+                                                    <p class="text-center">连接率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users35"></div>
+                                                    <p class="text-center">连接请求个数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users36"></div>
+                                                    <p class="text-center">连接请求率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users37"></div>
+                                                    <p class="text-center">连接失败个数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users38"></div>
+                                                    <p class="text-center">服务器响应时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users40"></div>
+                                                    <p class="text-center">客户端重置率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users41"></div>
+                                                    <p class="text-center">服务器重置率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake1"></div>
+                                                    <p class="text-center">数据传输时间/往返时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake2"></div>
+                                                    <p class="text-center">净荷传输时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake3"></div>
+                                                    <p class="text-center">净荷</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake4"></div>
+                                                    <p class="text-center">丢包率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake5"></div>
+                                                    <p class="text-center">包重传率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake6"></div>
+                                                    <p class="text-center">重传率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake7"></div>
+                                                    <p class="text-center">重传延时</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div id="fake_users66"></div>
+                                                    <p class="text-center">交易条数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users67"></div>
+                                                    <p class="text-center">成功率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users68"></div>
+                                                    <p class="text-center">响应时常</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" id="secondpart_2">
+                                <div class="col-md-12">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading inhert_style">http:8080</div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div id='linked_multi7'></div>
+                                                    <p class="text-center">流量</p>
+                                                </div>
+                                                <div class="col-md-4">
+
+                                                    <div id='linked_multi8'></div>
+                                                    <p class="text-center">数据包</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users4"></div>
+                                                    <p class="text-center">连接数</p>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div id="fake_users5"></div>
+                                                    <p class="text-center">交互个数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users6"></div>
+                                                    <p class="text-center">交互率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users7"></div>
+                                                    <p class="text-center">连接持续时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users8"></div>
+                                                    <p class="text-center">连接建立时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users9"></div>
+                                                    <p class="text-center">第一字节时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users10"></div>
+                                                    <p class="text-center">连接建立成功个数</p>
+                                                </div>
+
+                                                <div class="col-md-4">
+
+                                                    <div id="fake_users12"></div>
+                                                    <p class="text-center">连接率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users13"></div>
+                                                    <p class="text-center">连接请求个数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users14"></div>
+                                                    <p class="text-center">连接请求率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users15"></div>
+                                                    <p class="text-center">连接失败个数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users16"></div>
+                                                    <p class="text-center">服务器响应时间</p>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div id="fake_users18"></div>
+                                                    <p class="text-center">客户端重置率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users19"></div>
+                                                    <p class="text-center">服务器重置率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake8"></div>
+                                                    <p class="text-center">数据传输时间/往返时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake9"></div>
+                                                    <p class="text-center">净荷传输时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake10"></div>
+                                                    <p class="text-center">净荷</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake11"></div>
+                                                    <p class="text-center">丢包率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake12"></div>
+                                                    <p class="text-center">包重传率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake13"></div>
+                                                    <p class="text-center">重传率</p>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div id="fake14"></div>
+                                                    <p class="text-center">重传延时</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div id="fake_users63"></div>
+                                                    <p class="text-center">交易条数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users64"></div>
+                                                    <p class="text-center">成功率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users65"></div>
+                                                    <p class="text-center">响应时常</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="thirdpart">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading ">
+                            使用的服务
+                        </div>
+                        <div class="panel-body">
+                            <div class="row" id="thirdpart_3">
+                                <div class="col-md-12">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading ">HTTP 192.168.200.80:80</div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div id='linked_multi5'></div>
+                                                    <p class="text-center">流量</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id='linked_multi6'></div>
+                                                    <p class="text-center">数据包</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users48"></div>
+                                                    <p class="text-center">连接数</p>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div id="fake_users49"></div>
+                                                    <p class="text-center">交互个数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users50"></div>
+                                                    <p class="text-center">交互率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users51"></div>
+                                                    <p class="text-center">连接持续时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users52"></div>
+                                                    <p class="text-center">连接建立时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users53"></div>
+                                                    <p class="text-center">第一字节时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users54"></div>
+                                                    <p class="text-center">连接建立成功个数</p>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div id="fake_users56"></div>
+                                                    <p class="text-center">连接率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users57"></div>
+                                                    <p class="text-center">连接请求个数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users58"></div>
+                                                    <p class="text-center">连接请求率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users59"></div>
+                                                    <p class="text-center">连接失败个数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users60"></div>
+                                                    <p class="text-center">服务器响应时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users61"></div>
+                                                    <p class="text-center">客户端重置率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake_users62"></div>
+                                                    <p class="text-center">服务器重置率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake21"></div>
+                                                    <p class="text-center">数据传输时间/往返时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake20"></div>
+                                                    <p class="text-center">净荷传输时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake19"></div>
+                                                    <p class="text-center">净荷</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake18"></div>
+                                                    <p class="text-center">丢包率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake17"></div>
+                                                    <p class="text-center">包重传率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake16"></div>
+                                                    <p class="text-center">重传率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div id="fake15"></div>
+                                                    <p class="text-center">重传延时</p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" id="fordpart_4">
+                                        <div class="col-md-12">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading ">HTTP 192.168.200.81:80</div>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <div id='linked_multi15'></div>
+                                                            <p class="text-center">流量</p>
+                                                        </div>
+                                                        <div class="col-md-4">
+
+                                                            <div id='linked_multi16'></div>
+                                                            <p class="text-center">数据包</p>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

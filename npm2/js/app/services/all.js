@@ -2,5 +2,6 @@
     "./dateTimeService",
     "./flowService",
     "./warningService",
-    "./networkOverviewService"
+    "./networkOverviewService",
+    "./networkPerspectiveService"
 ], function () { });

@@ -12,7 +12,7 @@
                     <a href="javascript:void(0);">{{tab.displayName}}</a>
                 </li>
                 <div style="float:right;">
-                    <input type="text" class="datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN" data-min-view="2" placeholder="日期" ng-model="startDateInput" ng-keypress="formKeypressHandler($event)">
+                    <input type="text" class="form-control datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN" data-min-view="2" placeholder="日期" ng-model="startDateInput" ng-keypress="formKeypressHandler($event)">
                     <button class="btn btn-default" type="button" ng-click="search()">查询</button>
                     <a class="btn btn-default" ng-click="addDay(-1)" data-toggle="tooltip" data-placement="bottom" title="前一{{durationType.name}}"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a>
                     <a class="btn btn-default" ng-click="addDay()" ng-class="{'disabled': isToday}" data-toggle="tooltip" data-placement="bottom" title="现在"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span></a>

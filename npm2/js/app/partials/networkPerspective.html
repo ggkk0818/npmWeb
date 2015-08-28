@@ -2,9 +2,9 @@
     <div class="row">
         <div class="col-md-4">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="192.168.200.80">
+                <input type="text" class="form-control" placeholder="IP" ng-model="keywordInput" ng-keypress="formKeypressHandler($event)" />
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="button">查询</button>
+                    <button class="btn btn-default" type="button" ng-click="search()">查询</button>
                 </span>
             </div>
         </div>
@@ -14,24 +14,23 @@
                     <button type="button" class="btn btn-sm  btn-primary">实时</button>
                 </li>
                 <li>
-                    <input type="text" class="form-control" placeholder="2015-08-03">
+                    <input type="text" class="form-control datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN" data-min-view="2" placeholder="日期" ng-model="startDateInput" ng-keypress="formKeypressHandler($event)">
                 </li>
                 <li>
-                    <button type="button" class="btn btn-sm  btn-primary">查询</button>
+                    <button type="button" class="btn btn-sm  btn-primary" ng-click="search()">查询</button>
                 </li>
                 <li>
-                    <button type="button" class="btn btn-sm  btn-primary">
+                    <button type="button" class="btn btn-sm  btn-primary" ng-click="addDay(-1)" data-toggle="tooltip" data-placement="bottom" title="前一天">
                         <span class="glyphicon glyphicon-chevron-left"></span>
                     </button>
                 </li>
-
                 <li>
-                    <button type="button" class="btn  btn-sm  btn-primary">
+                    <button type="button" class="btn  btn-sm  btn-primary" ng-click="addDay()" data-toggle="tooltip" data-placement="bottom" title="现在">
                         <span class=" glyphicon glyphicon-stop"></span>
                     </button>
                 </li>
                 <li>
-                    <button type="button" class="btn btn-sm  btn-primary">
+                    <button type="button" class="btn btn-sm  btn-primary" ng-click="addDay(1)" data-toggle="tooltip" data-placement="bottom" title="后一天">
                         <span class=" glyphicon glyphicon-chevron-right"></span>
                     </button>
                 </li>

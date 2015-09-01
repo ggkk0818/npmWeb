@@ -1,0 +1,214 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title></title>
+    <link href="css/login-v2.css" rel="stylesheet" />
+    <script src="js/vendor/jquery/jquery-1.11.2.min.js"></script>
+    <script src="js/vendor/jquery/jquery.easing.1.3.js"></script>
+    <script src="js/vendor/particlesjs/particles.min.js"></script>
+</head>
+<body>
+    <div id="particles-js" class="image-container">
+    </div>
+    <div class="login-form">
+        <h3>请关注微信公众号，获取验证码登录</h3>
+        <img class="qr-img" src="img-login/qrcode_for_gh_680066d014af_344.jpg" />
+        <!--<div class="form-control">
+            <input name="username" class="input" type="text" placeholder="用户名" value="admin" required />
+            <div class="tooltip">用户名错误</div>
+        </div>-->
+        <div class="form-control">
+            <input name="password" class="input" type="password" placeholder="验证码" required />
+            <div class="tooltip">验证码错误</div>
+        </div>
+        <a class="button" href="javascript:void(0);">登录</a>
+        <p class="msg hidden">登录失败</p>
+    </div>
+    <script type="text/javascript">
+        var $imageContainer = $("body .image-container"),
+            $loginForm = $(".login-form"),
+            $password = $loginForm.find("input[name=password]");
+        var initImage = function () {
+            var bgPath = "img-login/", bgArr = [
+                "background0.jpg",
+                "background1.jpg",
+                "background2.jpg",
+                "background3.png"
+            ];
+            $imageContainer.css({ backgroundImage: "url(" + bgPath + bgArr[Math.floor(Math.random() * 4)] + ")" });
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": {
+                        "value": 110,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": "#ffffff"
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        },
+                        "polygon": {
+                            "nb_sides": 5
+                        },
+                        "image": {
+                            "src": "img/github.svg",
+                            "width": 100,
+                            "height": 100
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.5,
+                        "random": false,
+                        "anim": {
+                            "enable": false,
+                            "speed": 1,
+                            "opacity_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "size": {
+                        "value": 1,
+                        "random": true,
+                        "anim": {
+                            "enable": false,
+                            "speed": 20,
+                            "size_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 40,
+                        "color": "#fff",
+                        "opacity": 1,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 3,
+                        "direction": "none",
+                        "random": false,
+                        "straight": false,
+                        "out_mode": "out",
+                        "attract": {
+                            "enable": false,
+                            "rotateX": 600,
+                            "rotateY": 1200
+                        }
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "grab"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 120,
+                            "line_linked": {
+                                "opacity": 1
+                            }
+                        },
+                        "bubble": {
+                            "distance": 400,
+                            "size": 40,
+                            "duration": 2,
+                            "opacity": 8,
+                            "speed": 3
+                        },
+                        "repulse": {
+                            "distance": 300
+                        },
+                        "push": {
+                            "particles_nb": 4
+                        },
+                        "remove": {
+                            "particles_nb": 2
+                        }
+                    }
+                },
+                "retina_detect": true,
+                "config_demo": {
+                    "hide_card": false,
+                    "background_color": "#b61924",
+                    "background_image": "",
+                    "background_position": "50% 50%",
+                    "background_repeat": "no-repeat",
+                    "background_size": "cover"
+                }
+            });
+        };
+        var doLogin = function () {
+            if ($(this).hasClass("disabled"))
+                return;
+            $loginForm.children("p.msg").addClass("hidden");
+            //表单验证
+            var hasError = 0;
+            $loginForm.find(".form-control input, .form-control select").each(function (i, e) {
+                var $this = $(this),
+                    $control = $this.parent();
+                if ($this.prop("required") && (!$this.val() || $this.val().length == 0)) {
+                    $control.addClass("has-error");
+                    hasError++;
+                }
+                else {
+                    $control.removeClass("has-error");
+                }
+            });
+            if (hasError == 0) {
+                var params = {
+                    username: "admin",
+                    password: $password.val()
+                };
+                $(this).addClass("disabled");
+                $.ajax({
+                    url: "./signin",
+                    type: "POST",
+                    data: params,
+                    dataType: "json",
+                    cache: false,
+                    traditional: true,
+                    success: function (data) {
+                        if (data && data.status == 200) {
+                            window.location.href = "index.html";
+                        }
+                        else {
+                            $loginForm.children("p.msg").removeClass("hidden").text("登录失败。");
+                        }
+                    },
+                    error: function () {
+                        $loginForm.children("p.msg").removeClass("hidden").text("登录失败。");
+                    }
+                }).always(function () {
+                    $loginForm.children("a.button").removeClass("disabled");
+                });
+            }
+        };
+        $loginForm.find("input").keypress(function (e) {
+            if (e && e.keyCode == 13) {
+                doLogin.call($loginForm.children("a.button").get(0));
+            }
+        });
+        initImage();
+        $loginForm.children("a.button").click(doLogin);
+    </script>
+</body>
+</html>

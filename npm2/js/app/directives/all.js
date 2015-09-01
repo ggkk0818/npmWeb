@@ -5,5 +5,6 @@
     "./pagination",
     "./warnCenterChart",
     "./flowDetailRatioChart",
-    "./jqRangeSlider"
+    "./jqRangeSlider",
+    "./networkPerspectiveChart"
 ], function () { });

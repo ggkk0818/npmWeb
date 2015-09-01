@@ -38,3 +38,55 @@ svg{
     border-top: 1px solid #303030;
 }
 
+
+	.chart {
+  position: relative;
+  display: inline-block;
+  width: 110px;
+
+  
+  
+  text-align: center;
+}
+.chart canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.percent {
+  display: inline-block;
+  line-height: 110px;
+  z-index: 2;
+}
+.percent:after {
+  content: '%';
+  margin-left: 0.1em;
+  font-size: .8em;
+}
+
+	.chart1 {
+  position: relative;
+  display: inline-block;
+  width: 110px;
+
+  
+  
+  text-align: center;
+}
+.chart1 canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.percent1 {
+  display: inline-block;
+  line-height: 110px;
+  z-index: 2;
+}
+.percent1:after {
+  content: '%';
+  margin-left: 0.1em;
+  font-size: .8em;
+}
+
+

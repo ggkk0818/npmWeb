@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title></title>
+    <link href="css/login.css" rel="stylesheet" />
+    <script src="js/vendor/jquery/jquery-1.11.2.min.js"></script>
+    <script src="js/vendor/jquery/jquery.easing.1.3.js"></script>
+</head>
+<body>
+    <div class="image-container">
+    </div>
+    <div class="login-form">
+        <h3>请关注微信公众号，获取验证码登录</h3>
+        <img class="qr-img" src="img-login/qrcode_for_gh_680066d014af_344.jpg" />
+        <!--<div class="form-control">
+            <input name="username" class="input" type="text" placeholder="用户名" value="admin" required />
+            <div class="tooltip">用户名错误</div>
+        </div>-->
+        <div class="form-control">
+            <input name="password" class="input" type="password" placeholder="验证码" required />
+            <div class="tooltip">验证码错误</div>
+        </div>
+        <a class="button" href="javascript:void(0);">登录</a>
+        <p class="msg hidden">登录失败</p>
+    </div>
+    <script type="text/javascript">
+        var $imageContainer = $("body .image-container"),
+            $loginForm = $(".login-form"),
+            $password = $loginForm.find("input[name=password]");
+        var initImage = function () {
+            for (var i = 0; i < 83; i++) {
+                var $template = $("<div><img /></div>"),
+                    path = "img-login/" + (i < 10 ? "0" : "") + i + ".jpg";
+                $template.addClass("image").children().attr("src", path);
+                $imageContainer.append($template);
+            }
+            $imageContainer.children("div.image").first().addClass("show");
+        };
+        var setPosition = function () {
+            var $window = $(window),
+                width = 1024,
+                height = 718,
+                ratio = width / height,
+                windowRatio = $window.width() / $window.height();
+            if (windowRatio < ratio) {
+                $imageContainer.height($window.height()).width(ratio * $window.height());
+            }
+            else {
+                $imageContainer.width($window.width()).height(height / width * $window.width());
+            }
+            $("body > div").first().height(2490 + $(window).height());
+        };
+        var timer = null;
+        var play = function () {
+            $loginForm.fadeTo("slow", 0, "easeInOutCubic");
+            if (timer == null)
+                timer = setInterval(playTick, 50);
+        };
+        var playTick = function () {
+            var $current = $imageContainer.find(".image.show");
+            if ($current.length && $current.next(".image").length) {
+                $current.next(".image").addClass("show").end().removeClass("show");
+                if ($imageContainer.find(".image.show").nextAll(".image").length < 10) {
+                    $imageContainer.css({ opacity: $imageContainer.find(".image.show").nextAll(".image").length / 10 });
+                }
+            }
+            else {
+                clearInterval(timer);
+                playDone();
+            }
+        };
+        var playDone = function () {
+            window.location.href = "index.html";
+        };
+        var doLogin = function () {
+            if ($(this).hasClass("disabled"))
+                return;
+            $loginForm.children("p.msg").addClass("hidden");
+            //表单验证
+            var hasError = 0;
+            $loginForm.find(".form-control input, .form-control select").each(function (i, e) {
+                var $this = $(this),
+                    $control = $this.parent();
+                if ($this.prop("required") && (!$this.val() || $this.val().length == 0)) {
+                    $control.addClass("has-error");
+                    hasError++;
+                }
+                else {
+                    $control.removeClass("has-error");
+                }
+            });
+            if (hasError == 0) {
+                var params = {
+                    username: "admin",
+                    password: $password.val()
+                };
+                $(this).addClass("disabled");
+                $.ajax({
+                    url: "./signin",
+                    type: "POST",
+                    data: params,
+                    dataType: "json",
+                    cache: false,
+                    traditional: true,
+                    success: function (data) {
+                        if (data && data.status == 200) {
+                            play();
+                        }
+                        else {
+                            $loginForm.children("p.msg").removeClass("hidden").text("登录失败。");
+                        }
+                    },
+                    error: function () {
+                        $loginForm.children("p.msg").removeClass("hidden").text("登录失败。");
+                    }
+                }).always(function () {
+                    $loginForm.children("a.button").removeClass("disabled");
+                });
+            }
+        };
+        initImage();
+        $loginForm.children("a.button").click(doLogin);
+    </script>
+</body>
+</html>

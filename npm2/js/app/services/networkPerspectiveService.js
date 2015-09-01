@@ -8,10 +8,11 @@ function (angular, $, _, config) {
     'use strict';
     var module = angular.module('app.services');
     module.service('networkPerspectiveService', function ($http, $rootScope, $interval) {
-        this.base = function (params, callback) {
+        //基础指标
+        this.basic = function (params, callback) {
             $http({
                 method: 'GET',
-                url: 'perspective/base',
+                url: 'perspective/basic',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {
@@ -22,10 +23,11 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
-        this.service = function (params, callback) {
+        //开启协议列表
+        this.openService = function (params, callback) {
             $http({
                 method: 'GET',
-                url: 'perspective/service',
+                url: 'perspective/open/service',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {
@@ -36,10 +38,11 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
-        this.serviceDetail = function (params, callback) {
+        //协议统计信息
+        this.openServiceMetric = function (params, callback) {
             $http({
                 method: 'GET',
-                url: 'perspective/service/detail',
+                url: 'perspective/open/service/metric',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {

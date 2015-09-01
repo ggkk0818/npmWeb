@@ -89,42 +89,152 @@
         };
         //查询数据
         $scope.doQuery = function () {
-            var params = {};
+            var params = {
+                ip: $scope.keyword
+            };
             if ($scope.startDate) {
                 params.startTime = $scope.startDate + " " + $scope.startTime;
                 params.endTime = $scope.startDate + " " + $scope.endTime;
             }
-            networkPerspectiveService.base(params, function (data) {
-                $scope.success = data && data.status == 200 ? true : false;
-                $scope.recordList = data && data.data ? data.data : [];
+            networkPerspectiveService.basic(params, function (data) {
+                $scope.baseRecord = data || {};
+                if ($scope.baseRecord.time && $scope.baseRecord.time.length) {
+                    for (var i = 0; i < $scope.baseRecord.time.length; i++) {
+                        $scope.baseRecord.time[i] = new Date($scope.baseRecord.time[i]);
+                    }
+                    $timeout(function () {
+                        if ($scope.baseRecord.flow) {
+                            var chartData = [];
+                            for (var i = 0; i < $scope.baseRecord.flow.length; i++) {
+                                if (!$scope.baseRecord.time || i >= $scope.baseRecord.time.length)
+                                    break;
+                                chartData.push({ time: $scope.baseRecord.time[i], value: $scope.baseRecord.flow[i] });
+                            }
+                            MG.data_graphic({
+                                legend: ['总'],
+                                data: [chartData],
+                                full_width: true,
+                                height: 120,
+                                right: 20,
+                                top: 17,
+                                mouseover: function (d, i) {
+                                    //custom format the rollover text, show days
+                                    var str = (d.time instanceof Date ? d.time.Format("hh:mm:ss") + " " : "") + (d.value ? (d.value * 8 / 1024).toFixed(2) : d.value) + "kbps";
+                                    $('#networkPerspective_basic_flow svg .mg-active-datapoint').html(str);
+                                },
+                                target: '#networkPerspective_basic_flow',
+                                linked: true,
+                                x_accessor: 'time',
+                                y_accessor: 'value'
+                            });
+                        }
+                        if ($scope.baseRecord.package) {
+                            var chartData = [];
+                            for (var i = 0; i < $scope.baseRecord.package.length; i++) {
+                                if (!$scope.baseRecord.time || i >= $scope.baseRecord.time.length)
+                                    break;
+                                chartData.push({ time: $scope.baseRecord.time[i], value: $scope.baseRecord.package[i] });
+                            }
+                            MG.data_graphic({
+                                legend: ['总'],
+                                data: [chartData],
+                                full_width: true,
+                                height: 120,
+                                right: 20,
+                                top: 17,
+                                mouseover: function (d, i) {
+                                    //custom format the rollover text, show days
+                                    var str = (d.time instanceof Date ? d.time.Format("hh:mm:ss") + " " : "") + (d.value || 0) + "pps";
+                                    $('#networkPerspective_basic_package svg .mg-active-datapoint').html(str);
+                                },
+                                target: '#networkPerspective_basic_package',
+                                linked: true,
+                                x_accessor: 'time',
+                                y_accessor: 'value'
+                            });
+                        }
+                        if ($scope.baseRecord.connection) {
+                            var chartData = [];
+                            for (var i = 0; i < $scope.baseRecord.connection.length; i++) {
+                                if (!$scope.baseRecord.time || i >= $scope.baseRecord.time.length)
+                                    break;
+                                chartData.push({ time: $scope.baseRecord.time[i], value: $scope.baseRecord.connection[i] });
+                            }
+                            MG.data_graphic({
+                                data: chartData,
+                                full_width: true,
+                                height: 120,
+                                right: 20,
+                                top: 17,
+                                mouseover: function (d, i) {
+                                    //custom format the rollover text, show days
+                                    var str = (d.time instanceof Date ? d.time.Format("hh:mm:ss") + " " : "") + (d.value || 0) + "个";
+                                    $('#networkPerspective_basic_connection svg .mg-active-datapoint').html(str);
+                                },
+                                target: '#networkPerspective_basic_connection',
+                                x_accessor: 'time',
+                                y_accessor: 'value'
+                            });
+                        }
+                        if ($scope.baseRecord.turn) {
+                            var chartData = [];
+                            for (var i = 0; i < $scope.baseRecord.turn.length; i++) {
+                                if (!$scope.baseRecord.time || i >= $scope.baseRecord.time.length)
+                                    break;
+                                chartData.push({ time: $scope.baseRecord.time[i], value: $scope.baseRecord.turn[i] });
+                            }
+                            MG.data_graphic({
+                                data: chartData,
+                                full_width: true,
+                                height: 120,
+                                right: 20,
+                                top: 17,
+                                mouseover: function (d, i) {
+                                    //custom format the rollover text, show days
+                                    var str = (d.time instanceof Date ? d.time.Format("hh:mm:ss") + " " : "") + (d.value || 0) + "个";
+                                    $('#networkPerspective_basic_turn svg .mg-active-datapoint').html(str);
+                                },
+                                target: '#networkPerspective_basic_turn',
+                                x_accessor: 'time',
+                                y_accessor: 'value'
+                            });
+                        }
+                    });
+                }
             });
-            networkPerspectiveService.service(params, function (data) {
-                $scope.serviceList = data && data.data ? data.data : [];
-                for (var i = 0; i < $scope.serviceList.length; i++) {
-                    var record = $scope.recordList[i];
-                    if (typeof record.start_time === "number")
-                        record.start_time = new Date(record.start_time).Format("yyyy-MM-dd hh:mm:ss");
-                    if (typeof record.end_time === "number")
-                        record.end_time = new Date(record.end_time).Format("yyyy-MM-dd hh:mm:ss");
+            networkPerspectiveService.openService(params, function (data) {
+                $scope.serviceRecordList = data && data.data ? data.data : [];
+                for (var i = 0; i < $scope.serviceRecordList.length; i++) {
+                    var record = $scope.serviceRecordList[i];
                     $scope.doServiceDetailQuery(record);
                 }
             });
         };
         //查询详情
         $scope.doServiceDetailQuery = function (record) {
-            var params = {};
+            var params = {
+                ip: $scope.keyword
+            };
+            if (record) {
+                params.protocol = record.protocol;
+                params.port = record.port;
+            }
             if ($scope.startDate) {
                 params.startTime = $scope.startDate + " " + $scope.startTime;
                 params.endTime = $scope.startDate + " " + $scope.endTime;
             }
-            networkPerspectiveService.serviceDetail(params, function (data) {
-                if (data && data.status == 200 && data.data) {
-                    $.extend(record, data.data);
+            networkPerspectiveService.openServiceMetric(params, function (data) {
+                if (data && data.status == 200) {
+                    record.metric = data;
                 }
             });
         };
         //搜索
         $scope.search = function () {
+            if (typeof $scope.keywordInput == "undefined" || $scope.keywordInput == null || $scope.keywordInput.length == 0)
+                $scope.keyword = null;
+            else
+                $scope.keyword = $scope.keywordInput;
             if (typeof $scope.startDateInput == "undefined" || $scope.startDateInput == null || $scope.startDateInput.length == 0)
                 $scope.startDate = null;
             else

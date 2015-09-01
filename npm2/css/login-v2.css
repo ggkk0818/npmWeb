@@ -1,0 +1,258 @@
+﻿html {
+    font-family: "微软雅黑", 'Microsoft YaHei', Arial;
+    font-size: 14px;
+    line-height: 1.42857143;
+    background-color:#000;
+    color: #000;
+    background-color: #fff;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+body {
+    margin: 0;
+    padding-top:50px;
+}
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+*:before,
+*:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+    display: block;
+}
+a {
+    background-color: transparent;
+    text-decoration: none;
+    color: #000;
+}
+a:active,
+a:hover {
+    outline: 0;
+}
+a:hover,
+a.underline {
+    text-decoration: underline;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.1;
+    color: inherit;
+}
+h1,
+.h1 {
+    font-size: 36px;
+}
+h2,
+.h2 {
+    font-size: 30px;
+}
+h3,
+.h3 {
+    font-size: 20px;
+}
+h4,
+.h4 {
+    font-size: 16px;
+}
+h5,
+.h5 {
+    font-size: 14px;
+}
+h6,
+.h6 {
+    font-size: 12px;
+}
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+.hidden {
+    display: none !important;
+    visibility: hidden;
+}
+.invisible {
+    visibility: hidden;
+}
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+.clearfix:after {
+    clear: both;
+}
+.clearfix {
+    *zoom: 1;
+}
+/* ==========================================================================
+   Form Control
+   ========================================================================== */
+input.input {
+    width: 100%;
+    height:50px;
+    border-radius: 0px;
+    background-color: #f5f5f5;
+    color: #333d30;
+    border: 0px solid rgb(51, 61, 48);
+    box-shadow: none;
+    display: block;
+    padding:15px 15px;
+    margin: 0 auto 10px;
+    font-size:1rem;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    transition: box-shadow 0.45s, border-color 0.45s ease-in-out;
+}
+input.input:hover {
+    border-left: 5px solid #b6b6b6;
+    padding-left: 10px;
+}
+input.input:focus {
+    border-left: 5px solid #333d30;
+    padding-left: 10px;
+    outline: none;
+    box-shadow: inset 5px 0 0 #333d30;
+    -webkit-box-shadow: inset 5px 0 0 #333d30;
+    -moz-box-shadow: inset 5px 0 0 #333d30;
+}
+input.input::-moz-placeholder{
+    color:#b6b6b6;
+}
+input.input::-webkit-input-placeholder{
+    color:#b6b6b6;
+}
+input.input:-ms-input-placeholder{
+    color:#b6b6b6;
+}
+input.button,
+a.button{
+    display:block;
+    width:120px;
+    margin:15px auto;
+    padding: 15px 20px;
+    background-color: #6f95a9;
+    border-bottom: none;
+    text-align:center;
+    color:#fff;
+    border-radius:5px;
+    -webkit-transition: background 500ms ease, color 500ms ease;
+    -moz-transition: background 500ms ease, color 500ms ease;
+    transition: background 500ms ease, color 500ms ease;
+}
+input.button:hover,
+a.button:hover{
+    background-color: #668291;
+    text-decoration:none;
+}
+input.button.disabled,
+input.button.disabled:hover,
+a.button.disabled,
+a.button.disabled:hover{
+    background-color: #ccc;
+}
+/* ==========================================================================
+   Background
+   ========================================================================== */
+.image-container{
+    position:fixed;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    z-index:1;
+    background-position:center center;
+    background-repeat:no-repeat;
+    background-size:cover;
+}
+/* ==========================================================================
+   Login Panel
+   ========================================================================== */
+.login-form{
+    position:fixed;
+    left:50%;
+    top:50%;
+    width:450px;
+    height:475px;
+    margin: -237px 0 0 -225px;
+    padding:25px 50px;
+    background:rgba(255,255,255,0.7);
+    z-index:2;
+}
+.login-form h3{
+    margin:0 0 20px;
+    text-align:center;
+}
+.login-form .qr-img{
+    display:block;
+    width:250px;
+    height:250px;
+    margin:10px auto;
+}
+.login-form .form-control{
+    position:relative;
+    width:250px;
+    margin:0 auto;
+}
+.login-form .form-control .tooltip{
+    position:absolute;
+    top: -20px;
+    right:0;
+    display:none;
+    padding:0 10px;
+    background: #e86c4b;
+    border-radius:5px;
+    color:#fff;
+    font-size:12px;
+    font-family:"宋体";
+    line-height:20px;
+}
+.login-form .form-control.has-error .tooltip{
+    display:block;
+}
+.login-form .form-control .tooltip:after{
+    content:' ';
+    border-top: 9px solid #e86c4b;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    position: absolute;
+    right: 20px;
+    bottom: -7px;
+}
+.login-form a.button{
+    width:150px;
+    margin-bottom:5px;
+}
+.login-form p{
+    margin:5px 0;
+    text-align:center;
+}

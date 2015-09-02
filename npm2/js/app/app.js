@@ -22,6 +22,7 @@
     'jquery-numberanimate',
     'jquery-dateRangeSlider',
     'jquery-dateRangeSlider-withRuler',
+    'jquery-scrollTo',
     'date-format',
     'numeral',
     'numeral-cn',

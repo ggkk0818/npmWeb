@@ -22,7 +22,16 @@
                         bottom: 50
                     }
                 });
-                $("body").scrollspy({ target: "#affix" })
+                $("#affix").on("click", "a", function () {
+                    var $a = $(this);
+                    if ($a.data("target")) {
+                        $(window).scrollTo($a.data("target"), "normal");
+                    }
+                    else if (typeof $a.data("top") !== "undefined") {
+                        $(window).scrollTo(parseInt($a.data("top"), 10), "normal");
+                    }
+                });
+                $("body").scrollspy({ target: "#affix" });
             });
         };
         //获取查询参数
@@ -108,7 +117,7 @@
                             for (var i = 0; i < $scope.baseRecord.flow.length; i++) {
                                 if (!$scope.baseRecord.time || i >= $scope.baseRecord.time.length)
                                     break;
-                                chartData.push({ time: $scope.baseRecord.time[i], value: $scope.baseRecord.flow[i] });
+                                chartData.push({ time: $scope.baseRecord.time[i], value: $scope.baseRecord.flow[i] ? ($scope.baseRecord.flow[i] * 8 / 1024) : 0 });
                             }
                             MG.data_graphic({
                                 legend: ['总'],
@@ -119,7 +128,7 @@
                                 top: 17,
                                 mouseover: function (d, i) {
                                     //custom format the rollover text, show days
-                                    var str = (d.time instanceof Date ? d.time.Format("hh:mm:ss") + " " : "") + (d.value ? (d.value * 8 / 1024).toFixed(2) : d.value) + "kbps";
+                                    var str = (d.time instanceof Date ? d.time.Format("hh:mm:ss") + " " : "") + (d.value ? d.value.toFixed(2) : 0) + "kbps";
                                     $('#networkPerspective_basic_flow svg .mg-active-datapoint').html(str);
                                 },
                                 target: '#networkPerspective_basic_flow',

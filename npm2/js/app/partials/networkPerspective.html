@@ -59,7 +59,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#thirdpart">使用服务</a>
+                        <a href="javascript:void(0);" data-target="#thirdpart">使用服务</a>
                         <ul class="nav">
                             <li>
                                 <a href="javascript:void(0);" data-target="#thirdpart_3">HTTP 192.168.200.80:80</a>
@@ -70,7 +70,7 @@
                         </ul>
                     </li>
                 </ul>
-                <a class="back-to-top" href="javascript:void(0);" data-target="#top">返回顶部</a>
+                <a class="back-to-top" href="javascript:void(0);" data-top="0">返回顶部</a>
             </nav>
         </div>
         <div class="col-md-10">
@@ -145,11 +145,11 @@
                                                     <p class="text-center">流量</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div id='linked_multi4'></div>
+                                                    <div data-type="packet" style="height:120px;"></div>
                                                     <p class="text-center">数据包</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div id="fake_users26"></div>
+                                                    <div data-type="connection" style="height:120px;"></div>
                                                     <p class="text-center">连接数</p>
                                                 </div>
                                                 <div class="col-md-4">
@@ -205,31 +205,31 @@
                                                     <p class="text-center">服务器重置率</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div id="fake1"></div>
+                                                    <div data-type="transTime"></div>
                                                     <p class="text-center">数据传输时间/往返时间</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div id="fake2"></div>
+                                                    <div data-type="netPayloadTransTime"></div>
                                                     <p class="text-center">净荷传输时间</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div id="fake3"></div>
+                                                    <div data-type="netPayloadTime"></div>
                                                     <p class="text-center">净荷</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div id="fake4"></div>
+                                                    <div data-type="packetLossRatio"></div>
                                                     <p class="text-center">丢包率</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div id="fake5"></div>
+                                                    <div data-type="packetRetransRatio"></div>
                                                     <p class="text-center">包重传率</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div id="fake6"></div>
+                                                    <div data-type="retransRatio"></div>
                                                     <p class="text-center">重传率</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div id="fake7"></div>
+                                                    <div data-type="timeRetrans"></div>
                                                     <p class="text-center">重传延时</p>
                                                 </div>
                                             </div>

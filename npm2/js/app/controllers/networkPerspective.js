@@ -218,6 +218,13 @@
                     $scope.doServiceDetailQuery(record);
                 }
             });
+            networkPerspectiveService.usageService(params, function (data) {
+                $scope.usageServiceRecordList = data && data.data ? data.data : [];
+                for (var i = 0; i < $scope.usageServiceRecordList.length; i++) {
+                    var record = $scope.usageServiceRecordList[i];
+                    $scope.doUsageServiceDetailQuery(record);
+                }
+            });
         };
         //查询详情
         $scope.doServiceDetailQuery = function (record) {
@@ -233,6 +240,24 @@
                 params.endTime = $scope.startDate + " " + $scope.endTime;
             }
             networkPerspectiveService.openServiceMetric(params, function (data) {
+                if (data && data.status == 200) {
+                    record.metric = data;
+                }
+            });
+        };
+        $scope.doUsageServiceDetailQuery = function (record) {
+            var params = {
+                ip: $scope.keyword
+            };
+            if (record) {
+                params.protocol = record.protocol;
+                params.port = record.port;
+            }
+            if ($scope.startDate) {
+                params.startTime = $scope.startDate + " " + $scope.startTime;
+                params.endTime = $scope.startDate + " " + $scope.endTime;
+            }
+            networkPerspectiveService.usageServiceMetric(params, function (data) {
                 if (data && data.status == 200) {
                     record.metric = data;
                 }

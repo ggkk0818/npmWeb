@@ -23,6 +23,7 @@
     'jquery-dateRangeSlider',
     'jquery-dateRangeSlider-withRuler',
     'jquery-scrollTo',
+    'jquery-easypiechart',
     'date-format',
     'numeral',
     'numeral-cn',

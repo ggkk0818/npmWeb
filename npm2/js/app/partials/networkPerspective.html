@@ -54,18 +54,15 @@
                         <a href="javascript:void(0);" data-target="#secondpart">提供服务</a>
                         <ul class="nav">
                             <li ng-repeat="service in serviceRecordList">
-                                <a href="javascript:void(0);" data-target="#{{service.protocol + service.port}}">{{service.protocol}}:{{service.port}}</a>
+                                <a href="javascript:void(0);" data-target="#open-{{service.protocol + service.port}}">{{service.protocol}}:{{service.port}}</a>
                             </li>
                         </ul>
                     </li>
                     <li>
                         <a href="javascript:void(0);" data-target="#thirdpart">使用服务</a>
                         <ul class="nav">
-                            <li>
-                                <a href="javascript:void(0);" data-target="#thirdpart_3">HTTP 192.168.200.80:80</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" data-target="#fordpart_4">HTTP 192.168.200.81:80</a>
+                            <li ng-repeat="service in usageServiceRecordList">
+                                <a href="javascript:void(0);" data-target="#usage-{{service.protocol + service.port}}">{{service.protocol}}:{{service.port}}</a>
                             </li>
                         </ul>
                     </li>
@@ -126,7 +123,7 @@
                             </div>
                         </div>
                         <div class="panel-body" style="padding-left:0;padding-right:0">
-                            <div class="row network-perspective-service-record" id="{{service.protocol + service.port}}" ng-repeat="service in serviceRecordList" ng-show="serviceRecordList.length">
+                            <div class="row network-perspective-service-record" id="open-{{service.protocol + service.port}}" ng-repeat="service in serviceRecordList" ng-show="serviceRecordList.length">
                                 <div class="col-md-12">
                                     <div class="panel panel-default">
                                         <div class="panel-heading network_perspective_head_style">{{service.protocol}}:{{service.port}}</div>
@@ -153,11 +150,23 @@
                                                     <p class="text-center">连接数</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div id="fake_users27"></div>
-                                                    <p class="text-center">交互个数</p>
+                                                    <p class="text-center" data-type="outTurnCount">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
+                                                    <p class="text-center">交互个数（流出）</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div id="fake_users28"></div>
+                                                    <p class="text-center" data-type="inTurnCount">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
+                                                    <p class="text-center">交互个数（流入）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="turnRatio" style="height:120px;"></div>
                                                     <p class="text-center">交互率</p>
                                                 </div>
                                                 <div class="col-md-4">
@@ -165,15 +174,27 @@
                                                     <p class="text-center">连接持续时间</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div id="fake_users30"></div>
+                                                    <p class="text-center" data-type="connEstablishTime">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
                                                     <p class="text-center">连接建立时间</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div id="fake_users31"></div>
+                                                    <p class="text-center" data-type="firstByteTime">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
                                                     <p class="text-center">第一字节时间</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div id="fake_users32"></div>
+                                                    <p class="text-center" data-type="newConnSuccessCount">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
                                                     <p class="text-center">连接建立成功个数</p>
                                                 </div>
                                                 <div class="col-md-4">
@@ -181,7 +202,11 @@
                                                     <p class="text-center">连接率</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div id="fake_users35"></div>
+                                                    <p class="text-center" data-type="connReqCount">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
                                                     <p class="text-center">连接请求个数</p>
                                                 </div>
                                                 <div class="col-md-4">
@@ -189,19 +214,27 @@
                                                     <p class="text-center">连接请求率</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div id="fake_users37"></div>
+                                                    <p class="text-center" data-type="connFailingCount">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
                                                     <p class="text-center">连接失败个数</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div id="fake_users38"></div>
+                                                    <p class="text-center" data-type="serverResponseTime">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
                                                     <p class="text-center">服务器响应时间</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div id="fake_users40"></div>
+                                                    <div data-type="clientResetRatio" style="height:120px;"></div>
                                                     <p class="text-center">客户端重置率</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div id="fake_users41"></div>
+                                                    <div data-type="serverResetRatio" style="height:120px;"></div>
                                                     <p class="text-center">服务器重置率</p>
                                                 </div>
                                                 <div class="col-md-4">
@@ -233,20 +266,6 @@
                                                     <p class="text-center">重传延时</p>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <div id="fake_users66"></div>
-                                                    <p class="text-center">交易条数</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div id="fake_users67"></div>
-                                                    <p class="text-center">成功率</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div id="fake_users68"></div>
-                                                    <p class="text-center">响应时常</p>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -261,157 +280,179 @@
             <div class="row" id="thirdpart">
                 <div class="col-md-12">
                     <div class="panel panel-default">
-                        <div class="panel-heading ">使用的服务</div>
-                        <div class="panel-body">
-                            <div class="row" id="thirdpart_3">
-
-                                <div class="panel panel-default">
-                                    <div class="panel-heading network_perspective_head_style">HTTP 192.168.200.80:80</div>
-                                    <div class="panel-body" style="padding-left:0;padding-right:0">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <p class="text-center">
-                                                    <span class="chart" data-percent="60">
-                                                        <span class="percent"></span>
-                                                    </span>
-                                                </p>
-                                                <p class="text-center">流量占比</p>
-
-
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id='linked_multi5'></div>
-                                                <p class="text-center">流量</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id='linked_multi6'></div>
-                                                <p class="text-center">数据包</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="fake_users48"></div>
-                                                <p class="text-center">连接数</p>
-                                            </div>
-
-                                            <div class="col-md-4">
-                                                <div id="fake_users49"></div>
-                                                <p class="text-center">交互个数</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="fake_users50"></div>
-                                                <p class="text-center">交互率</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="fake_users51"></div>
-                                                <p class="text-center">连接持续时间</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="fake_users52"></div>
-                                                <p class="text-center">连接建立时间</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="fake_users53"></div>
-                                                <p class="text-center">第一字节时间</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="fake_users54"></div>
-                                                <p class="text-center">连接建立成功个数</p>
-                                            </div>
-
-                                            <div class="col-md-4">
-                                                <div id="fake_users56"></div>
-                                                <p class="text-center">连接率</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="fake_users57"></div>
-                                                <p class="text-center">连接请求个数</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="fake_users58"></div>
-                                                <p class="text-center">连接请求率</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="fake_users59"></div>
-                                                <p class="text-center">连接失败个数</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="fake_users60"></div>
-                                                <p class="text-center">服务器响应时间</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="fake_users61"></div>
-                                                <p class="text-center">客户端重置率</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="fake_users62"></div>
-                                                <p class="text-center">服务器重置率</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="fake21"></div>
-                                                <p class="text-center">数据传输时间/往返时间</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="fake20"></div>
-                                                <p class="text-center">净荷传输时间</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="fake19"></div>
-                                                <p class="text-center">净荷</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="fake18"></div>
-                                                <p class="text-center">丢包率</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="fake17"></div>
-                                                <p class="text-center">包重传率</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="fake16"></div>
-                                                <p class="text-center">重传率</p>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div id="fake15"></div>
-                                                <p class="text-center">重传延时</p>
-
-                                            </div>
-                                        </div>
-                                    </div>
+                        <div class="panel-heading">
+                            使用的服务
+                            <div class="progress pull-right" style="width:500px">
+                                <div class="progress-bar progress-bar-danger   " style="width: 30%">
+                                    <span>30%(HTTP:80)</span>
                                 </div>
-                                <div class="row" id="fordpart_4">
-                                    <div class="col-md-12">
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading network_perspective_head_style">HTTP 192.168.200.81:80</div>
-                                            <div class="panel-body">
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        <p class="text-center">
-                                                            <span class="chart1" data-percent="30">
-                                                                <span class="percent1"></span>
-                                                            </span>
-                                                        </p>
-                                                        <p class="text-center">流量占比</p>
-
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div id='linked_multi15'></div>
-                                                        <p class="text-center">流量</p>
-                                                    </div>
-                                                    <div class="col-md-4">
-
-                                                        <div id='linked_multi16'></div>
-                                                        <p class="text-center">数据包</p>
-                                                    </div>
-
+                                <div class="progress-bar progress-bar-warning " style="width: 20%">
+                                    <span>20%(HTTP:8080)</span>
+                                </div>
+                                <div class="progress-bar  progress-bar-success " style="width: 20%">
+                                    <span>20%(FTP:22)</span>
+                                </div>
+                                <div class="progress-bar " style="width: 15%;">
+                                    <span>15%(DNS)</span>
+                                </div>
+                                <div class="progress-bar progress-bar-info" style="width: 15%">
+                                    <span>15%(MYSQL)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="padding-left:0;padding-right:0">
+                            <div class="row network-perspective-service-record" id="usage-{{service.protocol + service.port}}" ng-repeat="service in usageServiceRecordList" ng-show="usageServiceRecordList.length">
+                                <div class="col-md-12">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading network_perspective_head_style">{{service.protocol}}:{{service.port}}</div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <p class="text-center">
+                                                        <span class="chart" data-percent="30">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
+                                                    <p class="text-center">流量占比</p>
                                                 </div>
-
+                                                <div class="col-md-4">
+                                                    <div data-type="flowRatio"></div>
+                                                    <p class="text-center">流量</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="packet" style="height:120px;"></div>
+                                                    <p class="text-center">数据包</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="connection" style="height:120px;"></div>
+                                                    <p class="text-center">连接数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p class="text-center" data-type="outTurnCount">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
+                                                    <p class="text-center">交互个数（流出）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p class="text-center" data-type="inTurnCount">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
+                                                    <p class="text-center">交互个数（流入）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="turnRatio" style="height:120px;"></div>
+                                                    <p class="text-center">交互率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="timeConnDuration"></div>
+                                                    <p class="text-center">连接持续时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p class="text-center" data-type="connEstablishTime">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
+                                                    <p class="text-center">连接建立时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p class="text-center" data-type="firstByteTime">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
+                                                    <p class="text-center">第一字节时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p class="text-center" data-type="newConnSuccessCount">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
+                                                    <p class="text-center">连接建立成功个数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="connRatio"></div>
+                                                    <p class="text-center">连接率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p class="text-center" data-type="connReqCount">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
+                                                    <p class="text-center">连接请求个数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="connRequestRatio"></div>
+                                                    <p class="text-center">连接请求率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p class="text-center" data-type="connFailingCount">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
+                                                    <p class="text-center">连接失败个数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p class="text-center" data-type="serverResponseTime">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
+                                                    <p class="text-center">服务器响应时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="clientResetRatio" style="height:120px;"></div>
+                                                    <p class="text-center">客户端重置率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="serverResetRatio" style="height:120px;"></div>
+                                                    <p class="text-center">服务器重置率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="transTime"></div>
+                                                    <p class="text-center">数据传输时间/往返时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="netPayloadTransTime"></div>
+                                                    <p class="text-center">净荷传输时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="netPayloadTime"></div>
+                                                    <p class="text-center">净荷</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="packetLossRatio"></div>
+                                                    <p class="text-center">丢包率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="packetRetransRatio"></div>
+                                                    <p class="text-center">包重传率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="retransRatio"></div>
+                                                    <p class="text-center">重传率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="timeRetrans"></div>
+                                                    <p class="text-center">重传延时</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <div style="text-align:center;" ng-hide="usageServiceRecordList.length">
+                                暂无服务
+                            </div>
                         </div>
                     </div>
-                    <!--  -->
                 </div>
             </div>
         </div>

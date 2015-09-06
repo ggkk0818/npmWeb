@@ -53,5 +53,35 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
+        //使用的协议列表
+        this.usageService = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'perspective/usage/service',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        //使用的协议统计信息
+        this.usageServiceMetric = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'perspective/usage/service/metric',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
     });
 });

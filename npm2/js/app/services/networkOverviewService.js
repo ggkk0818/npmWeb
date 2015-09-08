@@ -50,5 +50,77 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
+
+        /**
+         * 流量、数据包折线图
+         */
+        this.flow = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'overview/flow',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            });
+        };
+
+        /**
+         * IP TOP 10
+         */
+        this.ipTopTen = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'overview/top/ip',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            });
+        };
+
+        /**
+         * PORT TOP 10
+         */
+        this.portTopTen = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'overview/top/port',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            });
+        };
+
+        /**
+         * PROTOCOL TOP 10
+         */
+        this.protocolTopTen = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'overview/top/protocol',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            });
+        };
     });
 });

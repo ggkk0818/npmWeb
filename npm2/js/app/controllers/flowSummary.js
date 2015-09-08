@@ -1,11 +1,11 @@
 ﻿define(['angular', 'lodash', 'jquery', 'services/all', 'css!partials/flowSummary.css'], function (angular, _, $) {
     "use strict";
     var module = angular.module('app.controllers');
-    module.controller('FlowSummaryCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, dateTimeService, flowService) {
+    module.controller('FlowSummaryCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, dateTimeService, flowService, networkOverviewService) {
         //初始化变量
         $scope.DURATION_TYPE = [
-            { id: "hour", name: "小时" },
-            { id: "day", name: "天" }
+            {id: "hour", name: "小时"},
+            {id: "day", name: "天"}
         ];
         $scope.startDate = null;
         $scope.startHour = null;
@@ -28,20 +28,14 @@
         $scope.startHourInput = $scope.startHour = dateTimeService.serverTime.getHours();
         $scope.init = function () {
             $timeout(function () {
-                $scope.chartFlow = echarts.init($("#flowChart").get(0), "blue").showLoading({ effect: "ring" }).on(echarts.config.EVENT.DATA_ZOOM, onChartZoom);
-                $scope.chartPackage = echarts.init($("#packageChart").get(0), "blue").showLoading({ effect: "ring" }).on(echarts.config.EVENT.DATA_ZOOM, onChartZoom);
-                $scope.chartIpFlow = echarts.init($("#ipChartFlow").get(0), "blue").showLoading({ effect: "ring" });
-                $scope.chartIpPackage = echarts.init($("#ipChartPackage").get(0), "blue").showLoading({ effect: "ring" });
-                $scope.chartIpIntranetFlow = echarts.init($("#ipIntranetChartFlow").get(0), "blue").showLoading({ effect: "ring" });
-                $scope.chartIpIntranetPackage = echarts.init($("#ipIntranetChartPackage").get(0), "blue").showLoading({ effect: "ring" });
-                $scope.chartProtocolFlow = echarts.init($("#protocolChartFlow").get(0), "blue").showLoading({ effect: "ring" });
-                $scope.chartProtocolPackage = echarts.init($("#protocolChartPackage").get(0), "blue").showLoading({ effect: "ring" });
-                $scope.chartPortFlow = echarts.init($("#portChartFlow").get(0), "blue").showLoading({ effect: "ring" });
-                $scope.chartPortPackage = echarts.init($("#portChartPackage").get(0), "blue").showLoading({ effect: "ring" });
-                $scope.chartMacFlow = echarts.init($("#macChartFlow").get(0), "blue").showLoading({ effect: "ring" });
-                $scope.chartMacPackage = echarts.init($("#macChartPackage").get(0), "blue").showLoading({ effect: "ring" });
-                $scope.chartFlow.connect($scope.chartPackage);
-                $scope.chartPackage.connect($scope.chartFlow);
+                $scope.chartFlow = echarts.init($("#flowChart").get(0), "blue").showLoading({effect: "ring"}).on(echarts.config.EVENT.DATA_ZOOM, onChartZoom);
+                $scope.chartPackage = echarts.init($("#packageChart").get(0), "blue").showLoading({effect: "ring"}).on(echarts.config.EVENT.DATA_ZOOM, onChartZoom);
+                $scope.chartIpFlow = echarts.init($("#ipChartFlow").get(0), "blue").showLoading({effect: "ring"});
+                $scope.chartIpPackage = echarts.init($("#ipChartPackage").get(0), "blue").showLoading({effect: "ring"});
+                $scope.chartProtocolFlow = echarts.init($("#protocolChartFlow").get(0), "blue").showLoading({effect: "ring"});
+                $scope.chartProtocolPackage = echarts.init($("#protocolChartPackage").get(0), "blue").showLoading({effect: "ring"});
+                $scope.chartPortFlow = echarts.init($("#portChartFlow").get(0), "blue").showLoading({effect: "ring"});
+                $scope.chartPortPackage = echarts.init($("#portChartPackage").get(0), "blue").showLoading({effect: "ring"});
                 //小时选择控件
                 $(".hour-selector").mouseenter(hourSelectorHover).mouseleave(hourSelectorLeave).find(".btn-group .btn").on("click.hourSelector", hourSelectorBtnClick);
             });
@@ -123,53 +117,26 @@
                 params.timeType = $scope.durationType.id;
             if ($scope.startDate) {
                 var hour = null;
-                if($scope.durationType.id == "hour" ){
+                if ($scope.durationType.id == "hour") {
                     hour = $scope.startHour.toString() || "0";
                     if (hour.length == 1)
                         hour = "0" + hour;
                 }
-                params.startTime = $scope.startDate + " " + (hour? hour : "00") + ":00:00";
-                params.endTime = $scope.startDate + " " + (hour? hour : "23") + ":59:59";
+                params.startTime = $scope.startDate + " " + (hour ? hour : "00") + ":00:00";
+                params.endTime = $scope.startDate + " " + (hour ? hour : "23") + ":59:59";
             }
-            flowService.timeFlow(params, function (data) {
-                if (data && data.data) {
-                    var internetFlowData = [], intranetFlowData = [], totalFlowData = [],
-                        internetPackageData = [], intranetPackageData = [], totalPackageData = [],
-                        categoryData = [];
-                    if (data.data.length) {
-                        for (var i = 0; i < data.data.length; i++) {
-                            var d = data.data[i],
-                                datetime = new Date(d.datetime).Format("hh:mm:ss"),
-                                internet_bytes = (d.internet_send_bytes || 0) + (d.internet_rec_bytes || 0),
-                                intranet_bytes = (d.intranet_send_bytes || 0) + (d.intranet_rec_bytes || 0),
-                                internet_package = (d.internet_send_package || 0) + (d.internet_rec_package || 0),
-                                intranet_package = (d.intranet_send_package || 0) + (d.intranet_rec_package || 0);
-                            categoryData.push(datetime);
-                            //internetFlowData.push({ value: [datetime, (internet_bytes * 8 / 1024).toFixed(1)] });
-                            //intranetFlowData.push({ value: [datetime, (intranet_bytes * 8 / 1024).toFixed(1)] });
-                            //totalFlowData.push({ value: [datetime, ((internet_bytes + intranet_bytes) * 8 / 1024).toFixed(1)] });
-                            //internetPackageData.push({ value: [datetime, internet_package] });
-                            //intranetPackageData.push({ value: [datetime, intranet_package] });
-                            //totalPackageData.push({ value: [datetime, internet_package + intranet_package] });
-                            internetFlowData.push((internet_bytes * 8 / 1024).toFixed(1));
-                            intranetFlowData.push((intranet_bytes * 8 / 1024).toFixed(1));
-                            totalFlowData.push(((internet_bytes + intranet_bytes) * 8 / 1024).toFixed(1));
-                            internetPackageData.push(internet_package.toFixed(1));
-                            intranetPackageData.push(intranet_package.toFixed(1));
-                            totalPackageData.push((internet_package + intranet_package).toFixed(1));
-                        }
-                    }
-                    //else if (!$scope.option_flow.series[0].data.length && !$scope.option_package.series[0].data.length) {
-                    //    return;
-                    //}
-                    $scope.option_flow.xAxis[0].data = categoryData;
-                    $scope.option_flow.series[0].data = totalFlowData;
-                    $scope.option_flow.series[1].data = intranetFlowData;
-                    $scope.option_flow.series[2].data = internetFlowData;
-                    $scope.option_package.xAxis[0].data = categoryData;
-                    $scope.option_package.series[0].data = totalPackageData;
-                    $scope.option_package.series[1].data = intranetPackageData;
-                    $scope.option_package.series[2].data = internetPackageData;
+            // 流量、包数折线图
+            networkOverviewService.flow(params, function (data) {
+                if (data && data.status == 200) {
+
+                    $scope.option_flow.xAxis[0].data = data.time;
+                    $scope.option_flow.series[0].data = data.flow;
+                    $scope.option_flow.series[1].data = data.up_flow;
+                    $scope.option_flow.series[2].data = data.down_flow;
+                    $scope.option_package.xAxis[0].data = data.time;
+                    $scope.option_package.series[0].data = data.packet;
+                    $scope.option_package.series[1].data = data.up_packet;
+                    $scope.option_package.series[2].data = data.down_packet;
                     if ($scope.startTime || $scope.endTime) {
                         var startPoint = null,
                             endPoint = null;
@@ -237,232 +204,99 @@
                 else {
                     $scope.chartIpFlow.hideLoading();
                     $scope.chartIpPackage.hideLoading();
-                    $scope.chartIpIntranetFlow.hideLoading();
-                    $scope.chartIpIntranetPackage.hideLoading();
                     $scope.chartProtocolFlow.hideLoading();
                     $scope.chartProtocolPackage.hideLoading();
                     $scope.chartPortFlow.hideLoading();
                     $scope.chartPortPackage.hideLoading();
-                    $scope.chartMacFlow.hideLoading();
-                    $scope.chartMacPackage.hideLoading();
                 }
                 $scope.chartFlow.hideLoading().setOption($scope.option_flow, true);
                 $scope.chartPackage.hideLoading().setOption($scope.option_package, true);
-                //$timeout(function () {
-                //    onMouseUp();
-                //});
             });
         };
 
         $scope.doQueryTop10 = function (params) {
-            $scope.chartIpFlow.showLoading({ effect: "ring" });
-            $scope.chartIpPackage.showLoading({ effect: "ring" });
-            $scope.chartIpIntranetFlow.showLoading({ effect: "ring" });
-            $scope.chartIpIntranetPackage.showLoading({ effect: "ring" });
-            $scope.chartProtocolFlow.showLoading({ effect: "ring" });
-            $scope.chartProtocolPackage.showLoading({ effect: "ring" });
-            $scope.chartPortFlow.showLoading({ effect: "ring" });
-            $scope.chartPortPackage.showLoading({ effect: "ring" });
-            $scope.chartMacFlow.showLoading({ effect: "ring" });
-            $scope.chartMacPackage.showLoading({ effect: "ring" });
-            //查询外网TOP10
-            flowService.ipChart($.extend({}, params, { queryType: "FLOW" }), function (data) {
-                if (data && data.data) {
-                    var axisData = [],
-                        chartData1 = [],
-                        chartData2 = [];
-                    if (data.data.length) {
-                        data.data = data.data.reverse();
-                        for (var i = 0; i < data.data.length; i++) {
-                            var d = data.data[i];
-                            axisData.push(d.srcip);
-                            chartData1.push({ name: d.srcip, value: d.sendFlow ? (d.sendFlow * 8 / 1024).toFixed(1) : 0 });
-                            chartData2.push({ name: d.srcip, value: d.recFlow ? (d.recFlow * 8 / 1024).toFixed(1) : 0 });
-                        }
-                    }
-                    option_ip_flow.yAxis[0].data = axisData;
-                    option_ip_flow.series[0].data = chartData1;
-                    option_ip_flow.series[1].data = chartData2;
+            $scope.chartIpFlow.showLoading({effect: "ring"});
+            $scope.chartIpPackage.showLoading({effect: "ring"});
+            $scope.chartProtocolFlow.showLoading({effect: "ring"});
+            $scope.chartProtocolPackage.showLoading({effect: "ring"});
+            $scope.chartPortFlow.showLoading({effect: "ring"});
+            $scope.chartPortPackage.showLoading({effect: "ring"});
+            //查询IP流量 TOP10
+            networkOverviewService.ipTopTen($.extend({}, params, {queryType: "FLOW"}), function (data) {
+                if (data && data.status == 200) {
+                    var axisData = data.ip || [],
+                        chartData1 = data.up_flow || [],
+                        chartData2 = data.down_flow || [];
+                    option_ip_flow.yAxis[0].data = axisData.reverse();
+                    option_ip_flow.series[0].data = chartData1.reverse();
+                    option_ip_flow.series[1].data = chartData2.reverse();
                 }
                 $scope.chartIpFlow.hideLoading().setOption(option_ip_flow, true);
             });
-            flowService.ipChart($.extend({}, params, { queryType: "PACKAGE" }), function (data) {
-                if (data && data.data) {
-                    var axisData = [],
-                        chartData1 = [],
-                        chartData2 = [];
-                    if (data.data.length) {
-                        data.data = data.data.reverse();
-                        for (var i = 0; i < data.data.length; i++) {
-                            var d = data.data[i];
-                            axisData.push(d.srcip);
-                            chartData1.push({ name: d.srcip, value: d.sendPackage ? d.sendPackage.toFixed(1) : 0 });
-                            chartData2.push({ name: d.srcip, value: d.recPackage ? d.recPackage.toFixed(1) : 0 });
-                        }
-                    }
-                    option_ip_package.yAxis[0].data = axisData;
-                    option_ip_package.series[0].data = chartData1;
-                    option_ip_package.series[1].data = chartData2;
+            // 查询IP包数 TOP10
+            networkOverviewService.ipTopTen($.extend({}, params, {queryType: "PACKAGE"}), function (data) {
+                if (data && data.status == 200) {
+                    var axisData = data.ip || [],
+                        chartData1 = data.up_packet || [],
+                        chartData2 = data.down_packet || [];
+                    option_ip_package.yAxis[0].data = axisData.reverse();
+                    option_ip_package.series[0].data = chartData1.reverse();
+                    option_ip_package.series[1].data = chartData2.reverse();
                 }
                 $scope.chartIpPackage.hideLoading().setOption(option_ip_package, true);
             });
-            //查询内网TOP10
-            flowService.ipIntranetChart($.extend({}, params, {queryType:"FLOW"}), function (data) {
-                if (data && data.data) {
-                    var axisData = [],
-                        chartData1 = [],
-                        chartData2 = [];
-                    if (data.data.length) {
-                        data.data = data.data.reverse();
-                        for (var i = 0; i < data.data.length; i++) {
-                            var d = data.data[i];
-                            axisData.push(d.srcip);
-                            chartData1.push({ name: d.srcip, value: d.sendFlow ? (d.sendFlow * 8 / 1024).toFixed(1) : 0 });
-                            chartData2.push({ name: d.srcip, value: d.recFlow ? (d.recFlow * 8 / 1024).toFixed(1) : 0 });
-                        }
-                    }
-                    option_ipIntranet_flow.yAxis[0].data = axisData;
-                    option_ipIntranet_flow.series[0].data = chartData1;
-                    option_ipIntranet_flow.series[1].data = chartData2;
-                }
-                $scope.chartIpIntranetFlow.hideLoading().setOption(option_ipIntranet_flow, true);
-            });
-            flowService.ipIntranetChart($.extend({}, params, { queryType: "PACKAGE" }), function (data) {
-                if (data && data.data) {
-                    var axisData = [],
-                        chartData1 = [],
-                        chartData2 = [];
-                    if (data.data.length) {
-                        data.data = data.data.reverse();
-                        for (var i = 0; i < data.data.length; i++) {
-                            var d = data.data[i];
-                            axisData.push(d.srcip);
-                            chartData1.push({ name: d.srcip, value: d.sendPackage ? d.sendPackage.toFixed(1) : 0 });
-                            chartData2.push({ name: d.srcip, value: d.recPackage ? d.recPackage.toFixed(1) : 0 });
-                        }
-                    }
-                    option_ipIntranet_package.yAxis[0].data = axisData;
-                    option_ipIntranet_package.series[0].data = chartData1;
-                    option_ipIntranet_package.series[1].data = chartData2;
-                }
-                $scope.chartIpIntranetPackage.hideLoading().setOption(option_ipIntranet_package, true);
-            });
-            //查询协议TOP10
-            flowService.protocolChart(params, function (data) {
-                if (data && data.data && data.data.length > 0) {
-                    var axisData = [],
-                        chartData1 = [],
-                        chartData2 = [];
-                    if (data.data[0].length) {
-                        data.data[0] = data.data[0].reverse();
-                        for (var i = 0; i < data.data[0].length; i++) {
-                            var d = data.data[0][i];
-                            axisData.push(d.protocol);
-                            chartData1.push({ name: d.protocol, value: d.sendFlow ? (d.sendFlow * 8 / 1024).toFixed(1) : 0 });
-                            chartData2.push({ name: d.protocol, value: d.recFlow ? (d.recFlow * 8 / 1024).toFixed(1) : 0 });
-                        }
-                    }
-                    option_protocol_flow.yAxis[0].data = axisData;
-                    option_protocol_flow.series[0].data = chartData1;
-                    option_protocol_flow.series[1].data = chartData2;
+            //查询protocol流量 TOP10
+            networkOverviewService.protocolTopTen($.extend({}, params, {queryType: "FLOW"}), function (data) {
+                if (data && data.status == 200) {
+                    var axisData = data.protocol || [],
+                        chartData1 = data.up_flow || [],
+                        chartData2 = data.down_flow || [];
+                    option_protocol_flow.yAxis[0].data = axisData.reverse();
+                    option_protocol_flow.series[0].data = chartData1.reverse();
+                    option_protocol_flow.series[1].data = chartData2.reverse();
                 }
                 $scope.chartProtocolFlow.hideLoading().setOption(option_protocol_flow, true);
-                if (data && data.data && data.data.length > 1) {
-                    var axisData = [],
-                        chartData1 = [],
-                        chartData2 = [];
-                    if (data.data[1].length) {
-                        data.data[1] = data.data[1].reverse();
-                        for (var i = 0; i < data.data[1].length; i++) {
-                            var d = data.data[1][i];
-                            axisData.push(d.protocol);
-                            chartData1.push({ name: d.protocol, value: d.sendPackage ? d.sendPackage.toFixed(1) : 0 });
-                            chartData2.push({ name: d.protocol, value: d.recPackage ? d.recPackage.toFixed(1) : 0 });
-                        }
-                    }
-                    option_protocol_package.yAxis[0].data = axisData;
-                    option_protocol_package.series[0].data = chartData1;
-                    option_protocol_package.series[1].data = chartData2;
+            });
+
+            //查询protocol包数 TOP10
+            networkOverviewService.protocolTopTen($.extend({}, params, {queryType: "PACKAGE"}), function (data) {
+                if (data && data.status == 200) {
+                    var axisData = data.protocol || [],
+                        chartData1 = data.up_packet || [],
+                        chartData2 = data.down_packet || [];
+                    option_protocol_package.yAxis[0].data = axisData.reverse();
+                    option_protocol_package.series[0].data = chartData1.reverse();
+                    option_protocol_package.series[1].data = chartData2.reverse();
                 }
                 $scope.chartProtocolPackage.hideLoading().setOption(option_protocol_package, true);
             });
-            //查询端口TOP10
-            flowService.portChart(params, function (data) {
-                if (data && data.data && data.data.length > 0) {
-                    var axisData = [],
-                        chartData1 = [],
-                        chartData2 = [];
-                    if (data.data[0].length) {
-                        data.data[0] = data.data[0].reverse();
-                        for (var i = 0; i < data.data[0].length; i++) {
-                            var d = data.data[0][i];
-                            axisData.push(d.port);
-                            chartData1.push({ name: d.port, value: d.sendFlow ? (d.sendFlow * 8 / 1024).toFixed(1) : 0 });
-                            chartData2.push({ name: d.port, value: d.recFlow ? (d.recFlow * 8 / 1024).toFixed(1) : 0 });
-                        }
-                    }
-                    option_port_flow.yAxis[0].data = axisData;
-                    option_port_flow.series[0].data = chartData1;
-                    option_port_flow.series[1].data = chartData2;
+
+            //查询port 流量TOP10
+            networkOverviewService.portTopTen($.extend({}, params, {queryType: "FLOW"}), function (data) {
+                if (data && data.status == 200) {
+                    var axisData = data.port || [],
+                        chartData1 = data.up_flow || [],
+                        chartData2 = data.down_flow || [];
+                    option_port_flow.yAxis[0].data = axisData.reverse();
+                    option_port_flow.series[0].data = chartData1.reverse();
+                    option_port_flow.series[1].data = chartData2.reverse();
                 }
                 $scope.chartPortFlow.hideLoading().setOption(option_port_flow, true);
-                if (data && data.data && data.data.length > 1) {
-                    var axisData = [],
-                        chartData1 = [],
-                        chartData2 = [];
-                    if (data.data[1].length) {
-                        data.data[1] = data.data[1].reverse();
-                        for (var i = 0; i < data.data[1].length; i++) {
-                            var d = data.data[1][i];
-                            axisData.push(d.port);
-                            chartData1.push({ name: d.port, value: d.sendPackage ? d.sendPackage.toFixed(1) : 0 });
-                            chartData2.push({ name: d.port, value: d.recPackage ? d.recPackage.toFixed(1) : 0 });
-                        }
-                    }
-                    option_port_package.yAxis[0].data = axisData;
-                    option_port_package.series[0].data = chartData1;
-                    option_port_package.series[1].data = chartData2;
+
+            });
+
+            //查询port 包数TOP10
+            networkOverviewService.portTopTen($.extend({}, params, {queryType: "PACKAGE"}), function (data) {
+                if (data && data.status == 200) {
+                    var axisData = data.port || [],
+                        chartData1 = data.up_packet || [],
+                        chartData2 = data.down_packet || [];
+                    option_port_package.yAxis[0].data = axisData.reverse();
+                    option_port_package.series[0].data = chartData1.reverse();
+                    option_port_package.series[1].data = chartData2.reverse();
                 }
                 $scope.chartPortPackage.hideLoading().setOption(option_port_package, true);
-            });
-            //查询MAC TOP10
-            flowService.macChart(params, function (data) {
-                if (data && data.data && data.data.length > 0) {
-                    var axisData = [],
-                        chartData1 = [],
-                        chartData2 = [];
-                    if (data.data[0].length) {
-                        data.data[0] = data.data[0].reverse();
-                        for (var i = 0; i < data.data[0].length; i++) {
-                            var d = data.data[0][i];
-                            axisData.push(d.mac);
-                            chartData1.push({ name: d.mac, value: d.sendFlow ? (d.sendFlow * 8 / 1024).toFixed(1) : 0 });
-                            chartData2.push({ name: d.mac, value: d.recFlow ? (d.recFlow * 8 / 1024).toFixed(1) : 0 });
-                        }
-                    }
-                    option_mac_flow.yAxis[0].data = axisData;
-                    option_mac_flow.series[0].data = chartData1;
-                    option_mac_flow.series[1].data = chartData2;
-                }
-                $scope.chartMacFlow.hideLoading().setOption(option_mac_flow, true);
-                if (data && data.data && data.data.length > 1) {
-                    var axisData = [],
-                        chartData1 = [],
-                        chartData2 = [];
-                    if (data.data[1].length) {
-                        data.data[1] = data.data[1].reverse();
-                        for (var i = 0; i < data.data[1].length; i++) {
-                            var d = data.data[1][i];
-                            axisData.push(d.mac);
-                            chartData1.push({ name: d.mac, value: d.sendPackage ? d.sendPackage.toFixed(1) : 0 });
-                            chartData2.push({ name: d.mac, value: d.recPackage ? d.recPackage.toFixed(1) : 0 });
-                        }
-                    }
-                    option_mac_package.yAxis[0].data = axisData;
-                    option_mac_package.series[0].data = chartData1;
-                    option_mac_package.series[1].data = chartData2;
-                }
-                $scope.chartMacPackage.hideLoading().setOption(option_mac_package, true);
+
             });
         };
         //搜索
@@ -521,7 +355,7 @@
                 position: [80, 30],
                 padding: [5, 0, 5, 0],
                 backgroundColor: "rgba(255,255,255,1)",
-                textStyle:{color:"#333"},
+                textStyle: {color: "#333"},
                 formatter: function (params) {
                     var str = null;
                     if (params && params.length) {
@@ -543,10 +377,10 @@
             toolbox: {
                 show: true,
                 feature: {
-                    mark: { show: false },
-                    dataView: { show: false, readOnly: false },
-                    restore: { show: false },
-                    saveAsImage: { show: true }
+                    mark: {show: false},
+                    dataView: {show: false, readOnly: false},
+                    restore: {show: false},
+                    saveAsImage: {show: true}
                 }
             },
             calculable: true,
@@ -604,7 +438,7 @@
                 position: [80, 30],
                 padding: [5, 0, 5, 0],
                 backgroundColor: "rgba(255,255,255,1)",
-                textStyle: { color: "#333" },
+                textStyle: {color: "#333"},
                 formatter: function (params) {
                     var str = null;
                     if (params && params.length) {
@@ -626,10 +460,10 @@
             toolbox: {
                 show: true,
                 feature: {
-                    mark: { show: false },
-                    dataView: { show: false, readOnly: false },
-                    restore: { show: false },
-                    saveAsImage: { show: true }
+                    mark: {show: false},
+                    dataView: {show: false, readOnly: false},
+                    restore: {show: false},
+                    saveAsImage: {show: true}
                 }
             },
             calculable: true,
@@ -694,11 +528,11 @@
             toolbox: {
                 show: true,
                 feature: {
-                    mark: { show: false },
-                    dataView: { show: false, readOnly: false },
-                    magicType: { show: false, type: ['line', 'bar'] },
-                    restore: { show: false },
-                    saveAsImage: { show: true }
+                    mark: {show: false},
+                    dataView: {show: false, readOnly: false},
+                    magicType: {show: false, type: ['line', 'bar']},
+                    restore: {show: false},
+                    saveAsImage: {show: true}
                 }
             },
             calculable: true,
@@ -717,13 +551,13 @@
                 name: '发送',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }, {
                 name: '接收',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }]
         };
@@ -746,11 +580,11 @@
             toolbox: {
                 show: true,
                 feature: {
-                    mark: { show: false },
-                    dataView: { show: false, readOnly: false },
-                    magicType: { show: false, type: ['line', 'bar'] },
-                    restore: { show: false },
-                    saveAsImage: { show: true }
+                    mark: {show: false},
+                    dataView: {show: false, readOnly: false},
+                    magicType: {show: false, type: ['line', 'bar']},
+                    restore: {show: false},
+                    saveAsImage: {show: true}
                 }
             },
             calculable: true,
@@ -769,13 +603,13 @@
                 name: '发送',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }, {
                 name: '接收',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }]
         };
@@ -799,11 +633,11 @@
             toolbox: {
                 show: true,
                 feature: {
-                    mark: { show: false },
-                    dataView: { show: false, readOnly: false },
-                    magicType: { show: false, type: ['line', 'bar'] },
-                    restore: { show: false },
-                    saveAsImage: { show: true }
+                    mark: {show: false},
+                    dataView: {show: false, readOnly: false},
+                    magicType: {show: false, type: ['line', 'bar']},
+                    restore: {show: false},
+                    saveAsImage: {show: true}
                 }
             },
             calculable: true,
@@ -822,13 +656,13 @@
                 name: '发送',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }, {
                 name: '接收',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }]
         };
@@ -851,11 +685,11 @@
             toolbox: {
                 show: true,
                 feature: {
-                    mark: { show: false },
-                    dataView: { show: false, readOnly: false },
-                    magicType: { show: false, type: ['line', 'bar'] },
-                    restore: { show: false },
-                    saveAsImage: { show: true }
+                    mark: {show: false},
+                    dataView: {show: false, readOnly: false},
+                    magicType: {show: false, type: ['line', 'bar']},
+                    restore: {show: false},
+                    saveAsImage: {show: true}
                 }
             },
             calculable: true,
@@ -874,13 +708,13 @@
                 name: '发送',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }, {
                 name: '接收',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }]
         };
@@ -903,11 +737,11 @@
             toolbox: {
                 show: true,
                 feature: {
-                    mark: { show: false },
-                    dataView: { show: false, readOnly: false },
-                    magicType: { show: false, type: ['line', 'bar'] },
-                    restore: { show: false },
-                    saveAsImage: { show: true }
+                    mark: {show: false},
+                    dataView: {show: false, readOnly: false},
+                    magicType: {show: false, type: ['line', 'bar']},
+                    restore: {show: false},
+                    saveAsImage: {show: true}
                 }
             },
             calculable: true,
@@ -926,13 +760,13 @@
                 name: '发送',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }, {
                 name: '接收',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }]
         };
@@ -954,11 +788,11 @@
             toolbox: {
                 show: true,
                 feature: {
-                    mark: { show: false },
-                    dataView: { show: false, readOnly: false },
-                    magicType: { show: false, type: ['line', 'bar'] },
-                    restore: { show: false },
-                    saveAsImage: { show: true }
+                    mark: {show: false},
+                    dataView: {show: false, readOnly: false},
+                    magicType: {show: false, type: ['line', 'bar']},
+                    restore: {show: false},
+                    saveAsImage: {show: true}
                 }
             },
             calculable: true,
@@ -977,13 +811,13 @@
                 name: '发送',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }, {
                 name: '接收',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }]
         };
@@ -1006,11 +840,11 @@
             toolbox: {
                 show: true,
                 feature: {
-                    mark: { show: false },
-                    dataView: { show: false, readOnly: false },
-                    magicType: { show: false, type: ['line', 'bar'] },
-                    restore: { show: false },
-                    saveAsImage: { show: true }
+                    mark: {show: false},
+                    dataView: {show: false, readOnly: false},
+                    magicType: {show: false, type: ['line', 'bar']},
+                    restore: {show: false},
+                    saveAsImage: {show: true}
                 }
             },
             calculable: true,
@@ -1029,13 +863,13 @@
                 name: '发送',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }, {
                 name: '接收',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }]
         };
@@ -1057,11 +891,11 @@
             toolbox: {
                 show: true,
                 feature: {
-                    mark: { show: false },
-                    dataView: { show: false, readOnly: false },
-                    magicType: { show: false, type: ['line', 'bar'] },
-                    restore: { show: false },
-                    saveAsImage: { show: true }
+                    mark: {show: false},
+                    dataView: {show: false, readOnly: false},
+                    magicType: {show: false, type: ['line', 'bar']},
+                    restore: {show: false},
+                    saveAsImage: {show: true}
                 }
             },
             calculable: true,
@@ -1080,13 +914,13 @@
                 name: '发送',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }, {
                 name: '接收',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }]
         };
@@ -1110,11 +944,11 @@
             toolbox: {
                 show: true,
                 feature: {
-                    mark: { show: false },
-                    dataView: { show: false, readOnly: false },
-                    magicType: { show: false, type: ['line', 'bar'] },
-                    restore: { show: false },
-                    saveAsImage: { show: true }
+                    mark: {show: false},
+                    dataView: {show: false, readOnly: false},
+                    magicType: {show: false, type: ['line', 'bar']},
+                    restore: {show: false},
+                    saveAsImage: {show: true}
                 }
             },
             calculable: true,
@@ -1133,13 +967,13 @@
                 name: '发送',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }, {
                 name: '接收',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }]
         };
@@ -1162,11 +996,11 @@
             toolbox: {
                 show: true,
                 feature: {
-                    mark: { show: false },
-                    dataView: { show: false, readOnly: false },
-                    magicType: { show: false, type: ['line', 'bar'] },
-                    restore: { show: false },
-                    saveAsImage: { show: true }
+                    mark: {show: false},
+                    dataView: {show: false, readOnly: false},
+                    magicType: {show: false, type: ['line', 'bar']},
+                    restore: {show: false},
+                    saveAsImage: {show: true}
                 }
             },
             calculable: true,
@@ -1185,13 +1019,13 @@
                 name: '发送',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }, {
                 name: '接收',
                 type: 'bar',
                 stack: '总量',
-                itemStyle: { normal: { label: { show: false, position: 'insideRight' } } },
+                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
                 data: []
             }]
         };
@@ -1215,7 +1049,7 @@
             if ($scope.option_flow.series[0].data.length) {
                 var start = Math.round(zoom.start / 100 * $scope.option_flow.series[0].data.length),
                     end = Math.round(zoom.end / 100 * $scope.option_flow.series[0].data.length) - 1,
-                    startTime = $scope.startDate + " " +  $scope.option_flow.xAxis[0].data[start],
+                    startTime = $scope.startDate + " " + $scope.option_flow.xAxis[0].data[start],
                     endTime = $scope.startDate + " " + $scope.option_flow.xAxis[0].data[end];
                 $scope.startTimeTop10Temp = startTime;
                 $scope.endTimeTop10Temp = endTime;
@@ -1224,17 +1058,17 @@
         };
         var onMouseUp = function () {
             //$scope.$apply(function () {
-                if (($scope.startTimeTop10Temp && $scope.startTimeTop10Temp != $scope.startTimeTop10)
-                    || ($scope.endTimeTop10Temp && $scope.endTimeTop10Temp != $scope.endTimeTop10)) {
-                    $scope.startTimeTop10 = $scope.startTimeTop10Temp;
-                    $scope.endTimeTop10 = $scope.endTimeTop10Temp;
-                    $scope.startTimeTop10Temp = null;
-                    $scope.endTimeTop10Temp = null;
-                    $scope.doQueryTop10({
-                        startTime: $scope.startTimeTop10,
-                        endTime: $scope.endTimeTop10
-                    });
-                }
+            if (($scope.startTimeTop10Temp && $scope.startTimeTop10Temp != $scope.startTimeTop10)
+                || ($scope.endTimeTop10Temp && $scope.endTimeTop10Temp != $scope.endTimeTop10)) {
+                $scope.startTimeTop10 = $scope.startTimeTop10Temp;
+                $scope.endTimeTop10 = $scope.endTimeTop10Temp;
+                $scope.startTimeTop10Temp = null;
+                $scope.endTimeTop10Temp = null;
+                $scope.doQueryTop10({
+                    startTime: $scope.startTimeTop10,
+                    endTime: $scope.endTimeTop10
+                });
+            }
             //});
         };
         var onWindowResize = function () {
@@ -1265,7 +1099,7 @@
                     min = 23 - (offsetRight - 10) / width,
                     leftUnit = $scope.startHour > max ? max : $scope.startHour < min ? min : $scope.startHour;
                 $scope.$apply(function () {
-                    $btnGroup.addClass("active").css({ left: "calc(-" + leftUnit * 100 + "% + " + leftUnit + "px)" });
+                    $btnGroup.addClass("active").css({left: "calc(-" + leftUnit * 100 + "% + " + leftUnit + "px)"});
                 });
             }
             if (hourSelectorTimer) {
@@ -1286,7 +1120,7 @@
         var hourSelectorBtnClick = function () {
             hourSelectorHide();
         };
-        
+
         $scope.init();
         //窗口大小事件
         $(window).on("resize.flowSummary", onWindowResize);

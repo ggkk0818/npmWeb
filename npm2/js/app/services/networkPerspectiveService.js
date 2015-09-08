@@ -38,11 +38,26 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
-        //协议统计信息
+        //开启协议统计信息
         this.openServiceMetric = function (params, callback) {
             $http({
                 method: 'GET',
                 url: 'perspective/open/service/metric',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        //开启协议流量占比
+        this.openServiceRatio = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'perspective/open/service/ratio',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {
@@ -73,6 +88,21 @@ function (angular, $, _, config) {
             $http({
                 method: 'GET',
                 url: 'perspective/usage/service/metric',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        //使用的协议流量占比
+        this.usageServiceRatio = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'perspective/usage/service/ratio',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {

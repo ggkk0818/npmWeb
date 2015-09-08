@@ -24,6 +24,7 @@
     'jquery-dateRangeSlider-withRuler',
     'jquery-scrollTo',
     'jquery-easypiechart',
+    'jquery-viewport',
     'date-format',
     'numeral',
     'numeral-cn',

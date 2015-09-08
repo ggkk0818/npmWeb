@@ -120,8 +120,7 @@
                                 chartData.push({ time: $scope.baseRecord.time[i], value: $scope.baseRecord.flow[i] ? ($scope.baseRecord.flow[i] * 8 / 1024) : 0 });
                             }
                             MG.data_graphic({
-                                legend: ['总'],
-                                data: [chartData],
+                                data: chartData,
                                 full_width: true,
                                 height: 120,
                                 right: 20,
@@ -132,7 +131,7 @@
                                     $('#networkPerspective_basic_flow svg .mg-active-datapoint').html(str);
                                 },
                                 target: '#networkPerspective_basic_flow',
-                                linked: true,
+                                //linked: true,
                                 x_accessor: 'time',
                                 y_accessor: 'value'
                             });
@@ -145,8 +144,7 @@
                                 chartData.push({ time: $scope.baseRecord.time[i], value: $scope.baseRecord.package[i] });
                             }
                             MG.data_graphic({
-                                legend: ['总'],
-                                data: [chartData],
+                                data: chartData,
                                 full_width: true,
                                 height: 120,
                                 right: 20,
@@ -157,7 +155,7 @@
                                     $('#networkPerspective_basic_package svg .mg-active-datapoint').html(str);
                                 },
                                 target: '#networkPerspective_basic_package',
-                                linked: true,
+                                //linked: true,
                                 x_accessor: 'time',
                                 y_accessor: 'value'
                             });
@@ -211,18 +209,41 @@
                     });
                 }
             });
+            //查询开启的服务
+            var progressBarClassArr = ["", "progress-bar-info", "progress-bar-success", "progress-bar-warning", "progress-bar-danger"];
+            var serviceColorMap = {};
             networkPerspectiveService.openService(params, function (data) {
                 $scope.serviceRecordList = data && data.data ? data.data : [];
+                $scope.serviceRatioTotal = 0;
                 for (var i = 0; i < $scope.serviceRecordList.length; i++) {
                     var record = $scope.serviceRecordList[i];
+                    $scope.serviceRatioTotal += record.flow || 0;
+                    if (serviceColorMap[record.protocol + record.port] == undefined) {
+                        serviceColorMap[record.protocol + record.port] = progressBarClassArr[Math.floor(Math.random() * 5)];
+                    }
+                    record.progressBarClass = serviceColorMap[record.protocol + record.port];
                     $scope.doServiceDetailQuery(record);
+                }
+                for (var i = 0; i < $scope.serviceRecordList.length; i++) {
+                    var record = $scope.serviceRecordList[i];
+                    record.percent = (record.flow || 0) / $scope.serviceRatioTotal * 100;
                 }
             });
             networkPerspectiveService.usageService(params, function (data) {
                 $scope.usageServiceRecordList = data && data.data ? data.data : [];
+                $scope.usageServiceRatioTotal = 0;
                 for (var i = 0; i < $scope.usageServiceRecordList.length; i++) {
                     var record = $scope.usageServiceRecordList[i];
+                    $scope.usageServiceRatioTotal += record.flow || 0;
+                    if (serviceColorMap[record.protocol + record.port] == undefined) {
+                        serviceColorMap[record.protocol + record.port] = progressBarClassArr[Math.floor(Math.random() * 5)];
+                    }
+                    record.progressBarClass = serviceColorMap[record.protocol + record.port];
                     $scope.doUsageServiceDetailQuery(record);
+                }
+                for (var i = 0; i < $scope.usageServiceRecordList.length; i++) {
+                    var record = $scope.usageServiceRecordList[i];
+                    record.percent = (record.flow || 0) / $scope.usageServiceRatioTotal * 100;
                 }
             });
         };

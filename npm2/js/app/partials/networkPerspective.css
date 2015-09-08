@@ -3,3 +3,6 @@
     border: 0;
     border-bottom-right-radius: 8px;
 }
+.network-perspective-service-record .col-md-4{
+    height:150px;
+}

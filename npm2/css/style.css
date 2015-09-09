@@ -58,11 +58,11 @@ svg{
   line-height: 110px;
   z-index: 2;
 }
-.percent:after {
+/*.percent:after {
   content: '%';
   margin-left: 0.1em;
   font-size: .8em;
-}
+}*/
 
 	.chart1 {
   position: relative;

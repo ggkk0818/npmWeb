@@ -14,14 +14,15 @@ function (angular, app, _) {
                     { name: "flowRatio", tooltip: "kbps" },//流量速率
                     { name: "timeConnDuration", tooltip: "msps" },//连接持续时间
                     { name: "connRatio", tooltip: "个/sec" },//连接率
-                    { name: "connRequestRatio", tooltip: "个/sec" }//连接请求率
+                    { name: "connRequestRatio", tooltip: "个/sec" },//连接请求率
+                    { name: "userResponseTime", tooltip: "ms" }//用户响应时间
                 ];
                 var multiLineChartProp = [
                     { name: "transTime", props: ["outTransTime", "inTransTime"], tooltip: "ms", sum: true },//数据传输时间
                     { name: "netPayloadTransTime", props: ["outNetPayloadTransTime", "inNetPayloadTransTime"], tooltip: "ms", sum: true },//净荷传输时间
                     { name: "netPayloadTime", props: ["outNetPayloadTime", "inNetPayloadTime"], tooltip: "byte", sum: true },//净荷
                     { name: "packetLossRatio", props: ["outPacketLossRatio", "inPacketLossRatio"], tooltip: "%", sum: false },//丢包率
-                    { name: "packetRetransRatio", props: ["outPacketRetransRatio", "inPacketRetransRatio"], tooltip: "%", sum: true },//包重传率
+                    { name: "packetRetransRatio", props: ["outPacketRetransRatio", "inPacketRetransRatio"], tooltip: "个/sec", sum: true },//包重传率
                     { name: "retransRatio", props: ["outRetransRatio", "inRetransRatio"], tooltip: "kbps", sum: true },//重传率
                     { name: "timeRetrans", props: ["outTimeRetrans", "inTimeRetrans"], tooltip: "ms", sum: true }//重传延时
                 ];
@@ -36,14 +37,14 @@ function (angular, app, _) {
                     //{ name: "resetRatio", props: ["clientResetRatio", "serverResetRatio"], tooltip: "个/sec", sum: true }//重置率
                 ];
                 var singlePieChartProp = [
-                    "outTurnCount",//交互个数（流出）
-                    "inTurnCount",//交互个数（流入）
-                    "connEstablishTime",//连接建立时间
-                    "firstByteTime",//第一个字节时间
-                    "newConnSuccessCount",//连接建立成功个数
-                    "connReqCount",//连接请求个数
-                    "connFailingCount",//连接失败个数
-                    "serverResponseTime"//服务器响应时间
+                    { name: "outTurnCount", tooltip: "个" },//交互个数（流出）
+                    { name: "inTurnCount", tooltip: "个" },//交互个数（流入）
+                    { name: "connEstablishTime", tooltip: "ms" },//连接建立时间
+                    { name: "firstByteTime", tooltip: "ms" },//第一个字节时间
+                    { name: "newConnSuccessCount", tooltip: "个" },//连接建立成功个数
+                    { name: "connReqCount", tooltip: "个" },//连接请求个数
+                    { name: "connFailingCount", tooltip: "个" },//连接失败个数
+                    { name: "serverResponseTime", tooltip: "ms" }//服务器响应时间
                 ];
                 var init = function () {
                     if (!$scope.service || !$scope.service.metric)
@@ -254,18 +255,27 @@ function (angular, app, _) {
                         }
                         for (var index in singlePieChartProp) {
                             var prop = singlePieChartProp[index];
-                            if (dataType == prop && $scope.service.metric[prop]) {
+                            if (dataType == prop.name && $scope.service.metric[prop.name]) {
                                 $el.find(".chart")
-                                    .attr("data-percent", Math.round($scope.service.metric[prop]) || 0)
+                                    .attr("data-percent", Math.round($scope.service.metric[prop.name]) || 0)
                                     .easyPieChart({
                                         easing: 'easeOutBounce',
                                         lineWidth: '10',
                                         scaleColor: true,
                                         barColor: '#d9534f',
                                         trackColor: '#B7ADAD',
-                                        onStep: function (from, to, percent) {
-                                            $(this.el).find('.percent').text(Math.round(percent));
-                                        }
+                                        onStep: (function (prop, val) {
+                                            return function (from, to, percent) {
+                                                var str = null;
+                                                if (isNaN(percent)) {
+                                                    str = val && val.length ? Math.round(val[0]) + prop.tooltip : "N/A";
+                                                }
+                                                else {
+                                                    str = Math.round(percent) + prop.tooltip;
+                                                }
+                                                $(this.el).find('.percent').text(str);
+                                            };
+                                        })(prop, $scope.service.metric[prop.name])
                                     });
                             }
                         }

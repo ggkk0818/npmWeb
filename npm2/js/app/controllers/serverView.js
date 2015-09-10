@@ -204,7 +204,7 @@
                         var service = record.protocolRatio[i];
                         ratioTotal += service.flow || 0;
                         if (serviceColorMap[service.protocol + service.port] == undefined) {
-                            serviceColorMap[service.protocol + service.port] = progressBarClassArr[Math.floor(Math.random() * 5)];
+                            serviceColorMap[service.protocol + service.port] = (i >= progressBarClassArr.length ? progressBarClassArr[Math.floor(Math.random() * 5)] : progressBarClassArr[i]);
                         }
                         service.progressBarClass = serviceColorMap[service.protocol + service.port];
                     }

@@ -221,7 +221,7 @@
                     $.extend(ratioRecord, record);
                     $scope.serviceRatioTotal += record.flow || 0;
                     if (serviceColorMap[record.protocol + record.port] == undefined) {
-                        serviceColorMap[record.protocol + record.port] = progressBarClassArr[Math.floor(Math.random() * 5)];
+                        serviceColorMap[record.protocol + record.port] = (i >= progressBarClassArr.length ? progressBarClassArr[Math.floor(Math.random() * 5)] : progressBarClassArr[i]);
                     }
                     ratioRecord.progressBarClass = serviceColorMap[record.protocol + record.port];
                     $scope.serviceRatioList.push(ratioRecord);
@@ -251,7 +251,7 @@
                     $.extend(ratioRecord, record);
                     $scope.usageServiceRatioTotal += record.flow || 0;
                     if (serviceColorMap[record.protocol + record.port] == undefined) {
-                        serviceColorMap[record.protocol + record.port] = progressBarClassArr[Math.floor(Math.random() * 5)];
+                        serviceColorMap[record.protocol + record.port] = (i >= progressBarClassArr.length ? progressBarClassArr[Math.floor(Math.random() * 5)] : progressBarClassArr[i]);
                     }
                     ratioRecord.progressBarClass = serviceColorMap[record.protocol + record.port];
                     $scope.usageServiceRatioList.push(ratioRecord);

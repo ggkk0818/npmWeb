@@ -12,38 +12,39 @@ function (angular, app, _) {
             link: function ($scope, elem) {
                 var singleLineChartProp = [
                     { name: "flowRatio", tooltip: "kbps" },//流量速率
-                    { name: "timeConnDuration", tooltip: "msps" },//连接持续时间
-                    { name: "connRatio", tooltip: "个/sec" },//连接率
-                    { name: "connRequestRatio", tooltip: "个/sec" },//连接请求率
-                    { name: "userResponseTime", tooltip: "ms" }//用户响应时间
+                    { name: "timeConnDuration", tooltip: "ms/sec" },//连接持续时间
+                    { name: "connRatio", tooltip: "连接/sec" },//连接率
+                    { name: "connRequestRatio", tooltip: "连接/sec" },//连接请求率
+                    { name: "userResponseTime", tooltip: "ms" },//用户响应时间
+                    { name: "timeRetrans", tooltip: "ms" },//重传延时
                 ];
                 var multiLineChartProp = [
                     { name: "transTime", props: ["outTransTime", "inTransTime"], tooltip: "ms", sum: true },//数据传输时间
                     { name: "netPayloadTransTime", props: ["outNetPayloadTransTime", "inNetPayloadTransTime"], tooltip: "ms", sum: true },//净荷传输时间
                     { name: "netPayloadTime", props: ["outNetPayloadTime", "inNetPayloadTime"], tooltip: "byte", sum: true },//净荷
                     { name: "packetLossRatio", props: ["outPacketLossRatio", "inPacketLossRatio"], tooltip: "%", sum: false },//丢包率
-                    { name: "packetRetransRatio", props: ["outPacketRetransRatio", "inPacketRetransRatio"], tooltip: "个/sec", sum: true },//包重传率
-                    { name: "retransRatio", props: ["outRetransRatio", "inRetransRatio"], tooltip: "kbps", sum: true },//重传率
-                    { name: "timeRetrans", props: ["outTimeRetrans", "inTimeRetrans"], tooltip: "ms", sum: true }//重传延时
+                    { name: "packetRetransRatio", props: ["outPacketRetransRatio", "inPacketRetransRatio"], tooltip: "重传/sec", sum: true },//包重传率
+                    { name: "retransRatio", props: ["outRetransRatio", "inRetransRatio"], tooltip: "kbps", sum: true }//重传率
+                    //{ name: "timeRetrans", props: ["outTimeRetrans", "inTimeRetrans"], tooltip: "ms", sum: true }//重传延时
                 ];
                 var simgleColumnChartProp = [
-                    { name: "packet", tooltip: "个/sec" },//数据包
-                    { name: "connection", tooltip: "个/sec" },//连接数
-                    { name: "clientResetRatio", tooltip: "个/sec" },//重置率（客户端/流入）
-                    { name: "serverResetRatio", tooltip: "个/sec" }//重置率（服务器/流出）
+                    { name: "packet", tooltip: "pps" },//数据包
+                    { name: "connection", tooltip: "连接/sec" },//连接数
+                    { name: "clientResetRatio", tooltip: "重置/sec" },//重置率（客户端/流入）
+                    { name: "serverResetRatio", tooltip: "重置/sec" }//重置率（服务器/流出）
                 ];
                 var multiColumnChartProp = [
-                    { name: "turnRatio", props: ["outTurnRatio", "inTurnRatio"], tooltip: "个/sec", sum: true },//交互率
+                    { name: "turnRatio", props: ["outTurnRatio", "inTurnRatio"], tooltip: "交互/sec", sum: true },//交互率
                     //{ name: "resetRatio", props: ["clientResetRatio", "serverResetRatio"], tooltip: "个/sec", sum: true }//重置率
                 ];
                 var singlePieChartProp = [
-                    { name: "outTurnCount", tooltip: "个" },//交互个数（流出）
-                    { name: "inTurnCount", tooltip: "个" },//交互个数（流入）
+                    { name: "outTurnCount", tooltip: "交互" },//交互个数（流出）
+                    { name: "inTurnCount", tooltip: "交互" },//交互个数（流入）
                     { name: "connEstablishTime", tooltip: "ms" },//连接建立时间
                     { name: "firstByteTime", tooltip: "ms" },//第一个字节时间
-                    { name: "newConnSuccessCount", tooltip: "个" },//连接建立成功个数
-                    { name: "connReqCount", tooltip: "个" },//连接请求个数
-                    { name: "connFailingCount", tooltip: "个" },//连接失败个数
+                    { name: "newConnSuccessCount", tooltip: "连接" },//连接建立成功个数
+                    { name: "connReqCount", tooltip: "连接" },//连接请求个数
+                    { name: "connFailingCount", tooltip: "连接" },//连接失败个数
                     { name: "serverResponseTime", tooltip: "ms" }//服务器响应时间
                 ];
                 var init = function () {
@@ -83,7 +84,7 @@ function (angular, app, _) {
                                     mouseover: (function (prop) {
                                         return function (d, i) {
                                             //custom format the rollover text, show days
-                                            var str = (d.time instanceof Date ? d.time.Format("hh:mm:ss") + " " : "") + (d.value || 0) + prop.tooltip;
+                                            var str = (d.value || 0) + prop.tooltip + (d.time instanceof Date ? " " + d.time.Format("hh:mm:ss") : "");
                                             $el.find("svg .mg-active-datapoint").html(str);
                                         };
                                     })(prop),
@@ -121,7 +122,7 @@ function (angular, app, _) {
                                 mouseover: (function (prop) {
                                     return function (d, i) {
                                         //custom format the rollover text, show days
-                                        var str = (d.time instanceof Date ? d.time.Format("hh:mm:ss") + " " : "") + (d.value || 0) + prop.tooltip;
+                                        var str = (d.value || 0) + prop.tooltip + (d.time instanceof Date ? " " + d.time.Format("hh:mm:ss") : "");
                                         $el.find("svg .mg-active-datapoint").html(str);
                                     };
                                 })(prop),

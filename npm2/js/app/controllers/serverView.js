@@ -1,23 +1,25 @@
 ﻿define(['angular', 'lodash', 'jquery', 'services/all', 'css!partials/index.css'], function (angular, _, $) {
     "use strict";
     var module = angular.module('app.controllers');
-    module.controller('ServerViewCtrl', function ($rootScope, $scope, $route, $interval, $location, $timeout, $window, dateTimeService, networkOverviewService) {
+    module.controller('ServerViewCtrl', function ($rootScope, $scope, $route, $interval, $location, $timeout, $window, dateTimeService, networkOverviewService, networkPerspectiveService) {
         //初始化变量
-        $scope.QUERY_TYPE = [
-            { name: "ip", displayName: "按IP模式" },
-            { name: "protocol", displayName: "按协议模式" }
-        ];
+        $scope.ipSegmentList = null;
+        $scope.serviceList = null;
         $scope.pageNum = 1;
         $scope.pageTotal = 1;
-        $scope.pageSize = 10;
+        $scope.pageSize = 999;
         $scope.recordSize = 0;
         $scope.recordList = null;
         $scope.startDate = null;
         $scope.startTime = null;
         $scope.endTime = null;
-        $scope.queryType = $scope.QUERY_TYPE[0];
+        $scope.queryType = "group";
+        $scope.queryService = null;
         //表单数据
         $scope.startDateInput = $scope.startDate = dateTimeService.serverTime.Format("yyyy-MM-dd");
+        $scope.queryServiceInput = $scope.queryService = null;
+        $scope.keywordInput = $scope.queryType;
+        $scope.serviceInput = null;
         //初始化
         $scope.init = function () {
             $scope.setSearchParams();
@@ -28,8 +30,12 @@
             var params = {};
             if ($scope.startDate)
                 params.startDate = $scope.startDate;
-            if ($scope.queryType)
-                params.queryType = $scope.queryType.name;
+            if (typeof $scope.queryType === "object")
+                params.queryType = $scope.queryType.ipSegment;
+            else if ($scope.queryType)
+                params.queryType = $scope.queryType;
+            if ($scope.queryService)
+                params.queryService = $scope.queryService.protocol + $scope.queryService.port;
             return params;
         };
         //从url获取查询参数设置变量
@@ -46,17 +52,17 @@
             if (params.endTime)
                 $scope.endTime = params.endTime;
             if (params.queryType) {
-                for (var i = 0; i < $scope.QUERY_TYPE.length; i++) {
-                    if (params.queryType == $scope.QUERY_TYPE[i].name)
-                        $scope.queryType = $scope.QUERY_TYPE[i];
-                }
+                $scope.queryType = params.queryType;
+            }
+            if (params.queryService) {
+                $scope.queryService = params.queryService;
             }
             if (!$scope.startTime || !$scope.endTime) {
                 var today = new Date($scope.startDate.replace(/-/g, "/"));
                 if (!$scope.endTime) {
                     if ($scope.startTime) {
                         var time = new Date($scope.startDate.replace(/-/g, "/") + " " + $scope.startTime);
-                        time.setHours(time.getHours() + 5);
+                        time.setHours(time.getHours() + 1);
                         if (time.getDate() == today.getDate()) {
                             $scope.endTime = time.Format("hh:mm:ss");
                         }
@@ -70,7 +76,7 @@
                 }
                 if (!$scope.startTime) {
                     var time = new Date($scope.startDate.replace(/-/g, "/") + " " + $scope.endTime);
-                    time.setHours(time.getHours() - 5);
+                    time.setHours(time.getHours() - 1);
                     if (time.getDate() == today.getDate()) {
                         $scope.startTime = time.Format("hh:mm:ss");
                     }
@@ -90,90 +96,182 @@
         //查询数据
         $scope.doQuery = function () {
             var params = {
-                start: ($scope.pageNum - 1) * $scope.pageSize,
-                limit: $scope.pageSize
+                startTime: $scope.startDate + " " + $scope.startTime,
+                endTime: $scope.startDate + " " + $scope.endTime
             };
-            if ($scope.startDate) {
-                params.startTime = $scope.startDate + " " + $scope.startTime;
-                params.endTime = $scope.startDate + " " + $scope.endTime;
-            }
-            networkOverviewService.serviceIp(params, function (data) {
-                $scope.success = data && data.status == 200 ? true : false;
-                $scope.recordList = data && data.data ? data.data : [];
-                $scope.recordSize = data && data.count ? data.count : 0;
-                $scope.pageTotal = Math.floor($scope.recordSize / $scope.pageSize) + ($scope.recordSize % $scope.pageSize > 0 ? 1 : 0);
-                for (var i = 0; i < $scope.recordList.length; i++) {
-                    var record = { ip: $scope.recordList[i] };
-                    if (typeof record.start_time === "number")
-                        record.start_time = new Date(record.start_time).Format("yyyy-MM-dd hh:mm:ss");
-                    if (typeof record.end_time === "number")
-                        record.end_time = new Date(record.end_time).Format("yyyy-MM-dd hh:mm:ss");
-                    $scope.recordList[i] = record;
+            networkOverviewService.ipSegment(params, function (data) {
+                if (data && data.data) {
+                    $scope.ipSegmentList = data.data;
+                    if ($scope.queryType != "group" && $scope.ipSegmentList.length) {
+                        if (typeof $scope.queryType === "object")
+                            $scope.queryType = $scope.queryType.ipSegment;
+                        for (var i = 0; i < $scope.ipSegmentList.length; i++) {
+                            var segment = $scope.ipSegmentList[i];
+                            if ($scope.queryType == segment.ipSegment) {
+                                $scope.queryType = segment;
+                                $timeout(function () {
+                                    $scope.keywordInput = segment.ipSegment;
+                                });
+                                break;
+                            }
+                        }
+                    }
+                    if (typeof $scope.queryType === "object" || $scope.queryType == "group") {
+                        $scope.queryGroup();
+                    }
                 }
-                $scope.doDetailQuery();
+            });
+            networkPerspectiveService.openService(params, function (data) {
+                if (data && data.data) {
+                    $scope.serviceList = data.data;
+                    if ($scope.queryService != null && $scope.serviceList.length) {
+                        for (var i = 0; i < $scope.serviceList.length; i++) {
+                            var service = $scope.serviceList[i];
+                            if ($scope.queryService == service.protocol + service.port) {
+                                $scope.queryService = service;
+                                $timeout(function () {
+                                    $scope.serviceInput = service.protocol + service.port;
+                                });
+                                break;
+                            }
+                        }
+                    }
+                    else if ($scope.serviceList.length) {
+                        $scope.queryService = $scope.serviceList[0];
+                        $timeout(function () {
+                            $scope.serviceInput = $scope.queryService.protocol + $scope.queryService.port;
+                        });
+                    }
+                    if (typeof $scope.queryService === "object" && $scope.queryService != null) {
+                        $scope.queryServiceInfo();
+                    }
+                }
             });
         };
-        //查询详情
-        $scope.doDetailQuery = function () {
-            var params = {};
-            if ($scope.recordList && $scope.recordList.length) {
-                for (var i = 0; i < $scope.recordList.length; i++) {
-                    params["ips[" + i + "]"] = $scope.recordList[i].ip;
+        //查询ip或ip组列表
+        $scope.queryGroup = function () {
+            if ($scope.queryType == "group") {
+                var params = {
+                    startTime: $scope.startDate + " " + $scope.startTime,
+                    endTime: $scope.startDate + " " + $scope.endTime,
+                    start: 0,
+                    limit: 999
+                };
+                networkOverviewService.groupList(params, function (data) {
+                    if (data) {
+                        $scope.ipRecordList = data.data ? data.data : [];
+                        for (var i = 0; i < $scope.ipRecordList.length; i++) {
+                            var record = $scope.ipRecordList[i];
+                            $scope.queryGroupDetail(record);
+                        }
+                    }
+                });
+            }
+            else if (typeof $scope.queryType === "object" && $scope.queryType != null) {
+                $scope.ipRecordList = [];
+                if ($scope.queryType.ips) {
+                    for (var i = 0; i < $scope.queryType.ips.length; i++) {
+                        var record = { ip: $scope.queryType.ips[i] };
+                        $scope.ipRecordList.push(record);
+                        $scope.queryGroupDetail(record);
+                    }
                 }
             }
-            else {
+        };
+        //查询ip或ip组详情
+        var progressBarClassArr = ["", "progress-bar-info", "progress-bar-success", "progress-bar-warning", "progress-bar-danger"];
+        var serviceColorMap = {};
+        $scope.queryGroupDetail = function (record) {
+            if (!record)
                 return;
+            var params = {
+                startTime: $scope.startDate + " " + $scope.startTime,
+                endTime: $scope.startDate + " " + $scope.endTime
+            };
+            if (record.ips) {
+                for (var i = 0; i < record.ips.length; i++) {
+                    params["ips[" + i + "]"] = record.ips[i];
+                }
             }
-            if ($scope.startDate) {
-                params.startTime = $scope.startDate + " " + $scope.startTime;
-                params.endTime = $scope.startDate + " " + $scope.endTime;
+            else if (record.ip) {
+                params.ip = record.ip;
             }
-            networkOverviewService.system(params, function (data) {
-                if ($scope.recordList && $scope.recordList.length) {
-                    if (data && data.status == 200 && data.data) {
-                        for (var i = 0; i < data.data.length; i++) {
-                            var detail = data.data[i];
-                            for (var j = 0; j < $scope.recordList.length; j++) {
-                                var record = $scope.recordList[j];
-                                if (detail.ip === record.ip) {
-                                    for (var attr in detail) {
-                                        if (detail[attr] != null)
-                                            record[attr] = detail[attr];
-                                    }
-                                    if (record.uptimeMins) {
-                                        record.hasUpTimes = true;
-                                        if (record.uptimeMins >= 60) {
-                                            record.uptimeHours = Math.floor(record.uptimeMins / 60);
-                                            record.uptimeMins = record.uptimeMins % 60;
-                                        }
-                                        if (record.uptimeHours >= 24) {
-                                            record.uptimeDays = Math.floor(record.uptimeHours / 24);
-                                            record.uptimeHours = record.uptimeMins % 24;
-                                        }
-                                    }
-                                    break;
-                                }
-                            }
+            networkOverviewService.groupMetric(params, function (data) {
+                if (data && data.status == "200") {
+                    $.extend(record, data);
+                    var ratioTotal = 0;
+                    for (var i = 0; i < record.protocolRatio.length; i++) {
+                        var service = record.protocolRatio[i];
+                        ratioTotal += service.flow || 0;
+                        if (serviceColorMap[service.protocol + service.port] == undefined) {
+                            serviceColorMap[service.protocol + service.port] = progressBarClassArr[Math.floor(Math.random() * 5)];
                         }
+                        service.progressBarClass = serviceColorMap[service.protocol + service.port];
+                    }
+                    if (record.protocolRatio.length > 5) {
+                        var otherFlow = 0;
+                        for (var i = 4; i < record.protocolRatio.length; i++) {
+                            var service = record.protocolRatio[i];
+                            otherFlow += service.flow;
+                        }
+                        record.protocolRatio[4].name = "其他";
+                        record.protocolRatio[4].flow = otherFlow;
+                        record.protocolRatio.splice(5, record.protocolRatio.length - 5);
+                    }
+                    for (var i = 0; i < record.protocolRatio.length; i++) {
+                        var service = record.protocolRatio[i];
+                        service.percent = (service.flow || 0) / ratioTotal * 100;
                     }
                 }
             });
-            networkOverviewService.protocol(params, function (data) {
-                if ($scope.recordList && $scope.recordList.length) {
-                    if (data && data.status == 200 && data.data) {
-                        for (var i = 0; i < data.data.length; i++) {
-                            var detail = data.data[i];
-                            for (var j = 0; j < $scope.recordList.length; j++) {
-                                var record = $scope.recordList[j];
-                                if (detail.ip === record.ip) {
-                                    if (detail.flowRatioList)
-                                        record.flowRatioList = detail.flowRatioList;
-                                    break;
-                                }
-                            }
+        };
+        //查询服务信息
+        $scope.queryServiceInfo = function () {
+            var params = {
+                startTime: $scope.startDate + " " + $scope.startTime,
+                endTime: $scope.startDate + " " + $scope.endTime,
+                protocol: $scope.queryService.protocol,
+                port: $scope.queryService.port,
+                start: 0,
+                limit: 999
+            };
+            networkOverviewService.ipList(params, function (data) {
+                if (data && data.ip) {
+                    $scope.serviceRecordList = data.ip;
+                    for (var i = 0; i < $scope.serviceRecordList.length; i++) {
+                        var record = { ip: $scope.serviceRecordList[i] };
+                        $scope.serviceRecordList[i] = record;
+                        $scope.queryServiceDetail(record);
+                    }
+                }
+            });
+        };
+        $scope.queryServiceDetail = function (record) {
+            if (!record)
+                return;
+            var params = {
+                startTime: $scope.startDate + " " + $scope.startTime,
+                endTime: $scope.startDate + " " + $scope.endTime,
+                ip: record.ip
+            };
+            record.loading = true;
+            networkOverviewService.systemInfOs(params, function (data) {
+                if (data && data.status == "200") {
+                    record.systemInfo = data.system && data.system.length ? data.system[0] : null;
+                    record.ratioList = data.ratio ? data.ratio : [];
+                    if (record.systemInfo && record.systemInfo.uptimeMins) {
+                        record.systemInfo.hasUpTimes = true;
+                        if (record.systemInfo.uptimeMins >= 60) {
+                            record.systemInfo.uptimeHours = Math.floor(record.systemInfo.uptimeMins / 60);
+                            record.systemInfo.uptimeMins = record.systemInfo.uptimeMins % 60;
+                        }
+                        if (record.systemInfo.uptimeHours >= 24) {
+                            record.systemInfo.uptimeDays = Math.floor(record.systemInfo.uptimeHours / 24);
+                            record.systemInfo.uptimeHours = record.systemInfo.uptimeMins % 24;
                         }
                     }
                 }
+                record.loading = false;
             });
         };
         //搜索
@@ -182,6 +280,27 @@
                 $scope.startDate = null;
             else
                 $scope.startDate = $scope.startDateInput;
+            if ($scope.keywordInput != "group") {
+                for (var i = 0; i < $scope.ipSegmentList.length; i++) {
+                    var segment = $scope.ipSegmentList[i];
+                    if ($scope.keywordInput == segment.ipSegment) {
+                        $scope.queryType = segment;
+                        break;
+                    }
+                }
+            }
+            else {
+                $scope.keywordInput = $scope.queryType = "group";
+            }
+            if ($scope.serviceInput) {
+                for (var i = 0; i < $scope.serviceList.length; i++) {
+                    var service = $scope.serviceList[i];
+                    if ($scope.serviceInput == service.protocol + service.port) {
+                        $scope.queryService = service;
+                        break;
+                    }
+                }
+            }
             $scope.show();
         };
         //表单输入框按键事件
@@ -201,13 +320,6 @@
                 $scope.startDateInput = $scope.startDate = dateTimeService.serverTime.Format("yyyy-MM-dd");
             }
             $scope.show();
-        };
-        //点击tab页
-        $scope.changeTab = function (tab) {
-            if (tab) {
-                $scope.queryType = tab;
-                $scope.show();
-            }
         };
 
         $scope.$on("rangeSlideValuesChanged", function (e, $context, elem, event, data) {

@@ -105,7 +105,7 @@
                         <div class="panel-heading">
                             提供的服务
                             <div class="progress pull-right" style="width:500px" ng-show="serviceRecordList.length">
-                                <div class="progress-bar" ng-repeat="service in serviceRecordList" ng-class="service.progressBarClass" ng-style="{'width':service.percent + '%'}">
+                                <div class="progress-bar" ng-repeat="service in serviceRatioList" ng-class="service.progressBarClass" ng-style="{'width':service.percent + '%'}" data-toggle="tooltip" data-placement="bottom" title="{{service.percent | number:0}}%({{service.protocol + ':' + service.port}})">
                                     <span>{{service.percent | number:0}}%({{service.protocol + ":" + service.port}})</span>
                                 </div>
                             </div>
@@ -267,7 +267,7 @@
                         <div class="panel-heading">
                             使用的服务
                             <div class="progress pull-right" style="width:500px" ng-show="usageServiceRecordList.length">
-                                <div class="progress-bar" ng-repeat="service in usageServiceRecordList" ng-class="service.progressBarClass" ng-style="{'width':service.percent + '%'}">
+                                <div class="progress-bar" ng-repeat="service in usageServiceRatioList" ng-class="service.progressBarClass" ng-style="{'width':service.percent + '%'}" data-toggle="tooltip" data-placement="bottom" title="{{service.percent | number:0}}%({{service.protocol + ':' + service.port}})">
                                     <span>{{service.percent | number:0}}%({{service.protocol + ":" + service.port}})</span>
                                 </div>
                             </div>
@@ -406,6 +406,10 @@
                                                 <div class="col-md-4">
                                                     <div data-type="timeRetrans"></div>
                                                     <p class="text-center">重传延时</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="userResponseTime"></div>
+                                                    <p class="text-center">用户响应时间</p>
                                                 </div>
                                             </div>
                                         </div>

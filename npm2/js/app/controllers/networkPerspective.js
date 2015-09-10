@@ -127,7 +127,7 @@
                                 top: 17,
                                 mouseover: function (d, i) {
                                     //custom format the rollover text, show days
-                                    var str = (d.time instanceof Date ? d.time.Format("hh:mm:ss") + " " : "") + (d.value ? d.value.toFixed(2) : 0) + "kbps";
+                                    var str = (d.value ? d.value.toFixed(2) : 0) + "kbps" + (d.time instanceof Date ? " " + d.time.Format("hh:mm:ss") : "");
                                     $('#networkPerspective_basic_flow svg .mg-active-datapoint').html(str);
                                 },
                                 target: '#networkPerspective_basic_flow',
@@ -151,7 +151,7 @@
                                 top: 17,
                                 mouseover: function (d, i) {
                                     //custom format the rollover text, show days
-                                    var str = (d.time instanceof Date ? d.time.Format("hh:mm:ss") + " " : "") + (d.value || 0) + "pps";
+                                    var str = (d.value || 0) + "pps" + (d.time instanceof Date ? d.time.Format("hh:mm:ss") + " " : "");
                                     $('#networkPerspective_basic_package svg .mg-active-datapoint').html(str);
                                 },
                                 target: '#networkPerspective_basic_package',
@@ -175,7 +175,7 @@
                                 top: 17,
                                 mouseover: function (d, i) {
                                     //custom format the rollover text, show days
-                                    var str = (d.time instanceof Date ? d.time.Format("hh:mm:ss") + " " : "") + (d.value || 0) + "个";
+                                    var str = (d.value || 0) + "连接" + (d.time instanceof Date ? " " + d.time.Format("hh:mm:ss") : "");
                                     $('#networkPerspective_basic_connection svg .mg-active-datapoint').html(str);
                                 },
                                 target: '#networkPerspective_basic_connection',
@@ -198,7 +198,7 @@
                                 top: 17,
                                 mouseover: function (d, i) {
                                     //custom format the rollover text, show days
-                                    var str = (d.time instanceof Date ? d.time.Format("hh:mm:ss") + " " : "") + (d.value || 0) + "个";
+                                    var str = (d.value || 0) + "交互" + (d.time instanceof Date ? " " + d.time.Format("hh:mm:ss") : "");
                                     $('#networkPerspective_basic_turn svg .mg-active-datapoint').html(str);
                                 },
                                 target: '#networkPerspective_basic_turn',
@@ -215,34 +215,60 @@
             networkPerspectiveService.openService(params, function (data) {
                 $scope.serviceRecordList = data && data.data ? data.data : [];
                 $scope.serviceRatioTotal = 0;
+                $scope.serviceRatioList = [];
                 for (var i = 0; i < $scope.serviceRecordList.length; i++) {
-                    var record = $scope.serviceRecordList[i];
+                    var record = $scope.serviceRecordList[i], ratioRecord = {};
+                    $.extend(ratioRecord, record);
                     $scope.serviceRatioTotal += record.flow || 0;
                     if (serviceColorMap[record.protocol + record.port] == undefined) {
                         serviceColorMap[record.protocol + record.port] = progressBarClassArr[Math.floor(Math.random() * 5)];
                     }
-                    record.progressBarClass = serviceColorMap[record.protocol + record.port];
+                    ratioRecord.progressBarClass = serviceColorMap[record.protocol + record.port];
+                    $scope.serviceRatioList.push(ratioRecord);
                     $scope.doServiceDetailQuery(record);
                 }
-                for (var i = 0; i < $scope.serviceRecordList.length; i++) {
-                    var record = $scope.serviceRecordList[i];
+                if ($scope.serviceRatioList.length > 5) {
+                    var otherFlow = 0;
+                    for (var i = 4; i < $scope.serviceRatioList.length; i++) {
+                        var service = $scope.serviceRatioList[i];
+                        otherFlow += service.flow;
+                    }
+                    $scope.serviceRatioList[4].name = "其他";
+                    $scope.serviceRatioList[4].flow = otherFlow;
+                    $scope.serviceRatioList.splice(5, $scope.serviceRatioList.length - 5);
+                }
+                for (var i = 0; i < $scope.serviceRatioList.length; i++) {
+                    var record = $scope.serviceRatioList[i];
                     record.percent = (record.flow || 0) / $scope.serviceRatioTotal * 100;
                 }
             });
             networkPerspectiveService.usageService(params, function (data) {
                 $scope.usageServiceRecordList = data && data.data ? data.data : [];
                 $scope.usageServiceRatioTotal = 0;
+                $scope.usageServiceRatioList = [];
                 for (var i = 0; i < $scope.usageServiceRecordList.length; i++) {
-                    var record = $scope.usageServiceRecordList[i];
+                    var record = $scope.usageServiceRecordList[i], ratioRecord = {};
+                    $.extend(ratioRecord, record);
                     $scope.usageServiceRatioTotal += record.flow || 0;
                     if (serviceColorMap[record.protocol + record.port] == undefined) {
                         serviceColorMap[record.protocol + record.port] = progressBarClassArr[Math.floor(Math.random() * 5)];
                     }
-                    record.progressBarClass = serviceColorMap[record.protocol + record.port];
+                    ratioRecord.progressBarClass = serviceColorMap[record.protocol + record.port];
+                    $scope.usageServiceRatioList.push(ratioRecord);
                     $scope.doUsageServiceDetailQuery(record);
                 }
-                for (var i = 0; i < $scope.usageServiceRecordList.length; i++) {
-                    var record = $scope.usageServiceRecordList[i];
+                if ($scope.usageServiceRatioList.length > 5) {
+                    var otherFlow = 0;
+                    for (var i = 4; i < $scope.usageServiceRatioList.length; i++) {
+                        var service = $scope.usageServiceRatioList[i];
+                        otherFlow += service.flow;
+                    }
+                    $scope.usageServiceRatioList[4].name = "其他";
+                    $scope.usageServiceRatioList[4].flow = otherFlow;
+                    $scope.usageServiceRatioList.splice(5, $scope.usageServiceRatioList.length - 5);
+                }
+                for (var i = 0; i < $scope.usageServiceRatioList.length; i++) {
+                    var record = $scope.usageServiceRatioList[i];
                     record.percent = (record.flow || 0) / $scope.usageServiceRatioTotal * 100;
                 }
             });

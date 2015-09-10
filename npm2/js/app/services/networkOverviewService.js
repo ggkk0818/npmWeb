@@ -8,10 +8,11 @@ function (angular, $, _, config) {
     'use strict';
     var module = angular.module('app.services');
     module.service('networkOverviewService', function ($http, $rootScope, $interval) {
-        this.serviceIp = function (params, callback) {
+        //查询ip组列表
+        this.groupList = function (params, callback) {
             $http({
                 method: 'GET',
-                url: 'overview/service/ip',
+                url: 'overview/group/list',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {
@@ -22,10 +23,11 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
-        this.protocol = function (params, callback) {
+        //ip组详细信息
+        this.groupMetric = function (params, callback) {
             $http({
                 method: 'GET',
-                url: 'overview/protocol',
+                url: 'overview/group/metric',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {
@@ -36,7 +38,38 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
-        this.system = function (params, callback) {
+        //查询网段列表
+        this.ipSegment = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'overview/ip/segment',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        //查询协议ip列表
+        this.ipList = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'overview/ip/list',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        //查询服务详细信息
+        this.systemInfOs = function (params, callback) {
             $http({
                 method: 'GET',
                 url: 'overview/system',

@@ -1,67 +1,126 @@
-﻿<div class="container view-content" id="pag_one">
-    <ul id="myTab" class="nav nav-tabs" style="clear:both;margin-top:20px">
-        <li><a href="#/flow/summary">趋势指标</a></li>
-        <li><a href="#/flow/detail">实时视图</a></li>
-        <li class="active"><a href="javascript:void(0);">服务端视图</a></li>
+﻿<div class="container con-view">
+    <ul class="nav nav-tabs  con-view">
+        <li>
+            <a href="#/flow/summary">趋势指标</a>
+        </li>
+        <li class="active">
+            <a href="#/flow/server">服务端视图</a>
+        </li>
         <li><a href="javascript:void(0);">PCAP包下载</a></li>
     </ul>
-    <div id="myTabContent" class="tab-content">
-        <div class="tab-pane fade in active" id="apart3">
-            <ul class="nav  nav-tabs nav-indent">
-                <li ng-repeat="tab in QUERY_TYPE" ng-class="{'active':queryType.name==tab.name}" ng-click="changeTab(tab)">
-                    <a href="javascript:void(0);">{{tab.displayName}}</a>
-                </li>
-                <div style="float:right;">
-                    <input type="text" class="form-control datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN" data-min-view="2" placeholder="日期" ng-model="startDateInput" ng-keypress="formKeypressHandler($event)">
-                    <button class="btn btn-default" type="button" ng-click="search()">查询</button>
-                    <a class="btn btn-default" ng-click="addDay(-1)" data-toggle="tooltip" data-placement="bottom" title="前一{{durationType.name}}"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a>
-                    <a class="btn btn-default" ng-click="addDay()" ng-class="{'disabled': isToday}" data-toggle="tooltip" data-placement="bottom" title="现在"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span></a>
-                    <a class="btn btn-default" ng-click="addDay(1)" data-toggle="tooltip" data-placement="bottom" title="后一{{durationType.name}}"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
-                </div>
-
-            </ul>
-            <div class="col-md-12" style="margin-top:10px;margin-bottom:10px;">
+    <div class="tab-content">
+        <div class="tab-pane active">
+            <div class="col-md-12 con-view">
                 <div class="range-slider" data-type="date" data-min="{{::startDate}} 00:00:00" data-max="{{::startDate}} 23:59:59" data-start="{{::startDate + ' ' + startTime}}" data-end="{{::startDate + ' ' + endTime}}"></div>
             </div>
-            <div class="tab-content">
-                <div id="apart1_11" class="tab-pane fade in active">
+            <div class="tab-content wrapp-view">
+                <div class="tab-pane fade in active">
                     <div class="row">
-                        <div class="col-md-8" style="margin:10px 20px 10px">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="自定义IP组" style="position:relative">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="	position:absolute">
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="javascript:void(0);">192.168.200.82</a></li>
-                                    <li><a href="javascript:void(0);">192.168.200.83</a></li>
-                                </ul>
+                        <div class="col-md-4">
+                            <div class="input-group con-view ">
+                                <select class="js-states form-control" ng-model="keywordInput">
+                                    <option value="group">IP组</option>
+                                    <optgroup label="网段">
+                                        <option value="{{segment.ipSegment}}" ng-repeat="segment in ipSegmentList">{{segment.ipSegment}}</option>
+                                    </optgroup>
+                                </select>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" ng-click="search()">查询</button>
+                                </span>
                             </div>
                         </div>
+                        <div class="col-md-8 ">
+                            <ul class="nav  nav-pills con-view pull-right">
+                                <li ng-if="false">
+                                    <button type="button" class="btn btn-sm  btn-primary">实时</button>
+                                </li>
+                                <li>
+                                    <input type="text" class="form-control datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN" data-min-view="2" placeholder="日期" ng-model="startDateInput" ng-keypress="formKeypressHandler($event)">
+                                </li>
+                                <li>
+                                    <button type="button" class="btn btn-sm  btn-primary" ng-click="search()">查询</button>
+                                </li>
+                                <li>
+                                    <button type="button" class="btn btn-sm btn-primary" ng-click="addDay(-1)" data-toggle="tooltip" data-placement="bottom" title="前一天">
+                                        <span class="glyphicon glyphicon-chevron-left"></span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" class="btn btn-sm btn-primary" ng-click="addDay()" ng-class="{'disabled': isToday}" data-toggle="tooltip" data-placement="bottom" title="现在">
+                                        <span class=" glyphicon glyphicon-stop"></span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" class="btn btn-sm btn-primary" ng-click="addDay(1)" data-toggle="tooltip" data-placement="bottom" title="后一天">
+                                        <span class=" glyphicon glyphicon-chevron-right"></span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="container-fluid" style="margin-top:20px">
-                        <div class="row">
-                            <div class="col-md-4" ng-repeat="record in recordList">
-                                <div style="background-color:#ccc;margin:10px">
-                                    <p><i class="fa fa-lightbulb-o fa-lg" style="margin-right:10px"></i>{{record.ip}}</p>
-                                    <p>
-                                        在线时长：{{record.hasUpTimes ? (record.uptimeDays ? record.uptimeDays + "天" : "") + (record.uptimeHours ? record.uptimeHours + "小时" : "") + record.uptimeMins + "分钟" : "-"}};
-                                        操作系统：{{record.os ? record.os + " " + record.osVersion : "-"}}
-                                    </p>
-                                    <hr />
-                                    <div id="mainmy" style="height:250px;width:250px;margin-top: -20%;margin-left: 10%;"></div>
+                    <div class="row">
+                        <div class="col-md-6 server-view-ip-chart" ng-repeat="record in ipRecordList">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <i class="fa fa-lightbulb-o fa-lg" style="color:red;margin-right:10px"></i>
+                                    {{record.group || record.ip}}
+                                </div>
+                                <div class="panel-body">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <div class="progress">
+                                                    <div class="progress-bar" ng-repeat="service in record.protocolRatio" ng-class="service.progressBarClass" ng-style="{'width':service.percent + '%'}" data-toggle="tooltip" data-placement="bottom" title="{{service.percent | number:0}}%({{service.name ? service.name : (service.protocol + ':' + service.port)}})">
+                                                        <span>{{service.percent | number:0}}%({{service.name ? service.name : (service.protocol + ":" + service.port)}})</span>
+                                                    </div>
+                                                </div>
+                                            </tr>
+                                            <tr>
+                                                <td>流量</td>
+                                                <td>
+                                                    <div data-type="chart-flow"></div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>数据包</td>
+                                                <td>
+                                                    <div data-type="chart-package"></div>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <nav class="text-center" style="position:relative;margin-top:20px;" ng-show="recordList">
-                        <div class="pull-right" style="line-height:34px;position:absolute;top:0;right:0;">
-                            <span style="padding-right:10px;">匹配的记录 {{recordSize||0}} 笔</span>
-                            <span style="padding-right:10px;">第 {{pageNum||0}} 页</span>
-                            <span>共 {{pageTotal||0}} 页</span>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="input-group con-view ">
+                                <select class="js-states form-control" ng-model="serviceInput">
+                                    <option value="{{service.protocol + service.port}}" ng-repeat="service in serviceList">{{service.protocol}}:{{service.port}}</option>
+                                </select>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" ng-click="search()">查询</button>
+                                </span>
+                            </div>
                         </div>
-                        <ul class="pagination" style="margin:0 auto;" data-page-click="show"></ul>
-                    </nav>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4" ng-repeat="record in serviceRecordList">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <i class="fa fa-lightbulb-o fa-lg" style="color:red;margin-right:10px"></i>
+                                    {{record.ip}}
+                                    <p style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">
+                                        在线时长：{{record.systemInfo.hasUpTimes ? (record.systemInfo.uptimeDays ? record.systemInfo.uptimeDays + "天" : "") + (record.systemInfo.uptimeHours ? record.systemInfo.uptimeHours + "小时" : "") + record.systemInfo.uptimeMins + "分钟" : "-"}};
+                                        操作系统：<span data-toggle="tooltip" data-placement="bottom" title="{{record.systemInfo.os ? record.systemInfo.os + ' ' + record.systemInfo.osVersion : ''}}">{{record.systemInfo.os ? record.systemInfo.os + " " + record.systemInfo.osVersion : "-"}}</span>
+                                    </p>
+                                </div>
+                                <div class="panel-body server-view-service-chart" style="height:200px"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -6,5 +6,7 @@
     "./warnCenterChart",
     "./flowDetailRatioChart",
     "./jqRangeSlider",
-    "./networkPerspectiveChart"
+    "./networkPerspectiveChart",
+    "./serverViewIpChart",
+    "./serverViewServiceChart"
 ], function () { });

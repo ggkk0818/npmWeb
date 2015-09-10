@@ -7,7 +7,7 @@
         //导航信息
         var sidebarNav = [];
         sidebarNav.push({ name: "网络总览", href: "#/flow/summary", icon: "glyphicon-th-large" });
-        sidebarNav.push({ name: "网络透视", href: "#/", icon: "glyphicon-th-large" });
+        sidebarNav.push({ name: "服务透视", href: "#/", icon: "glyphicon-th-large" });
         sidebarNav.push({ name: "应用透视", href: "#/", icon: "glyphicon-lock" });
         sidebarNav.push({ name: "主动测评", href: "#/", icon: "glyphicon-th" });
         $scope.sidebarNav = sidebarNav;
@@ -18,7 +18,7 @@
             href: "#/flow/.*"
         });
         otherNav.push({
-            name: "网络透视",
+            name: "服务透视",
             href: "#/network/.*"
         });
         otherNav.push({

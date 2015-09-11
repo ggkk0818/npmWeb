@@ -78,15 +78,15 @@
                         <div class="panel-body">
                             <div class="col-md-6" ng-show="baseRecord.time.length">
                                 <div id="networkPerspective_basic_flow"></div>
-                                <p class="text-center">流量</p>
+                                <p class="text-center">流量速率</p>
                             </div>
                             <div class="col-md-6" ng-show="baseRecord.time.length">
                                 <div id="networkPerspective_basic_package"></div>
-                                <p class="text-center">数据包</p>
+                                <p class="text-center">包传输率</p>
                             </div>
                             <div class="col-md-6" ng-show="baseRecord.time.length">
                                 <div id="networkPerspective_basic_connection"></div>
-                                <p class="text-center">连接并发数</p>
+                                <p class="text-center">并发连接数</p>
                             </div>
                             <div class="col-md-6" ng-show="baseRecord.time.length">
                                 <div id="networkPerspective_basic_turn"></div>
@@ -105,8 +105,8 @@
                         <div class="panel-heading">
                             提供的服务
                             <div class="progress pull-right" style="width:500px" ng-show="serviceRecordList.length">
-                                <div class="progress-bar" ng-repeat="service in serviceRatioList" ng-class="service.progressBarClass" ng-style="{'width':service.percent + '%'}" data-toggle="tooltip" data-placement="bottom" title="{{service.percent | number:0}}%({{service.protocol + ':' + service.port}})">
-                                    <span>{{service.percent | number:0}}%({{service.protocol + ":" + service.port}})</span>
+                                <div class="progress-bar" ng-repeat="service in serviceRatioList" ng-class="service.progressBarClass" ng-style="{'width':service.percent + '%'}" data-toggle="tooltip" data-placement="bottom" title="{{service.percent | number:0}}%({{service.name ? service.name : (service.protocol + ':' + service.port)}})">
+                                    <span>{{service.percent | number:0}}%({{service.name ? service.name : (service.protocol + ":" + service.port)}})</span>
                                 </div>
                             </div>
                         </div>
@@ -118,40 +118,16 @@
                                         <div class="panel-body">
                                             <div class="row">
                                                 <div class="col-md-4">
+                                                    <div data-type="userResponseTime"></div>
+                                                    <p class="text-center">用户响应时间</p>
+                                                </div>
+                                                <div class="col-md-4">
                                                     <div data-type="flowRatio"></div>
                                                     <p class="text-center">流量速率</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div data-type="packet" style="height:120px;"></div>
-                                                    <p class="text-center">数据包</p>
-                                                </div>
-                                                <div class="col-md-4">
                                                     <div data-type="connection" style="height:120px;"></div>
-                                                    <p class="text-center">连接并发数</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <p class="text-center" data-type="outTurnCount">
-                                                        <span class="chart">
-                                                            <span class="percent"></span>
-                                                        </span>
-                                                    </p>
-                                                    <p class="text-center">交互个数（流出）</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <p class="text-center" data-type="inTurnCount">
-                                                        <span class="chart">
-                                                            <span class="percent"></span>
-                                                        </span>
-                                                    </p>
-                                                    <p class="text-center">交互个数（流入）</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="turnRatio" style="height:120px;"></div>
-                                                    <p class="text-center">交互率</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="timeConnDuration"></div>
-                                                    <p class="text-center">连接持续时间</p>
+                                                    <p class="text-center">并发连接数</p>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="connEstablishTime">
@@ -159,7 +135,7 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">连接建立时间</p>
+                                                    <p class="text-center">平均连接建立时间</p>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="firstByteTime">
@@ -167,7 +143,11 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">第一字节时间</p>
+                                                    <p class="text-center">平均第一个字节时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="timeConnDuration"></div>
+                                                    <p class="text-center">连接持续时间</p>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="newConnSuccessCount">
@@ -175,11 +155,11 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">连接建立成功个数</p>
+                                                    <p class="text-center">新建连接成功数</p>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="connRatio"></div>
-                                                    <p class="text-center">连接率</p>
+                                                    <p class="text-center">新建连接率</p>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="connReqCount">
@@ -187,11 +167,11 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">连接请求个数</p>
+                                                    <p class="text-center">新建连接请求数</p>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="connRequestRatio"></div>
-                                                    <p class="text-center">连接请求率</p>
+                                                    <p class="text-center">新建连接请求率</p>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="connFailingCount">
@@ -199,7 +179,95 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">连接失败个数</p>
+                                                    <p class="text-center">新建连接失败数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p class="text-center" data-type="outTurnCount">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
+                                                    <p class="text-center">流出交互个数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="outTurnRatio" style="height:120px;"></div>
+                                                    <p class="text-center">流出交互率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p class="text-center" data-type="inTurnCount">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
+                                                    <p class="text-center">流入交互个数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="inTurnRatio" style="height:120px;"></div>
+                                                    <p class="text-center">流入交互率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="packet" style="height:120px;"></div>
+                                                    <p class="text-center">包传输率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="inPacketLossRatio"></div>
+                                                    <p class="text-center">丢包率（流入）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="outPacketLossRatio"></div>
+                                                    <p class="text-center">丢包率（流出）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="inPacketRetransRatio"></div>
+                                                    <p class="text-center">包重传率（流入）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="outPacketRetransRatio"></div>
+                                                    <p class="text-center">包重传率（流出）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="inRetransRatio"></div>
+                                                    <p class="text-center">重传率（流入）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="outRetransRatio"></div>
+                                                    <p class="text-center">重传率（流出）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="timeRetrans"></div>
+                                                    <p class="text-center">重传延时</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="clientResetRatio" style="height:120px;"></div>
+                                                    <p class="text-center">重置率（客户端/流入）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="serverResetRatio" style="height:120px;"></div>
+                                                    <p class="text-center">重置率（服务器/流出）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="outNetPayloadTime"></div>
+                                                    <p class="text-center">净荷（流出）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="inNetPayloadTime"></div>
+                                                    <p class="text-center">净荷（流入）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="outNetPayloadTransTime"></div>
+                                                    <p class="text-center">净荷传输时间/往返时间（流出）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="inNetPayloadTransTime"></div>
+                                                    <p class="text-center">净荷传输时间/往返时间（流入）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="outTransTime"></div>
+                                                    <p class="text-center">数据传输时间（流出）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="inTransTime"></div>
+                                                    <p class="text-center">数据传输时间（流入）</p>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="serverResponseTime">
@@ -207,47 +275,7 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">服务器响应时间</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="clientResetRatio" style="height:120px;"></div>
-                                                    <p class="text-center">客户端重置率</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="serverResetRatio" style="height:120px;"></div>
-                                                    <p class="text-center">服务器重置率</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="transTime"></div>
-                                                    <p class="text-center">数据传输时间/往返时间</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="netPayloadTransTime"></div>
-                                                    <p class="text-center">净荷传输时间</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="netPayloadTime"></div>
-                                                    <p class="text-center">净荷</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="packetLossRatio"></div>
-                                                    <p class="text-center">丢包率</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="packetRetransRatio"></div>
-                                                    <p class="text-center">包重传率</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="retransRatio"></div>
-                                                    <p class="text-center">重传率</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="timeRetrans"></div>
-                                                    <p class="text-center">重传延时</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="userResponseTime"></div>
-                                                    <p class="text-center">用户响应时间</p>
+                                                    <p class="text-center">平均服务器响应时间</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -267,8 +295,8 @@
                         <div class="panel-heading">
                             使用的服务
                             <div class="progress pull-right" style="width:500px" ng-show="usageServiceRecordList.length">
-                                <div class="progress-bar" ng-repeat="service in usageServiceRatioList" ng-class="service.progressBarClass" ng-style="{'width':service.percent + '%'}" data-toggle="tooltip" data-placement="bottom" title="{{service.percent | number:0}}%({{service.protocol + ':' + service.port}})">
-                                    <span>{{service.percent | number:0}}%({{service.protocol + ":" + service.port}})</span>
+                                <div class="progress-bar" ng-repeat="service in usageServiceRatioList" ng-class="service.progressBarClass" ng-style="{'width':service.percent + '%'}" data-toggle="tooltip" data-placement="bottom" title="{{service.percent | number:0}}%({{service.name ? service.name : (service.protocol + ':' + service.port)}})">
+                                    <span>{{service.percent | number:0}}%({{service.name ? service.name : (service.protocol + ":" + service.port)}})</span>
                                 </div>
                             </div>
                         </div>
@@ -280,40 +308,16 @@
                                         <div class="panel-body">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <div data-type="flowRatio"></div>
-                                                    <p class="text-center">流量</p>
+                                                    <div data-type="userResponseTime"></div>
+                                                    <p class="text-center">用户响应时间</p>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div data-type="packet" style="height:120px;"></div>
-                                                    <p class="text-center">数据包</p>
+                                                    <div data-type="flowRatio"></div>
+                                                    <p class="text-center">流量速率</p>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="connection" style="height:120px;"></div>
-                                                    <p class="text-center">连接并发数</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <p class="text-center" data-type="outTurnCount">
-                                                        <span class="chart">
-                                                            <span class="percent"></span>
-                                                        </span>
-                                                    </p>
-                                                    <p class="text-center">交互个数（流出）</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <p class="text-center" data-type="inTurnCount">
-                                                        <span class="chart">
-                                                            <span class="percent"></span>
-                                                        </span>
-                                                    </p>
-                                                    <p class="text-center">交互个数（流入）</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="turnRatio" style="height:120px;"></div>
-                                                    <p class="text-center">交互率</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="timeConnDuration"></div>
-                                                    <p class="text-center">连接持续时间</p>
+                                                    <p class="text-center">并发连接数</p>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="connEstablishTime">
@@ -321,7 +325,7 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">连接建立时间</p>
+                                                    <p class="text-center">平均连接建立时间</p>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="firstByteTime">
@@ -329,7 +333,11 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">第一字节时间</p>
+                                                    <p class="text-center">平均第一个字节时间</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="timeConnDuration"></div>
+                                                    <p class="text-center">连接持续时间</p>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="newConnSuccessCount">
@@ -337,11 +345,11 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">连接建立成功个数</p>
+                                                    <p class="text-center">新建连接成功数</p>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="connRatio"></div>
-                                                    <p class="text-center">连接率</p>
+                                                    <p class="text-center">新建连接率</p>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="connReqCount">
@@ -349,11 +357,11 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">连接请求个数</p>
+                                                    <p class="text-center">新建连接请求数</p>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="connRequestRatio"></div>
-                                                    <p class="text-center">连接请求率</p>
+                                                    <p class="text-center">新建连接请求率</p>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="connFailingCount">
@@ -361,7 +369,95 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">连接失败个数</p>
+                                                    <p class="text-center">新建连接失败数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p class="text-center" data-type="outTurnCount">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
+                                                    <p class="text-center">流出交互个数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="outTurnRatio" style="height:120px;"></div>
+                                                    <p class="text-center">流出交互率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p class="text-center" data-type="inTurnCount">
+                                                        <span class="chart">
+                                                            <span class="percent"></span>
+                                                        </span>
+                                                    </p>
+                                                    <p class="text-center">流入交互个数</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="inTurnRatio" style="height:120px;"></div>
+                                                    <p class="text-center">流入交互率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="packet" style="height:120px;"></div>
+                                                    <p class="text-center">包传输率</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="inPacketLossRatio"></div>
+                                                    <p class="text-center">丢包率（流入）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="outPacketLossRatio"></div>
+                                                    <p class="text-center">丢包率（流出）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="inPacketRetransRatio"></div>
+                                                    <p class="text-center">包重传率（流入）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="outPacketRetransRatio"></div>
+                                                    <p class="text-center">包重传率（流出）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="inRetransRatio"></div>
+                                                    <p class="text-center">重传率（流入）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="outRetransRatio"></div>
+                                                    <p class="text-center">重传率（流出）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="timeRetrans"></div>
+                                                    <p class="text-center">重传延时</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="clientResetRatio" style="height:120px;"></div>
+                                                    <p class="text-center">重置率（客户端/流入）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="serverResetRatio" style="height:120px;"></div>
+                                                    <p class="text-center">重置率（服务器/流出）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="outNetPayloadTime"></div>
+                                                    <p class="text-center">净荷（流出）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="inNetPayloadTime"></div>
+                                                    <p class="text-center">净荷（流入）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="outNetPayloadTransTime"></div>
+                                                    <p class="text-center">净荷传输时间/往返时间（流出）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="inNetPayloadTransTime"></div>
+                                                    <p class="text-center">净荷传输时间/往返时间（流入）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="outTransTime"></div>
+                                                    <p class="text-center">数据传输时间（流出）</p>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div data-type="inTransTime"></div>
+                                                    <p class="text-center">数据传输时间（流入）</p>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="serverResponseTime">
@@ -369,47 +465,7 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">服务器响应时间</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="clientResetRatio" style="height:120px;"></div>
-                                                    <p class="text-center">客户端重置率</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="serverResetRatio" style="height:120px;"></div>
-                                                    <p class="text-center">服务器重置率</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="transTime"></div>
-                                                    <p class="text-center">数据传输时间/往返时间</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="netPayloadTransTime"></div>
-                                                    <p class="text-center">净荷传输时间</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="netPayloadTime"></div>
-                                                    <p class="text-center">净荷</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="packetLossRatio"></div>
-                                                    <p class="text-center">丢包率</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="packetRetransRatio"></div>
-                                                    <p class="text-center">包重传率</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="retransRatio"></div>
-                                                    <p class="text-center">重传率</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="timeRetrans"></div>
-                                                    <p class="text-center">重传延时</p>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div data-type="userResponseTime"></div>
-                                                    <p class="text-center">用户响应时间</p>
+                                                    <p class="text-center">平均服务器响应时间</p>
                                                 </div>
                                             </div>
                                         </div>

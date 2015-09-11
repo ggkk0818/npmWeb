@@ -17,21 +17,35 @@ function (angular, app, _) {
                     { name: "connRequestRatio", tooltip: "连接/sec" },//连接请求率
                     { name: "userResponseTime", tooltip: "ms" },//用户响应时间
                     { name: "timeRetrans", tooltip: "ms" },//重传延时
+                    { name: "inPacketLossRatio", tooltip: "%" },//丢包率（流入）
+                    { name: "outPacketLossRatio", tooltip: "%" },//丢包率（流出）
+                    { name: "inPacketRetransRatio", tooltip: "重传/sec" },//包重传率（流入）
+                    { name: "outPacketRetransRatio", tooltip: "重传/sec" },//包重传率（流出）
+                    { name: "inRetransRatio", tooltip: "kbps" },//重传率（流入）
+                    { name: "outRetransRatio", tooltip: "kbps" },//重传率（流出）
+                    { name: "inNetPayloadTime", tooltip: "byte" },//净荷（流入）
+                    { name: "outNetPayloadTime", tooltip: "byte" },//净荷（流出）
+                    { name: "inNetPayloadTransTime", tooltip: "ms" },//净荷传输时间（流入）
+                    { name: "outNetPayloadTransTime", tooltip: "ms" },//净荷传输时间（流出）
+                    { name: "inTransTime", tooltip: "ms" },//数据传输时间（流入）
+                    { name: "outTransTime", tooltip: "ms" },//数据传输时间（流出）
                 ];
                 var multiLineChartProp = [
-                    { name: "transTime", props: ["outTransTime", "inTransTime"], tooltip: "ms", sum: true },//数据传输时间
-                    { name: "netPayloadTransTime", props: ["outNetPayloadTransTime", "inNetPayloadTransTime"], tooltip: "ms", sum: true },//净荷传输时间
-                    { name: "netPayloadTime", props: ["outNetPayloadTime", "inNetPayloadTime"], tooltip: "byte", sum: true },//净荷
-                    { name: "packetLossRatio", props: ["outPacketLossRatio", "inPacketLossRatio"], tooltip: "%", sum: false },//丢包率
-                    { name: "packetRetransRatio", props: ["outPacketRetransRatio", "inPacketRetransRatio"], tooltip: "重传/sec", sum: true },//包重传率
-                    { name: "retransRatio", props: ["outRetransRatio", "inRetransRatio"], tooltip: "kbps", sum: true }//重传率
+                    //{ name: "transTime", props: ["outTransTime", "inTransTime"], tooltip: "ms", sum: true },//数据传输时间
+                    //{ name: "netPayloadTransTime", props: ["outNetPayloadTransTime", "inNetPayloadTransTime"], tooltip: "ms", sum: true },//净荷传输时间
+                    //{ name: "netPayloadTime", props: ["outNetPayloadTime", "inNetPayloadTime"], tooltip: "byte", sum: true },//净荷
+                    //{ name: "packetLossRatio", props: ["outPacketLossRatio", "inPacketLossRatio"], tooltip: "%", sum: false },//丢包率
+                    //{ name: "packetRetransRatio", props: ["outPacketRetransRatio", "inPacketRetransRatio"], tooltip: "重传/sec", sum: true },//包重传率
+                    //{ name: "retransRatio", props: ["outRetransRatio", "inRetransRatio"], tooltip: "kbps", sum: true }//重传率
                     //{ name: "timeRetrans", props: ["outTimeRetrans", "inTimeRetrans"], tooltip: "ms", sum: true }//重传延时
                 ];
                 var simgleColumnChartProp = [
                     { name: "packet", tooltip: "pps" },//数据包
                     { name: "connection", tooltip: "连接/sec" },//连接数
                     { name: "clientResetRatio", tooltip: "重置/sec" },//重置率（客户端/流入）
-                    { name: "serverResetRatio", tooltip: "重置/sec" }//重置率（服务器/流出）
+                    { name: "serverResetRatio", tooltip: "重置/sec" },//重置率（服务器/流出）
+                    { name: "inTurnRatio", tooltip: "交互/sec" },//流入交互率
+                    { name: "outTurnRatio", tooltip: "交互/sec" }//流出交互率
                 ];
                 var multiColumnChartProp = [
                     { name: "turnRatio", props: ["outTurnRatio", "inTurnRatio"], tooltip: "交互/sec", sum: true },//交互率

@@ -151,7 +151,7 @@
         $scope.deleteModal = function () {
             if ($scope.currentRecord) {
                 $scope.msg = null;
-                flowService.settingsDelete({ id: $scope.currentRecord.id }, function (data) {
+                ipService.configDelete({ id: $scope.currentRecord.id }, function (data) {
                     if (data && data.status == 200) {
                         $("#deleteModal").modal("hide");
                         $scope.doQuery();
@@ -187,7 +187,7 @@
                     params.protocol = $scope.protocolInput;
                 if ($scope.regexInput)
                     params.regex = $scope.regexInput;
-                flowService.settingsDetailUpdate(params, function (data) {
+                ipService.detailUpdate(params, function (data) {
                     if (data && data.status == 200) {
                         $("#detailSaveModal").modal("hide");
                         $scope.doQuery();
@@ -206,7 +206,7 @@
                     params.protocol = $scope.protocolInput;
                 if ($scope.regexInput)
                     params.regex = $scope.regexInput;
-                flowService.settingsDetailSave(params, function (data) {
+                ipService.detailAdd(params, function (data) {
                     if (data && data.status == 200) {
                         $("#detailSaveModal").modal("hide");
                         $scope.doQuery();
@@ -226,7 +226,7 @@
         $scope.deleteDetailModal = function () {
             if ($scope.currentDetail) {
                 $scope.msg = null;
-                flowService.settingsDetailDelete({ id: $scope.currentDetail.id }, function (data) {
+                ipService.detailDelete({ id: $scope.currentDetail.id }, function (data) {
                     if (data && data.status == 200) {
                         $("#detailDeleteModal").modal("hide");
                         $scope.doQuery();

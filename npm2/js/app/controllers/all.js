@@ -5,5 +5,6 @@
     "./flowDetail",
     "./warnCenter",
     "./serverView",
-    "./networkPerspective"
+    "./networkPerspective",
+    "./settings"
 ], function () { });

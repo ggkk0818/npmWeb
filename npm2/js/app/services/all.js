@@ -3,5 +3,6 @@
     "./flowService",
     "./warningService",
     "./networkOverviewService",
-    "./networkPerspectiveService"
+    "./networkPerspectiveService",
+    "./ipService"
 ], function () { });

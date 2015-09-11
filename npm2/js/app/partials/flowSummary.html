@@ -7,42 +7,47 @@
     </ul>
     <div id="myTabContent" class="tab-content">
         <div class="tab-pane fade in active" id="apart1">
-                <div style="float:right">
-                    <div class="form-group btn-group">
-                        <button class="btn btn-default" type="button" ng-repeat="t in DURATION_TYPE"
-                                ng-class="{'active':durationType.id==t.id}" ng-click="changeDurationType(t)">{{t.name}}
-                        </button>
-                    </div>
-                    <input type="text" class="datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN"
-                           data-min-view="2" placeholder="日期" ng-model="startDateInput"
-                           ng-keypress="formKeypressHandler($event)">
-
-                    <div class="form-group hour-selector" ng-show="durationType.id=='hour'">
-                        <button class="btn btn-default" type="button">{{startHour|numberFormat:2}}</button>
-                        <div class="btn-group">
-                            <button class="btn btn-default" type="button"
-                                    ng-repeat="h in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]"
-                                    ng-class="{'active':startHour==h}" ng-click="changeHour(h)">{{h|numberFormat:2}}
-                            </button>
-                        </div>
-                    </div>
-                    <button class="btn btn-default" type="button" ng-click="search()">查询</button>
-                    <a class="btn btn-default" ng-click="addDay(-1)" data-toggle="tooltip" data-placement="bottom"
-                       title="前一{{durationType.name}}"><span class="glyphicon glyphicon-chevron-left"
-                                                             aria-hidden="true"></span></a>
-                    <a class="btn btn-default" ng-click="addDay()" ng-class="{'disabled': isToday}"
-                       data-toggle="tooltip" data-placement="bottom" title="现在"><span class="glyphicon glyphicon-stop"
-                                                                                      aria-hidden="true"></span></a>
-                    <a class="btn btn-default" ng-click="addDay(1)" data-toggle="tooltip" data-placement="bottom"
-                       title="后一{{durationType.name}}"><span class="glyphicon glyphicon-chevron-right"
-                                                             aria-hidden="true"></span></a>
+            <div style="float:right">
+                <div class="form-group btn-group" ng-if="false">
+                    <button class="btn btn-default" type="button" ng-repeat="t in DURATION_TYPE"
+                            ng-class="{'active':durationType.id==t.id}" ng-click="changeDurationType(t)">{{t.name}}
+                    </button>
                 </div>
+
+                <a class="btn btn-default" ng-click="addDay(-1)" data-toggle="tooltip" data-placement="bottom"
+                   title="前一{{durationType.name}}"><span class="glyphicon glyphicon-chevron-left"
+                                                         aria-hidden="true"></span></a>
+                <a class="btn btn-default" ng-click="addDay()" ng-class="{'disabled': isToday}"
+                   data-toggle="tooltip" data-placement="bottom" title="现在"><span class="glyphicon glyphicon-stop"
+                                                                                  aria-hidden="true"></span></a>
+                <a class="btn btn-default" ng-click="addDay(1)" data-toggle="tooltip" data-placement="bottom"
+                   title="后一{{durationType.name}}"><span class="glyphicon glyphicon-chevron-right"
+                                                         aria-hidden="true"></span></a>
+            </div>
+            <div style="float:left">
+                <input type="text" class="datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN"
+                       data-min-view="2" placeholder="日期" ng-model="startDateInput"
+                       ng-keypress="formKeypressHandler($event)">
+                <!--<div class="form-group hour-selector" ng-show="durationType.id=='hour'">-->
+                    <!--<button class="btn btn-default" type="button">{{startHour|numberFormat:2}}</button>-->
+                    <!--<div class="btn-group">-->
+                        <!--<button class="btn btn-default" type="button"-->
+                                <!--ng-repeat="h in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]"-->
+                                <!--ng-class="{'active':startHour==h}" ng-click="changeHour(h)">{{h|numberFormat:2}}-->
+                        <!--</button>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <button class="btn btn-default" type="button" ng-click="search()">查询</button>
+            </div>
             <div class="tab-content wrapp-view">
                 <div class="tab-pane fade in active">
                     <div class="row" style="margin-top:20px;">
                         <div class="col-xs-12 flowSummary-chart-container">
                             <div id="flowChart" style="height:200px;"></div>
-                            <a class="btn btn-default" href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" title="联动" ng-class="{'locked': isConnect}" ng-click="toggleChartConnect()" ng-show="option_flow.series[0].data.length" ng-if="false">
+                            <a class="btn btn-default" href="javascript:void(0);" data-toggle="tooltip"
+                               data-placement="bottom" title="联动" ng-class="{'locked': isConnect}"
+                               ng-click="toggleChartConnect()" ng-show="option_flow.series[0].data.length"
+                               ng-if="false">
                                 <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
                             </a>
                         </div>
@@ -50,33 +55,36 @@
                     <div class="row" style="margin-top: 20px;">
                         <div class="col-xs-12 flowSummary-chart-container">
                             <div id="packageChart" style="height:270px;"></div>
-                            <a class="btn btn-default" href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" title="联动" ng-class="{'locked': isConnect}" ng-click="toggleChartConnect()" ng-show="option_package.series[0].data.length" ng-if="false">
+                            <a class="btn btn-default" href="javascript:void(0);" data-toggle="tooltip"
+                               data-placement="bottom" title="联动" ng-class="{'locked': isConnect}"
+                               ng-click="toggleChartConnect()" ng-show="option_package.series[0].data.length"
+                               ng-if="false">
                                 <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
                             </a>
                         </div>
                     </div>
                     <div class="row" style="margin-top:20px;">
                         <div class="col-xs-6">
-                            <div id="ipChartFlow" style="height:400px;"></div>
+                            <div id="ipChartFlow" style="height:300px;"></div>
                         </div>
                         <div class="col-xs-6">
-                            <div id="ipChartPackage" style="height:400px;"></div>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-top:20px;">
-                        <div class="col-xs-6">
-                            <div id="protocolChartFlow" style="height:400px;"></div>
-                        </div>
-                        <div class="col-xs-6">
-                            <div id="protocolChartPackage" style="height:400px;"></div>
+                            <div id="ipChartPackage" style="height:300px;"></div>
                         </div>
                     </div>
                     <div class="row" style="margin-top:20px;">
                         <div class="col-xs-6">
-                            <div id="portChartFlow" style="height:400px;"></div>
+                            <div id="protocolChartFlow" style="height:300px;"></div>
                         </div>
                         <div class="col-xs-6">
-                            <div id="portChartPackage" style="height:400px;"></div>
+                            <div id="protocolChartPackage" style="height:300px;"></div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:20px;">
+                        <div class="col-xs-6">
+                            <div id="portChartFlow" style="height:300px;"></div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div id="portChartPackage" style="height:300px;"></div>
                         </div>
                     </div>
 

@@ -187,7 +187,30 @@ function (angular, app, _) {
                                         data: $scope.service.metric[prop.name]
                                     }]
                                 }, true);
-
+                                //var chartData = [];
+                                //for (var i = 0; i < $scope.service.metric[prop.name].length; i++) {
+                                //    if (!$scope.service.metric.time || i >= $scope.service.metric.time.length)
+                                //        break;
+                                //    chartData.push({ date: $scope.service.metric.time[i], value: $scope.service.metric[prop.name][i] });
+                                //}
+                                //MG.data_graphic({
+                                //    chart_type: 'histogram',
+                                //    data: chartData,
+                                //    full_width: true,
+                                //    height: 120,
+                                //    right: 20,
+                                //    top: 17,
+                                //    mouseover: (function (prop) {
+                                //        return function (d, i) {
+                                //            //custom format the rollover text, show days
+                                //            var str = (d.value || 0) + prop.tooltip + (d.date instanceof Date ? " " + d.date.Format("hh:mm:ss") : "");
+                                //            $el.find("svg .mg-active-datapoint").html(str);
+                                //        };
+                                //    })(prop),
+                                //    target: el,
+                                //    bar_margin: 0,
+                                //    binned: true
+                                //});
                             }
                         }
                         for (var index in multiColumnChartProp) {

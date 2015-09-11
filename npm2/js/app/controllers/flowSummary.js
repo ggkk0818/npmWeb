@@ -28,14 +28,17 @@
         $scope.startHourInput = $scope.startHour = dateTimeService.serverTime.getHours();
         $scope.init = function () {
             $timeout(function () {
-                $scope.chartFlow = echarts.init($("#flowChart").get(0), "blue").showLoading({effect: "ring"}).on(echarts.config.EVENT.DATA_ZOOM, onChartZoom);
-                $scope.chartPackage = echarts.init($("#packageChart").get(0), "blue").showLoading({effect: "ring"}).on(echarts.config.EVENT.DATA_ZOOM, onChartZoom);
-                $scope.chartIpFlow = echarts.init($("#ipChartFlow").get(0), "blue").showLoading({effect: "ring"});
-                $scope.chartIpPackage = echarts.init($("#ipChartPackage").get(0), "blue").showLoading({effect: "ring"});
-                $scope.chartProtocolFlow = echarts.init($("#protocolChartFlow").get(0), "blue").showLoading({effect: "ring"});
-                $scope.chartProtocolPackage = echarts.init($("#protocolChartPackage").get(0), "blue").showLoading({effect: "ring"});
-                $scope.chartPortFlow = echarts.init($("#portChartFlow").get(0), "blue").showLoading({effect: "ring"});
-                $scope.chartPortPackage = echarts.init($("#portChartPackage").get(0), "blue").showLoading({effect: "ring"});
+                $scope.chartFlow = echarts.init($("#flowChart").get(0)).showLoading({effect: "ring"}).on(echarts.config.EVENT.DATA_ZOOM, onChartZoom);
+                $scope.chartPackage = echarts.init($("#packageChart").get(0)).showLoading({effect: "ring"}).on(echarts.config.EVENT.DATA_ZOOM, onChartZoom);
+                $scope.chartIpFlow = echarts.init($("#ipChartFlow").get(0)).showLoading({effect: "ring"});
+                $scope.chartIpPackage = echarts.init($("#ipChartPackage").get(0)).showLoading({effect: "ring"});
+                $scope.chartProtocolFlow = echarts.init($("#protocolChartFlow").get(0)).showLoading({effect: "ring"});
+                $scope.chartProtocolPackage = echarts.init($("#protocolChartPackage").get(0)).showLoading({effect: "ring"});
+                $scope.chartPortFlow = echarts.init($("#portChartFlow").get(0)).showLoading({effect: "ring"});
+                $scope.chartPortPackage = echarts.init($("#portChartPackage").get(0)).showLoading({effect: "ring"});
+                $scope.chartFlow.connect($scope.chartPackage);
+                $scope.chartPackage.connect($scope.chartFlow);
+
                 //小时选择控件
                 $(".hour-selector").mouseenter(hourSelectorHover).mouseleave(hourSelectorLeave).find(".btn-group .btn").on("click.hourSelector", hourSelectorBtnClick);
             });
@@ -354,8 +357,8 @@
                 transitionDuration: 0,
                 position: [80, 30],
                 padding: [5, 0, 5, 0],
-                backgroundColor: "rgba(255,255,255,1)",
-                textStyle: {color: "#333"},
+                //backgroundColor: "rgba(255,255,255,1)",
+                //textStyle: {color: "#333"},
                 formatter: function (params) {
                     var str = null;
                     if (params && params.length) {
@@ -372,7 +375,7 @@
                 }
             },
             legend: {
-                data: ['总流量', '内网流量', '外网流量']
+                data: ['总流量', '发送流量', '接收流量']
             },
             toolbox: {
                 show: true,
@@ -410,14 +413,14 @@
                 //itemStyle: { normal: { areaStyle: { type: 'default' } } },
                 data: []
             }, {
-                name: '内网流量',
+                name: '发送流量',
                 type: 'line',
                 smooth: true,
                 symbol: 'none',
                 //itemStyle: { normal: { areaStyle: { type: 'default' } } },
                 data: []
             }, {
-                name: '外网流量',
+                name: '接收流量',
                 type: 'line',
                 smooth: true,
                 symbol: 'none',
@@ -437,8 +440,8 @@
                 transitionDuration: 0,
                 position: [80, 30],
                 padding: [5, 0, 5, 0],
-                backgroundColor: "rgba(255,255,255,1)",
-                textStyle: {color: "#333"},
+                //backgroundColor: "rgba(255,255,255,1)",
+                //textStyle: {color: "#333"},
                 formatter: function (params) {
                     var str = null;
                     if (params && params.length) {
@@ -455,7 +458,7 @@
                 }
             },
             legend: {
-                data: ['总数据包', '内网数据包', '外网数据包']
+                data: ['总数据包', '发送数据包', '接收数据包']
             },
             toolbox: {
                 show: true,
@@ -493,14 +496,14 @@
                 //itemStyle: { normal: { areaStyle: { type: 'default' } } },
                 data: []
             }, {
-                name: '内网数据包',
+                name: '发送数据包',
                 type: 'line',
                 smooth: true,
                 symbol: 'none',
                 //itemStyle: { normal: { areaStyle: { type: 'default' } } },
                 data: []
             }, {
-                name: '外网数据包',
+                name: '接收数据包',
                 type: 'line',
                 smooth: true,
                 symbol: 'none',
@@ -508,15 +511,16 @@
                 data: []
             }]
         };
-        //外网 TOP10
+        //Ip TOP10
         var option_ip_flow = {
             animation: false,
             title: {
-                text: '外网 top 10',
+                text: 'IP top 10',
                 subtext: '流量（kb）'
             },
             tooltip: {
-                trigger: 'axis'
+                trigger: 'axis',
+                showDelay: 0            // 显示延迟,添加显示延迟可以避免频繁切换,单位ms
             },
             grid: {
                 x: 120,
@@ -564,116 +568,12 @@
         var option_ip_package = {
             animation: false,
             title: {
-                text: '外网 top 10',
+                text: 'Packet top 10',
                 subtext: '数据包'
             },
             tooltip: {
-                trigger: 'axis'
-            },
-            grid: {
-                x: 120,
-                x2: 20
-            },
-            legend: {
-                data: ['发送', '接收']
-            },
-            toolbox: {
-                show: true,
-                feature: {
-                    mark: {show: false},
-                    dataView: {show: false, readOnly: false},
-                    magicType: {show: false, type: ['line', 'bar']},
-                    restore: {show: false},
-                    saveAsImage: {show: true}
-                }
-            },
-            calculable: true,
-            xAxis: [
-                {
-                    type: 'value'
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'category',
-                    data: []
-                }
-            ],
-            series: [{
-                name: '发送',
-                type: 'bar',
-                stack: '总量',
-                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
-                data: []
-            }, {
-                name: '接收',
-                type: 'bar',
-                stack: '总量',
-                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
-                data: []
-            }]
-        };
-        //内网 TOP10
-        var option_ipIntranet_flow = {
-            animation: false,
-            title: {
-                text: '内网 top 10',
-                subtext: '流量（kb）'
-            },
-            tooltip: {
-                trigger: 'axis'
-            },
-            grid: {
-                x: 120,
-                x2: 20
-            },
-            legend: {
-                data: ['发送', '接收']
-            },
-            toolbox: {
-                show: true,
-                feature: {
-                    mark: {show: false},
-                    dataView: {show: false, readOnly: false},
-                    magicType: {show: false, type: ['line', 'bar']},
-                    restore: {show: false},
-                    saveAsImage: {show: true}
-                }
-            },
-            calculable: true,
-            xAxis: [
-                {
-                    type: 'value'
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'category',
-                    data: []
-                }
-            ],
-            series: [{
-                name: '发送',
-                type: 'bar',
-                stack: '总量',
-                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
-                data: []
-            }, {
-                name: '接收',
-                type: 'bar',
-                stack: '总量',
-                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
-                data: []
-            }]
-        };
-        var option_ipIntranet_package = {
-            animation: false,
-            title: {
-                text: '内网 top 10',
-                subtext: '数据包'
-            },
-            tooltip: {
-                trigger: 'axis'
+                trigger: 'axis',
+                showDelay: 0          // 显示延迟,添加显示延迟可以避免频繁切换,单位ms
             },
             grid: {
                 x: 120,
@@ -726,9 +626,11 @@
                 subtext: '流量（kb）'
             },
             tooltip: {
-                trigger: 'axis'
+                trigger: 'axis',
+                showDelay: 0          // 显示延迟,添加显示延迟可以避免频繁切换,单位ms
             },
             grid: {
+                x: 120,
                 x2: 20
             },
             legend: {
@@ -777,9 +679,11 @@
                 subtext: '数据包'
             },
             tooltip: {
-                trigger: 'axis'
+                trigger: 'axis',
+                showDelay: 0            // 显示延迟,添加显示延迟可以避免频繁切换,单位ms
             },
             grid: {
+                x: 120,
                 x2: 20
             },
             legend: {
@@ -829,9 +733,11 @@
                 subtext: '流量（kb）'
             },
             tooltip: {
-                trigger: 'axis'
+                trigger: 'axis',
+                showDelay: 0             // 显示延迟,添加显示延迟可以避免频繁切换,单位ms
             },
             grid: {
+                x: 120,
                 x2: 20
             },
             legend: {
@@ -880,59 +786,8 @@
                 subtext: '数据包'
             },
             tooltip: {
-                trigger: 'axis'
-            },
-            grid: {
-                x2: 20
-            },
-            legend: {
-                data: ['发送', '接收']
-            },
-            toolbox: {
-                show: true,
-                feature: {
-                    mark: {show: false},
-                    dataView: {show: false, readOnly: false},
-                    magicType: {show: false, type: ['line', 'bar']},
-                    restore: {show: false},
-                    saveAsImage: {show: true}
-                }
-            },
-            calculable: true,
-            xAxis: [
-                {
-                    type: 'value'
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'category',
-                    data: []
-                }
-            ],
-            series: [{
-                name: '发送',
-                type: 'bar',
-                stack: '总量',
-                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
-                data: []
-            }, {
-                name: '接收',
-                type: 'bar',
-                stack: '总量',
-                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
-                data: []
-            }]
-        };
-        //MAC TOP10
-        var option_mac_flow = {
-            animation: false,
-            title: {
-                text: 'MAC top 10',
-                subtext: '流量（kb）'
-            },
-            tooltip: {
-                trigger: 'axis'
+                trigger: 'axis',
+                showDelay: 0             // 显示延迟,添加显示延迟可以避免频繁切换,单位ms
             },
             grid: {
                 x: 120,
@@ -977,58 +832,7 @@
                 data: []
             }]
         };
-        var option_mac_package = {
-            animation: false,
-            title: {
-                text: 'MAC top 10',
-                subtext: '数据包'
-            },
-            tooltip: {
-                trigger: 'axis'
-            },
-            grid: {
-                x: 120,
-                x2: 20
-            },
-            legend: {
-                data: ['发送', '接收']
-            },
-            toolbox: {
-                show: true,
-                feature: {
-                    mark: {show: false},
-                    dataView: {show: false, readOnly: false},
-                    magicType: {show: false, type: ['line', 'bar']},
-                    restore: {show: false},
-                    saveAsImage: {show: true}
-                }
-            },
-            calculable: true,
-            xAxis: [
-                {
-                    type: 'value'
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'category',
-                    data: []
-                }
-            ],
-            series: [{
-                name: '发送',
-                type: 'bar',
-                stack: '总量',
-                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
-                data: []
-            }, {
-                name: '接收',
-                type: 'bar',
-                stack: '总量',
-                itemStyle: {normal: {label: {show: false, position: 'insideRight'}}},
-                data: []
-            }]
-        };
+
 
         $scope.toggleChartConnect = function () {
             if ($scope.isConnect) {
@@ -1076,14 +880,10 @@
             $scope.chartPackage.resize();
             $scope.chartIpFlow.resize();
             $scope.chartIpPackage.resize();
-            $scope.chartIpIntranetFlow.resize();
-            $scope.chartIpIntranetPackage.resize();
             $scope.chartProtocolFlow.resize();
             $scope.chartProtocolPackage.resize();
             $scope.chartPortFlow.resize();
             $scope.chartPortPackage.resize();
-            $scope.chartMacFlow.resize();
-            $scope.chartMacPackage.resize();
         };
 
         //小时选择控件事件

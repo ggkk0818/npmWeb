@@ -35,7 +35,7 @@
             else if ($scope.queryType)
                 params.queryType = $scope.queryType;
             if ($scope.queryService)
-                params.queryService = $scope.queryService.protocol + $scope.queryService.port;
+                params.queryService = $scope.queryService.protocol;
             return params;
         };
         //从url获取查询参数设置变量
@@ -121,16 +121,21 @@
                     }
                 }
             });
-            networkPerspectiveService.openService(params, function (data) {
-                if (data && data.data) {
-                    $scope.serviceList = data.data;
+            networkOverviewService.serviceList(params, function (data) {
+                if (data && data.service) {
+                    $scope.serviceList = data.service;
+                    if ($scope.serviceList.length) {
+                        for (var i = 0; i < $scope.serviceList.length; i++) {
+                            $scope.serviceList[i] = { protocol: $scope.serviceList[i] };
+                        }
+                    }
                     if ($scope.queryService != null && $scope.serviceList.length) {
                         for (var i = 0; i < $scope.serviceList.length; i++) {
                             var service = $scope.serviceList[i];
-                            if ($scope.queryService == service.protocol + service.port) {
+                            if ($scope.queryService == service.protocol) {
                                 $scope.queryService = service;
                                 $timeout(function () {
-                                    $scope.serviceInput = service.protocol + service.port;
+                                    $scope.serviceInput = service.protocol;
                                 });
                                 break;
                             }
@@ -139,7 +144,7 @@
                     else if ($scope.serviceList.length) {
                         $scope.queryService = $scope.serviceList[0];
                         $timeout(function () {
-                            $scope.serviceInput = $scope.queryService.protocol + $scope.queryService.port;
+                            $scope.serviceInput = $scope.queryService.protocol;
                         });
                     }
                     if (typeof $scope.queryService === "object" && $scope.queryService != null) {
@@ -231,7 +236,6 @@
                 startTime: $scope.startDate + " " + $scope.startTime,
                 endTime: $scope.startDate + " " + $scope.endTime,
                 protocol: $scope.queryService.protocol,
-                port: $scope.queryService.port,
                 start: 0,
                 limit: 999
             };
@@ -295,7 +299,7 @@
             if ($scope.serviceInput) {
                 for (var i = 0; i < $scope.serviceList.length; i++) {
                     var service = $scope.serviceList[i];
-                    if ($scope.serviceInput == service.protocol + service.port) {
+                    if ($scope.serviceInput == service.protocol) {
                         $scope.queryService = service;
                         break;
                     }

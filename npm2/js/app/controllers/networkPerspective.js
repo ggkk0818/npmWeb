@@ -244,8 +244,21 @@
             });
             networkPerspectiveService.usageService(params, function (data) {
                 $scope.usageServiceRecordList = data && data.data ? data.data : [];
+                $scope.usageServiceRecordNav = {};
                 $scope.usageServiceRatioTotal = 0;
                 $scope.usageServiceRatioList = [];
+                for (var i = 0; i < $scope.usageServiceRecordList.length; i++) {
+                    var record = $scope.usageServiceRecordList[i];
+                    if(!record.protocol)
+                        continue;
+                    if (record.server_ip)
+                        record.server_ip_replace = record.server_ip.replace(/\./g, "");
+                    if (!$scope.usageServiceRecordNav[record.protocol]) {
+                        $scope.usageServiceRecordNav[record.protocol] = { protocol: record.protocol, recordList: [] };
+                    }
+                    var protocolNav = $scope.usageServiceRecordNav[record.protocol];
+                    protocolNav.recordList.push(record);
+                }
                 for (var i = 0; i < $scope.usageServiceRecordList.length; i++) {
                     var record = $scope.usageServiceRecordList[i], ratioRecord = {};
                     $.extend(ratioRecord, record);

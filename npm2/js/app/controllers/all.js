@@ -6,5 +6,6 @@
     "./warnCenter",
     "./serverView",
     "./networkPerspective",
-    "./settings"
+    "./settings",
+    "./flowPcap"
 ], function () { });

@@ -1,0 +1,60 @@
+﻿<div class="container con-view">
+    <ul class="nav nav-tabs  con-view">
+        <li>
+            <a href="#/flow/summary">趋势指标</a>
+        </li>
+        <li>
+            <a href="#/flow/server">服务端视图</a>
+        </li>
+        <li class="active"><a href="#/flow/pcap">PCAP包下载</a></li>
+    </ul>
+    <div class="row flowPcapCondition" style="padding-top:25px;">
+        <div class="col-md-12">
+            <div class="pull-left">
+                <form class="form-inline">
+                    <input type="text" class="form-control datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN" data-min-view="2" placeholder="日期" ng-model="startDateInput" ng-keypress="formKeypressHandler($event)">
+                    <input type="text" class="form-control datetime" data-date-format="hh:ii:ss" data-date-language="zh-CN" data-max-view="1" data-start-view="1" placeholder="时间" ng-model="startTimeInput" ng-keypress="formKeypressHandler($event)">
+                    <div class="form-group">
+                        <label class="sr-only">持续时间</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="持续时间" ng-model="durationInput" ng-keypress="formKeypressHandler($event)">
+                            <div class="input-group-addon">秒</div>
+                        </div>
+                    </div>
+                    <!--<div class="form-group">
+                        <label class="sr-only">协议</label>
+                        <div class="form-group btn-group">
+                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                                {{queryType.displayName || "协议"}} <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li ng-repeat="t in QUERY_TYPE" ng-class="{'active':queryType.name==t.name}"><a href="javascript:void(0);" ng-click="$parent.queryType=t">{{t.displayName}}</a></li>
+                            </ul>
+                        </div>
+                    </div>-->
+                    <input type="text" class="form-control" placeholder="协议" ng-model="protocolInput" ng-keypress="formKeypressHandler($event)">
+                    <input type="text" class="form-control" placeholder="源IP" ng-model="srcIpInput" ng-keypress="formKeypressHandler($event)">
+                    <input type="text" class="form-control" placeholder="源端口" ng-model="srcPortInput" ng-keypress="formKeypressHandler($event)">
+                    <input type="text" class="form-control" placeholder="目的IP" ng-model="destIpInput" ng-keypress="formKeypressHandler($event)">
+                    <input type="text" class="form-control" placeholder="目的端口" ng-model="destPortInput" ng-keypress="formKeypressHandler($event)">
+                    <input type="text" class="form-control" placeholder="源MAC" ng-model="srcMacInput" ng-keypress="formKeypressHandler($event)">
+                    <input type="text" class="form-control" placeholder="目的MAC" ng-model="destMacInput" ng-keypress="formKeypressHandler($event)">
+                    <button class="btn btn-info" type="button" ng-click="show()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top:20px;">
+        <div class="col-xs-12">
+            <div ng-show="fileName">
+                <label>点击下载：</label>
+                <a href="javascript:void(0);" ng-click="doDownload()">{{fileName}}</a>
+            </div>
+            <div ng-show="msg">{{msg}}</div>
+            <div ng-show="isLoading" style="margin-top: 20px; text-align: center;">
+                <span class="glyphicon glyphicon-hourglass flow-pcap-loading" aria-hidden="true"></span>正在加载...
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -93,6 +93,10 @@
                 templateUrl: 'js/app/partials/serverView.html',
                 controller: 'ServerViewCtrl'
             })
+            .when('/flow/pcap', {
+                templateUrl: 'js/app/partials/flowPcap.html',
+                controller: 'FlowPcapCtrl'
+            })
             .when('/warn/center', {
                 templateUrl: 'js/app/partials/warnCenter.html',
                 controller: 'WarnCenterCtrl'

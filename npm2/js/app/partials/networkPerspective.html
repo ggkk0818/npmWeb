@@ -61,8 +61,13 @@
                     <li>
                         <a href="javascript:void(0);" data-target="#thirdpart">使用服务</a>
                         <ul class="nav">
-                            <li ng-repeat="service in usageServiceRecordList">
-                                <a href="javascript:void(0);" data-target="#usage-{{service.protocol + service.port}}">{{service.protocol}}:{{service.port}}</a>
+                            <li ng-repeat="(key, protocol) in usageServiceRecordNav">
+                                <a href="javascript:void(0);" data-target="{{protocol.recordList.length ? '#usage-' + protocol.recordList[0].server_ip_replace + protocol.recordList[0].protocol + protocol.recordList[0].server_port : '#thirdpart'}}">{{key}}</a>
+                                <ul class="nav" ng-if="protocol.recordList.length">
+                                    <li ng-repeat="service in protocol.recordList">
+                                        <a href="javascript:void(0);" style="padding-left:35px;" data-target="#usage-{{service.server_ip_replace + service.protocol + service.server_port}}">{{service.server_ip}}:{{service.server_port}}</a>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
                     </li>
@@ -295,16 +300,16 @@
                         <div class="panel-heading">
                             使用的服务
                             <div class="progress pull-right" style="width:500px" ng-show="usageServiceRecordList.length">
-                                <div class="progress-bar" ng-repeat="service in usageServiceRatioList" ng-class="service.progressBarClass" ng-style="{'width':service.percent + '%'}" data-toggle="tooltip" data-placement="bottom" title="{{service.percent | number:0}}%({{service.name ? service.name : (service.protocol + ':' + service.port)}})">
-                                    <span>{{service.percent | number:0}}%({{service.name ? service.name : (service.protocol + ":" + service.port)}})</span>
+                                <div class="progress-bar" ng-repeat="service in usageServiceRatioList" ng-class="service.progressBarClass" ng-style="{'width':service.percent + '%'}" data-toggle="tooltip" data-placement="bottom" title="{{service.percent | number:0}}%({{service.name ? service.name : (service.protocol + ':' + service.server_port)}})">
+                                    <span>{{service.percent | number:0}}%({{service.name ? service.name : (service.protocol + ":" + service.server_port)}})</span>
                                 </div>
                             </div>
                         </div>
                         <div class="panel-body" style="padding-left:0;padding-right:0">
-                            <div class="row network-perspective-service-record" id="usage-{{service.protocol + service.port}}" ng-repeat="service in usageServiceRecordList" ng-show="usageServiceRecordList.length">
+                            <div class="row network-perspective-service-record" id="usage-{{service.server_ip_replace + service.protocol + service.server_port}}" ng-repeat="service in usageServiceRecordList" ng-show="usageServiceRecordList.length">
                                 <div class="col-md-12">
                                     <div class="panel panel-default">
-                                        <div class="panel-heading network_perspective_head_style">{{service.protocol}}:{{service.port}}</div>
+                                        <div class="panel-heading network_perspective_head_style">{{service.protocol}}&nbsp;{{service.server_ip}}:{{service.server_port}}</div>
                                         <div class="panel-body">
                                             <div class="row">
                                                 <div class="col-md-4">

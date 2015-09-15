@@ -83,6 +83,21 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
+        //查询协议列表
+        this.serviceList = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'overview/service/list',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
 
         /**
          * 流量、数据包折线图

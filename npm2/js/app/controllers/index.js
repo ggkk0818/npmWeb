@@ -30,7 +30,7 @@
         $($window).off("resize.index").on("resize.index", windowResize).trigger("resize.index");
         //离开该页事件
         $scope.$on("$routeChangeStart", function () {
-            $scope.$parent.showFooter = false;
+            $scope.$parent.showFooter = true;
             $($window).off("resize.index");
         });
         //执行初始化

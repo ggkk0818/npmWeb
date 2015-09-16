@@ -13,10 +13,12 @@
     'angular-resource',
     'angular-route',
     'angular-touch',
+    'angular-elastic',
     'jquery-ui',
     'jquery-cookie',
     'jquery-mousewheel',
     'jquery-jscrollpane',
+    'jquery-elasticsearch',
     'jquery-outerhtml',
     'jquery-easing',
     'jquery-numberanimate',
@@ -116,7 +118,7 @@
         register_fns.filter = $filterProvider.register;
     });
 
-    var apps_deps = ['ngSanitize', 'ngCookies', 'ngRoute', 'app'];
+    var apps_deps = ['elasticjs.service', 'ngSanitize', 'ngCookies', 'ngRoute', 'app'];
     _.each('controllers directives factories services filters'.split(' '), function (type) {
         var module_name = 'app.' + type;
         // create the module

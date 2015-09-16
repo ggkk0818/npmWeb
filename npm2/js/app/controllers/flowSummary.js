@@ -357,8 +357,8 @@
                 transitionDuration: 0,
                 position: [80, 30],
                 padding: [5, 0, 5, 0],
-                //backgroundColor: "rgba(255,255,255,1)",
-                //textStyle: {color: "#333"},
+                backgroundColor: "rgba(255,255,255,1)",
+                textStyle: {color: "#333"},
                 formatter: function (params) {
                     var str = null;
                     if (params && params.length) {
@@ -440,8 +440,8 @@
                 transitionDuration: 0,
                 position: [80, 30],
                 padding: [5, 0, 5, 0],
-                //backgroundColor: "rgba(255,255,255,1)",
-                //textStyle: {color: "#333"},
+                backgroundColor: "rgba(255,255,255,1)",
+                textStyle: {color: "#333"},
                 formatter: function (params) {
                     var str = null;
                     if (params && params.length) {

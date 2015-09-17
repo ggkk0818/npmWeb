@@ -40,6 +40,7 @@
                     <input type="text" class="form-control" placeholder="源MAC" ng-model="srcMacInput" ng-keypress="formKeypressHandler($event)">
                     <input type="text" class="form-control" placeholder="目的MAC" ng-model="destMacInput" ng-keypress="formKeypressHandler($event)">
                     <button class="btn btn-info" type="button" ng-click="show()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 查找</button>
+                    <button class="btn btn-info" type="button" ng-click="download()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 下载</button>
                 </form>
             </div>
         </div>
@@ -56,5 +57,51 @@
             </div>
         </div>
     </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr role="row" class="heading">
+                <th width="1%">
+                    序号
+                </th>
+                <th width="2%">
+                    时间
+                </th>
+                <th width="2%">
+                    源地址
+                </th>
+                <th width="2%">
+                    目的地址
+                </th>
+                <th width="2%">
+                    协议
+                </th>
+                <th width="2%">
+                    长度
+                </th>
+                <th width="10%">
+                    信息
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr role="row" class="odd" ng-repeat="packet in recordList">
+                <td>{{packet.no}}</td>
+                <td>{{packet.time}}</td>
+                <td>{{packet.source}}</td>
+                <td>{{packet.destination}}</td>
+                <td>{{packet.protocol}}</td>
+                <td>{{packet.length}}</td>
+                <td>{{packet.info}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <nav class="text-center" style="position:relative;margin-top:20px;" ng-show="recordList">
+        <div class="pull-right" style="line-height:34px;position:absolute;top:0;right:0;">
+            <span style="padding-right:10px;">第 {{pageNum||0}} 页</span>
+            <span>共 {{pageTotal||0}} 页</span>
+        </div>
+        <ul class="pagination" style="margin:0 auto;" data-page-click="show"></ul>
+    </nav>
 </div>
 

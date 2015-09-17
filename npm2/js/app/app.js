@@ -79,9 +79,13 @@
                 templateUrl: 'js/app/partials/index.html',
                 controller: 'IndexCtrl'
             })
-            .when('/settings', {
+            .when('/settings/group', {
                 templateUrl: 'js/app/partials/settings.html',
                 controller: 'SettingsCtrl'
+            })
+            .when('/settings/warn', {
+                templateUrl: 'js/app/partials/settingsWarn.html',
+                controller: 'SettingsWarnCtrl'
             })
             .when('/flow/summary', {
                 templateUrl: 'js/app/partials/flowSummary.html',

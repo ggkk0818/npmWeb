@@ -5,5 +5,6 @@
     "./networkOverviewService",
     "./networkPerspectiveService",
     "./ipService",
-    "./pcapService"
+    "./pcapService",
+    "./configWarnProtocolService"
 ], function () { });

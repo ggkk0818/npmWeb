@@ -1,9 +1,10 @@
 ﻿define(['angular', 'lodash', 'jquery', 'services/all', 'css!partials/networkPerspective.css'], function (angular, _, $) {
     "use strict";
     var module = angular.module('app.controllers');
-    module.controller('NetworkPerspectiveCtrl', function ($rootScope, $scope, $route, $interval, $location, $timeout, $window, dateTimeService, networkPerspectiveService) {
+    module.controller('NetworkPerspectiveCtrl', function ($rootScope, $scope, $route, $interval, $location, $timeout, $window, dateTimeService, networkPerspectiveService, networkOverviewService) {
         //初始化变量
         $scope.keyword = null;
+        $scope.searchObj = null;
         $scope.recordList = null;
         $scope.startDate = null;
         $scope.startTime = null;
@@ -14,7 +15,7 @@
         //初始化
         $scope.init = function () {
             $scope.setSearchParams();
-            $scope.doQuery();
+            $scope.getIpGroupAndSegment();
             $timeout(function () {
                 $("#affix").affix({
                     offset: {
@@ -89,6 +90,56 @@
                 }
             }
         };
+        //查询ip组和网段信息
+        $scope.getIpGroupAndSegment = function () {
+            var params = {
+                startTime: $scope.startDate + " 00:00:00",
+                endTime: $scope.startDate + " 23:59:59",
+                start: 0,
+                limit: 999
+            };
+            networkOverviewService.ipSegment(params, function (data) {
+                if (data && data.data) {
+                    $scope.ipSegmentList = data.data || [];
+                    if (!$scope.searchObj && $scope.ipSegmentList.length) {
+                        for (var i = 0; i < $scope.ipSegmentList.length; i++) {
+                            var segment = $scope.ipSegmentList[i];
+                            if ($scope.keyword == segment.ipSegment) {
+                                $scope.searchObj = segment;
+                                
+                                break;
+                            }
+                        }
+                        if ($scope.searchObj || $scope.groupList) {
+                            $scope.doQuery();
+                        }
+                    }
+                    else if (!$scope.searchObj && $scope.groupList) {
+                        $scope.doQuery();
+                    }
+                }
+            });
+            networkOverviewService.groupList(params, function (data) {
+                if (data && data.data) {
+                    $scope.groupList = data.data || [];
+                    if (!$scope.searchObj && $scope.groupList.length) {
+                        for (var i = 0; i < $scope.groupList.length; i++) {
+                            var group = $scope.groupList[i];
+                            if ($scope.keyword == group.group) {
+                                $scope.searchObj = group;
+                                break;
+                            }
+                        }
+                        if ($scope.searchObj || $scope.ipSegmentList) {
+                            $scope.doQuery();
+                        }
+                    }
+                    else if (!$scope.searchObj && $scope.ipSegmentList) {
+                        $scope.doQuery();
+                    }
+                }
+            });
+        };
         //显示信息
         $scope.show = function () {
             var params = $scope.getSearchParams();
@@ -98,9 +149,17 @@
         };
         //查询数据
         $scope.doQuery = function () {
-            var params = {
-                ip: $scope.keyword
-            };
+            var params = {};
+            if ($scope.searchObj) {
+                if ($scope.searchObj.ips) {
+                    for (var i = 0; i < $scope.searchObj.ips.length; i++) {
+                        params["ips[" + i + "]"] = $scope.searchObj.ips[i];
+                    }
+                }
+            }
+            else if ($scope.keyword) {
+                params.ip = $scope.keyword;
+            }
             if ($scope.startDate) {
                 params.startTime = $scope.startDate + " " + $scope.startTime;
                 params.endTime = $scope.startDate + " " + $scope.endTime;
@@ -117,7 +176,7 @@
                             for (var i = 0; i < $scope.baseRecord.flow.length; i++) {
                                 if (!$scope.baseRecord.time || i >= $scope.baseRecord.time.length)
                                     break;
-                                chartData.push({ time: $scope.baseRecord.time[i], value: $scope.baseRecord.flow[i] ? ($scope.baseRecord.flow[i] * 8 / 1024) : 0 });
+                                chartData.push({ time: $scope.baseRecord.time[i], value: $scope.baseRecord.flow[i] });
                             }
                             MG.data_graphic({
                                 data: chartData,
@@ -288,9 +347,17 @@
         };
         //查询详情
         $scope.doServiceDetailQuery = function (record) {
-            var params = {
-                ip: $scope.keyword
-            };
+            var params = {};
+            if ($scope.searchObj) {
+                if ($scope.searchObj.ips) {
+                    for (var i = 0; i < $scope.searchObj.ips.length; i++) {
+                        params["ips[" + i + "]"] = $scope.searchObj.ips[i];
+                    }
+                }
+            }
+            else if ($scope.keyword) {
+                params.ip = $scope.keyword;
+            }
             if (record) {
                 params.protocol = record.protocol;
                 params.port = record.port;
@@ -306,9 +373,17 @@
             });
         };
         $scope.doUsageServiceDetailQuery = function (record) {
-            var params = {
-                ip: $scope.keyword
-            };
+            var params = {};
+            if ($scope.searchObj) {
+                if ($scope.searchObj.ips) {
+                    for (var i = 0; i < $scope.searchObj.ips.length; i++) {
+                        params["ips[" + i + "]"] = $scope.searchObj.ips[i];
+                    }
+                }
+            }
+            else if ($scope.keyword) {
+                params.ip = $scope.keyword;
+            }
             if (record) {
                 params.protocol = record.protocol;
                 params.port = record.port;

@@ -7,5 +7,6 @@
     "./serverView",
     "./networkPerspective",
     "./settings",
+    "./settingsWarn",
     "./flowPcap"
 ], function () { });

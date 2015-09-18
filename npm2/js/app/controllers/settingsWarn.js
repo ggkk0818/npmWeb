@@ -3,13 +3,13 @@
     var module = angular.module('app.controllers');
     module.controller('SettingsWarnCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, configWarnProtocolService) {
         //初始化变量
-        $scope.DURATION_TYPE = [
-            { name: "30秒", type: "second", value: 30 },
-            { name: "1分钟", type: "minute", value: 1 },
-            { name: "5分钟", type: "minute", value: 5 },
-            { name: "15分钟", type: "minute", value: 15 },
-            { name: "1小时", type: "hour", value: 1 },
-        ];
+        $scope.DURATION_TYPE = {
+            30: { name: "30秒", type: "second", value: 30 },
+            60: { name: "1分钟", type: "minute", value: 60 },
+            300: { name: "5分钟", type: "minute", value: 300 },
+            900: { name: "15分钟", type: "minute", value: 900 },
+            3600: { name: "1小时", type: "hour", value: 3600 },
+        };
         $scope.pageNum = 1;
         $scope.pageTotal = 1;
         $scope.pageSize = 10;
@@ -60,7 +60,7 @@
                 limit: $scope.pageSize
             };
             if ($scope.keyword) {
-                params.period = $scope.keyword;
+                params.protocol = $scope.keyword;
             }
             configWarnProtocolService.configSearch(params, function (data) {
                 $scope.success = data && data.status == 200 ? true : false;
@@ -85,7 +85,7 @@
         };
         //显示ip添加对话框
         $scope.showSaveModal = function (record) {
-            $scope.periodInput = record && record.id ? record.id.period : null;
+            $scope.periodInput = record && record.id ? ($scope.DURATION_TYPE[record.id.period] ? $scope.DURATION_TYPE[record.id.period] : record.id.period) : null;
             $scope.protocolInput = record && record.id ? record.id.protocol : null;
             $scope.successRateInput = record ? record.threshold_success_rate : null;
             $scope.avgDelayInput = record ? record.threshold_avg_delay : null;
@@ -95,46 +95,26 @@
         //保存ip添加对话框
         $scope.saveModal = function () {
             $scope.msg = null;
-            if (!$scope.saveForm.$valid) {
+            if (!$scope.saveForm.$valid || !$scope.periodInput) {
                 $scope.msg = "请填写配置信息";
                 return;
             }
-            if ($scope.recordId) {
-                var params = { id: $scope.recordId, ip: $scope.ipInput };
-                if ($scope.nameInput)
-                    params.group = $scope.nameInput;
-                if ($scope.attentionInput)
-                    params.is_attention = $scope.attentionInput;
-                else
-                    params.is_attention = false;
-                configWarnProtocolService.configUpdate(params, function (data) {
-                    if (data && data.status == 200) {
-                        $("#saveModal").modal("hide");
-                        $scope.doQuery();
-                    }
-                    else {
-                        $scope.msg = "保存失败";
-                    }
-                });
-            }
-            else {
-                var params = { ip: $scope.ipInput };
-                if ($scope.nameInput)
-                    params.group = $scope.nameInput;
-                if ($scope.attentionInput)
-                    params.is_attention = $scope.attentionInput;
-                else
-                    params.is_attention = false;
-                configWarnProtocolService.configAdd(params, function (data) {
-                    if (data && data.status == 200) {
-                        $("#saveModal").modal("hide");
-                        $scope.doQuery();
-                    }
-                    else {
-                        $scope.msg = "保存失败";
-                    }
-                });
-            }
+            var params = {
+                "id.period": $scope.periodInput.value || $scope.periodInput,
+                "id.protocol": $scope.protocolInput,
+                threshold_success_rate: $scope.successRateInput,
+                threshold_avg_delay: $scope.avgDelayInput,
+                is_update: true,
+            };
+            configWarnProtocolService.configAdd(params, function (data) {
+                if (data && data.status == 200) {
+                    $("#saveModal").modal("hide");
+                    $scope.doQuery();
+                }
+                else {
+                    $scope.msg = "保存失败";
+                }
+            });
         };
         //显示ip删除对话框
         $scope.showDeleteModal = function (record) {

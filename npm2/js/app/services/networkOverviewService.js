@@ -118,6 +118,24 @@ function (angular, $, _, config) {
         };
 
         /**
+         * 活跃IP数
+         */
+        this.activityIp = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'overview/activity/ip',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            });
+        };
+
+        /**
          * IP TOP 10
          */
         this.ipTopTen = function (params, callback) {

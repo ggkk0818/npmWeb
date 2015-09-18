@@ -8,5 +8,6 @@
     "./networkPerspective",
     "./settings",
     "./settingsWarn",
-    "./flowPcap"
+    "./flowPcap",
+    "./appPerspective"
 ], function () { });

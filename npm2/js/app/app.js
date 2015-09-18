@@ -111,6 +111,10 @@
                 templateUrl: 'js/app/partials/networkPerspective.html',
                 controller: 'NetworkPerspectiveCtrl'
             })
+            .when('/app/perspective', {
+                templateUrl: 'js/app/partials/appPerspective.html',
+                controller: 'AppPerspectiveCtrl'
+            })
             .otherwise({
                 redirectTo: '/'
             });

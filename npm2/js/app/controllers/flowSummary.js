@@ -30,6 +30,7 @@
             $timeout(function () {
                 $scope.chartFlow = echarts.init($("#flowChart").get(0)).showLoading({effect: "ring"}).on(echarts.config.EVENT.DATA_ZOOM, onChartZoom);
                 $scope.chartPackage = echarts.init($("#packageChart").get(0)).showLoading({effect: "ring"}).on(echarts.config.EVENT.DATA_ZOOM, onChartZoom);
+                $scope.chartIpCount = echarts.init($("#ipCountChart").get(0)).showLoading({effect: "ring"}).on(echarts.config.EVENT.DATA_ZOOM, onChartZoom);
                 $scope.chartIpFlow = echarts.init($("#ipChartFlow").get(0)).showLoading({effect: "ring"});
                 $scope.chartIpPackage = echarts.init($("#ipChartPackage").get(0)).showLoading({effect: "ring"});
                 $scope.chartProtocolFlow = echarts.init($("#protocolChartFlow").get(0)).showLoading({effect: "ring"});
@@ -37,8 +38,11 @@
                 $scope.chartPortFlow = echarts.init($("#portChartFlow").get(0)).showLoading({effect: "ring"});
                 $scope.chartPortPackage = echarts.init($("#portChartPackage").get(0)).showLoading({effect: "ring"});
                 $scope.chartFlow.connect($scope.chartPackage);
+                $scope.chartFlow.connect($scope.chartIpCount);
                 $scope.chartPackage.connect($scope.chartFlow);
-
+                $scope.chartPackage.connect($scope.chartIpCount);
+                $scope.chartIpCount.connect($scope.chartFlow);
+                $scope.chartIpCount.connect($scope.chartPackage);
                 //小时选择控件
                 $(".hour-selector").mouseenter(hourSelectorHover).mouseleave(hourSelectorLeave).find(".btn-group .btn").on("click.hourSelector", hourSelectorBtnClick);
             });
@@ -214,6 +218,14 @@
                 }
                 $scope.chartFlow.hideLoading().setOption($scope.option_flow, true);
                 $scope.chartPackage.hideLoading().setOption($scope.option_package, true);
+            });
+            networkOverviewService.activityIp(params, function (data) {
+                if (data && data.status == 200) {
+                    var chartData1 = data.ipCount;
+                    $scope.option_ipCount.xAxis[0].data = data.time;
+                    $scope.option_ipCount.series[0].data = chartData1.reverse();
+                }
+                $scope.chartIpCount.hideLoading().setOption($scope.option_ipCount, true);
             });
         };
 
@@ -471,7 +483,7 @@
             },
             calculable: true,
             dataZoom: {
-                show: true,
+                show: false,
                 y: 230,
                 realtime: false,
                 start: 50,
@@ -479,7 +491,7 @@
             },
             grid: {
                 x2: 20,
-                y2: 80
+                y2: 10
             },
             xAxis: [{
                 type: 'category',
@@ -508,6 +520,76 @@
                 smooth: true,
                 symbol: 'none',
                 //itemStyle: { normal: { areaStyle: { type: 'default' } } },
+                data: []
+            }]
+        };
+
+
+        //TODO 活跃IP
+        $scope.option_ipCount = {
+            animation: false,
+            title: {
+                text: '活跃IP'
+            },
+            tooltip: {
+                trigger: 'axis',
+                showDelay: 0,
+                transitionDuration: 0,
+                position: [80, 30],
+                padding: [5, 0, 5, 0],
+                backgroundColor: "rgba(255,255,255,1)",
+                textStyle: {color: "#333"},
+                formatter: function (params) {
+                    var str = null;
+                    if (params && params.length) {
+                        str = params[0].name + " ";
+                        for (var i = 0; i < params.length; i++) {
+                            var data = params[i];
+                            str += data.seriesName + ":" + data.value + "ip ";
+                        }
+                    }
+                    else {
+                        str = "暂无信息";
+                    }
+                    return str;
+                }
+            },
+            legend: {
+                data: ['活跃IP']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: {show: false},
+                    dataView: {show: false, readOnly: false},
+                    restore: {show: false},
+                    saveAsImage: {show: true}
+                }
+            },
+            calculable: true,
+            dataZoom: {
+                show: true,
+                y: 230,
+                realtime: false,
+                start: 50,
+                end: 100
+            },
+            grid: {
+                x2: 20,
+                y2: 80
+            },
+            xAxis: [{
+                type: 'category',
+                data: []
+            }],
+            yAxis: [{
+                type: 'value'
+            }],
+            series: [{
+                name: '活跃IP',
+                type: 'bar',
+                smooth: true,
+                symbol: 'none',
                 data: []
             }]
         };
@@ -618,6 +700,7 @@
                 data: []
             }]
         };
+
         //协议 TOP10
         var option_protocol_flow = {
             animation: false,

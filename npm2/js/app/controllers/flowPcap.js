@@ -1,7 +1,7 @@
 ﻿define(['angular', 'lodash', 'jquery', 'services/all', 'css!partials/flowPcap.css'], function (angular, _, $) {
     "use strict";
     var module = angular.module('app.controllers');
-    module.controller('FlowPcapCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, flowService, pcapService) {
+    module.controller('FlowPcapCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, flowService, pcapService, dateTimeService) {
         //初始化变量
         $scope.QUERY_TYPE = [
             {name: "ip", displayName: "IP"},
@@ -12,9 +12,9 @@
         $scope.queryType = $scope.QUERY_TYPE[0];
         $scope.isLoading = false;
         //表单数据
-        $scope.startDateInput = null;
-        $scope.startTimeInput = null;
-        $scope.durationInput = null;
+        $scope.startDateInput = new Date(dateTimeService.serverTime.getTime() - 30 * 60 * 1000).Format("yyyy-MM-dd");
+        $scope.startTimeInput = new Date(dateTimeService.serverTime.getTime() - 30 * 60 * 1000).Format("hh:mm:ss");
+        $scope.durationInput = 10;
         $scope.protocolInput = null;
         $scope.srcIpInput = null;
         $scope.srcPortInput = null;

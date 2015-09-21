@@ -87,6 +87,10 @@
                 templateUrl: 'js/app/partials/settingsWarn.html',
                 controller: 'SettingsWarnCtrl'
             })
+            .when('/settings/app', {
+                templateUrl: 'js/app/partials/settingsApp.html',
+                controller: 'SettingsAppCtrl'
+            })
             .when('/flow/summary', {
                 templateUrl: 'js/app/partials/flowSummary.html',
                 controller: 'FlowSummaryCtrl'

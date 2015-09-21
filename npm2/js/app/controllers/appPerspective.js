@@ -9,7 +9,7 @@
             $scope.$parent.showFooter = false;
             $timeout(function () {
                 $appFrame = $("#appFrame");
-                $appFrame.attr("src", "http://" + window.location.hostname + ":5601/#/dashboard/%E9%A6%96%E9%A1%B5");
+                $appFrame.attr("src", "https://" + window.location.hostname + ":5601/#/dashboard/%E9%A6%96%E9%A1%B5");
                 windowResize();
             });
         };

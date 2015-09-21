@@ -267,6 +267,9 @@
                         }
                     });
                 }
+                else {
+                    $scope.baseRecord.empty = true;
+                }
             });
             //查询开启的服务
             var progressBarClassArr = ["", "progress-bar-info", "progress-bar-success", "progress-bar-warning", "progress-bar-danger"];

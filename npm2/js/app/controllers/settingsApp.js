@@ -1,19 +1,8 @@
 ﻿define(['angular', 'lodash', 'jquery', 'services/all', 'css!partials/settings.css'], function (angular, _, $) {
     "use strict";
     var module = angular.module('app.controllers');
-    module.controller('SettingsWarnCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, configWarnProtocolService) {
+    module.controller('SettingsAppCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, configAppService) {
         //初始化变量
-        $scope.DURATION_TYPE = {
-            30: { name: "30秒", type: "second", value: 30 },
-            60: { name: "1分钟", type: "minute", value: 60 },
-            300: { name: "5分钟", type: "minute", value: 300 },
-            900: { name: "15分钟", type: "minute", value: 900 },
-            3600: { name: "1小时", type: "hour", value: 3600 },
-        };
-        $scope.DURATION_TYPE_ARR = [];
-        for (var seconds in $scope.DURATION_TYPE) {
-            $scope.DURATION_TYPE_ARR.push($scope.DURATION_TYPE[seconds]);
-        }
         $scope.pageNum = 1;
         $scope.pageTotal = 1;
         $scope.pageSize = 10;
@@ -24,11 +13,11 @@
         $scope.keywordInput = null;
         //弹出框变量
         $scope.currentRecord = null;
-        $scope.periodInput = null;
+        $scope.appNameInput = null;
+        $scope.ipInput = null;
         $scope.protocolInput = null;
-        $scope.successRateInput = null;
-        $scope.avgDelayInput = null;
-        $scope.isUpdateInput = false;
+        $scope.ruleInput = null;
+        $scope.effectiveInput = true;
         //获取查询参数
         $scope.getSearchParams = function () {
             var params = { pageNum: $scope.pageNum };
@@ -65,9 +54,9 @@
                 limit: $scope.pageSize
             };
             if ($scope.keyword) {
-                params.protocol = $scope.keyword;
+                params.appName = $scope.keyword;
             }
-            configWarnProtocolService.configSearch(params, function (data) {
+            configAppService.configSearch(params, function (data) {
                 $scope.success = data && data.status == 200 ? true : false;
                 $scope.recordList = data && data.data ? data.data : [];
                 $scope.recordSize = data && data.count ? data.count : 0;
@@ -91,34 +80,34 @@
         //显示ip添加对话框
         $scope.showSaveModal = function (record) {
             $scope.currentRecord = record;
-            $scope.periodInput = record && record.id ? ($scope.DURATION_TYPE[record.id.period] ? $scope.DURATION_TYPE[record.id.period] : record.id.period) : null;
-            $scope.protocolInput = record && record.id ? record.id.protocol : null;
-            $scope.successRateInput = record ? record.threshold_success_rate : null;
-            $scope.avgDelayInput = record ? record.threshold_avg_delay : null;
-            $scope.isUpdateInput = record ? record.is_update : false;
+            $scope.appNameInput = record ? record.app_name : null;
+            $scope.ipInput = record ? record.ip : null;
+            $scope.protocolInput = record ? record.protocol : null;
+            $scope.ruleInput = record ? record.rule : null;
+            $scope.effectiveInput = record ? record.effective : false;
             $("#saveModal").modal("show");
         };
         //保存ip添加对话框
         $scope.saveModal = function () {
             $scope.msg = null;
-            if (!$scope.saveForm.$valid || !$scope.periodInput) {
+            if (!$scope.saveForm.$valid) {
                 $scope.msg = "请填写配置信息";
                 return;
             }
             var params = {
-                "id.period": $scope.periodInput.value || $scope.periodInput,
-                "id.protocol": $scope.protocolInput,
-                threshold_success_rate: $scope.successRateInput,
-                threshold_avg_delay: $scope.avgDelayInput,
-                is_update: true,
+                "app_name": $scope.appNameInput,
+                protocol: $scope.protocolInput,
+                rule: $scope.ruleInput,
+                effective: $scope.effectiveInput,
             };
+            if ($scope.ipInput)
+                params.ip = $scope.ipInput;
             if ($scope.currentRecord) {
-                configWarnProtocolService.configDelete({
-                    "id.period": $scope.currentRecord.id.period,
-                    "id.protocol": $scope.currentRecord.id.protocol
+                configAppService.configDelete({
+                    "app_name": $scope.currentRecord.app_name
                 }, function (data1) {
                     if (data1 && data1.status == 200) {
-                        configWarnProtocolService.configAdd(params, function (data) {
+                        configAppService.configAdd(params, function (data) {
                             if (data && data.status == 200) {
                                 $("#saveModal").modal("hide");
                                 $scope.doQuery();
@@ -134,7 +123,7 @@
                 });
             }
             else {
-                configWarnProtocolService.configAdd(params, function (data) {
+                configAppService.configAdd(params, function (data) {
                     if (data && data.status == 200) {
                         $("#saveModal").modal("hide");
                         $scope.doQuery();
@@ -154,9 +143,8 @@
         $scope.deleteModal = function () {
             if ($scope.currentRecord) {
                 $scope.msg = null;
-                configWarnProtocolService.configDelete({
-                    "id.period": $scope.currentRecord.id.period,
-                    "id.protocol": $scope.currentRecord.id.protocol
+                configAppService.configDelete({
+                    "app_name": $scope.currentRecord.app_name
                 }, function (data) {
                     if (data && data.status == 200) {
                         $("#deleteModal").modal("hide");

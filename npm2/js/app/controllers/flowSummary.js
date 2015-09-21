@@ -180,6 +180,8 @@
                         $scope.option_flow.dataZoom.start = startPoint;
                         $scope.option_package.dataZoom.end = endPoint;
                         $scope.option_package.dataZoom.start = startPoint;
+                        $scope.option_ipCount.dataZoom.end = endPoint;
+                        $scope.option_ipCount.dataZoom.start = startPoint;
                     }
                     else if (!$scope.startDate || $scope.durationType.id == "day" && $scope.startDate == dateTimeService.serverTime.Format("yyyy-MM-dd")) {
                         var endPoint = Math.round((dateTimeService.serverTime.getHours() * 60 + dateTimeService.serverTime.getMinutes()) * 100 / (24 * 60));
@@ -190,6 +192,8 @@
                         $scope.option_flow.dataZoom.start = endPoint - $scope.defaultChartZoomSize;
                         $scope.option_package.dataZoom.end = endPoint;
                         $scope.option_package.dataZoom.start = endPoint - $scope.defaultChartZoomSize;
+                        $scope.option_ipCount.dataZoom.end = endPoint;
+                        $scope.option_ipCount.dataZoom.start = endPoint - $scope.defaultChartZoomSize;
                     }
                     else if ($scope.durationType.id == "hour" && $scope.startDate == dateTimeService.serverTime.Format("yyyy-MM-dd") && dateTimeService.serverTime.getHours() == $scope.startHour) {
                         var endPoint = dateTimeService.serverTime.getMinutes() * 100 / 60;
@@ -200,12 +204,16 @@
                         $scope.option_flow.dataZoom.start = endPoint - $scope.defaultChartZoomSize;
                         $scope.option_package.dataZoom.end = endPoint;
                         $scope.option_package.dataZoom.start = endPoint - $scope.defaultChartZoomSize;
+                        $scope.option_ipCount.dataZoom.end = endPoint;
+                        $scope.option_ipCount.dataZoom.start = endPoint - $scope.defaultChartZoomSize;
                     }
                     else {
                         $scope.option_flow.dataZoom.end = 100;
                         $scope.option_flow.dataZoom.start = 100 - $scope.defaultChartZoomSize;
                         $scope.option_package.dataZoom.end = 100;
                         $scope.option_package.dataZoom.start = 100 - $scope.defaultChartZoomSize;
+                        $scope.option_ipCount.dataZoom.end = 100;
+                        $scope.option_ipCount.dataZoom.start = 100 - $scope.defaultChartZoomSize;
                     }
                 }
                 else {
@@ -219,11 +227,12 @@
                 $scope.chartFlow.hideLoading().setOption($scope.option_flow, true);
                 $scope.chartPackage.hideLoading().setOption($scope.option_package, true);
             });
+            // 活跃IP
             networkOverviewService.activityIp(params, function (data) {
                 if (data && data.status == 200) {
                     var chartData1 = data.ipCount;
                     $scope.option_ipCount.xAxis[0].data = data.time;
-                    $scope.option_ipCount.series[0].data = chartData1.reverse();
+                    $scope.option_ipCount.series[0].data = chartData1;
                 }
                 $scope.chartIpCount.hideLoading().setOption($scope.option_ipCount, true);
             });
@@ -525,11 +534,11 @@
         };
 
 
-        //TODO 活跃IP
+        // 活跃IP
         $scope.option_ipCount = {
             animation: false,
             title: {
-                text: '活跃IP'
+                text: '活跃的服务器个数'
             },
             tooltip: {
                 trigger: 'axis',
@@ -555,7 +564,7 @@
                 }
             },
             legend: {
-                data: ['活跃IP']
+                data: ['活跃服务器个数']
             },
             toolbox: {
                 show: true,
@@ -586,7 +595,7 @@
                 type: 'value'
             }],
             series: [{
-                name: '活跃IP',
+                name: '活跃服务器个数',
                 type: 'bar',
                 smooth: true,
                 symbol: 'none',

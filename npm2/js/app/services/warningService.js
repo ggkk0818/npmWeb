@@ -53,5 +53,20 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
+        // 协议告警查询
+        this.protocol = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'warning/protocol',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
     });
 });

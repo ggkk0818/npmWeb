@@ -33,6 +33,9 @@
                     }
                 });
                 $("body").scrollspy({ target: "#affix" });
+                $("#openServiceDetailModal").on("hidden.bs.modal", function () {
+                    $scope.openServiceDetailRecord = null;
+                });
             });
         };
         //获取查询参数
@@ -400,6 +403,38 @@
                     record.metric = data;
                 }
             });
+        };
+        //显示开启的服务详情窗口
+        $scope.showOpenServiceClientMetric = function (record, dataType, displayName) {
+            record.dataType = dataType;
+            record.displayName = displayName;
+            if (!record.clientMetric) {
+                var params = {};
+                if ($scope.searchObj) {
+                    if ($scope.searchObj.ips) {
+                        for (var i = 0; i < $scope.searchObj.ips.length; i++) {
+                            params["ips[" + i + "]"] = $scope.searchObj.ips[i];
+                        }
+                    }
+                }
+                else if ($scope.keyword) {
+                    params.ip = $scope.keyword;
+                }
+                if (record) {
+                    params.protocol = record.protocol;
+                    params.port = record.port;
+                }
+                if ($scope.startDate) {
+                    params.startTime = $scope.startDate + " " + $scope.startTime;
+                    params.endTime = $scope.startDate + " " + $scope.endTime;
+                }
+                networkPerspectiveService.openServiceClientMetric(params, function (data) {
+                    record.clientMetric = data && data.metric ? data.metric : [];
+                });
+            }
+            $("#openServiceDetailModal").one("shown.bs.modal", function () {
+                $scope.openServiceDetailRecord = record;
+            }).modal("show");
         };
         //搜索
         $scope.search = function () {

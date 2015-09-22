@@ -1,0 +1,70 @@
+<div class="container view-content" id="view_content">
+    <ul class="nav nav-tabs" style="margin-top:20px">
+        <li><a href="#/warn/center">趋势异常</a></li>
+        <li class="active"><a href="#/warn/protocol">协议告警</a></li>
+        <div style="float:right">
+            <input type="text" class="datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN"
+                   data-min-view="2" placeholder="日期" ng-model="startDateInput"
+                   ng-keypress="formKeypressHandler($event)">
+            <button class="btn btn-default" type="button" ng-click="search()"><span class="glyphicon glyphicon-search"
+                                                                                    aria-hidden="true"></span> 查找
+            </button>
+            <button class="btn btn-default" type="button" ng-click="addDay(-1)" data-toggle="tooltip"
+                    data-placement="bottom" title="前一天"><span class="glyphicon glyphicon-chevron-left"
+                                                              aria-hidden="true"></span></button>
+            <button class="btn btn-default" type="button" ng-click="addDay()" ng-class="{'disabled': isToday}"
+                    data-toggle="tooltip" data-placement="bottom" title="今天"><span class="glyphicon glyphicon-stop"
+                                                                                   aria-hidden="true"></span></button>
+            <button class="btn btn-default" type="button" ng-click="addDay(1)" data-toggle="tooltip"
+                    data-placement="bottom" title="后一天"><span class="glyphicon glyphicon-chevron-right"
+                                                              aria-hidden="true"></span></button>
+        </div>
+    </ul>
+    <table class="table table-bordered">
+        <thead>
+        <tr role="row" class="heading">
+            <th width="5%">
+                协议
+            </th>
+            <th width="5%">
+                IP
+            </th>
+            <th width="5%">
+                端口
+            </th>
+            <th width="5%">
+                周期
+            </th>
+            <th width="5%">
+                告警时间
+            </th>
+            <th width="5%">
+                成功率
+            </th>
+            <th width="5%">
+                平均时延
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr role="row" class="odd" ng-repeat="record in recordList">
+            <td>{{record.protocol}}</td>
+            <td>{{record.ip}}</td>
+            <td>{{record.port}}</td>
+            <td>{{record.period}}</td>
+            <td>{{record.warn_time}}</td>
+            <td>{{record.success_rate}}</td>
+            <td>{{record.avg_delay}}</td>
+        </tr>
+        </tbody>
+    </table>
+    <nav class="text-center" style="position:relative;margin-top:20px;" ng-show="recordList">
+        <div class="pull-right" style="line-height:34px;position:absolute;top:0;right:0;">
+            <span style="padding-right:10px;">匹配的记录 {{recordSize||0}} 笔</span>
+            <span style="padding-right:10px;">第 {{pageNum||0}} 页</span>
+            <span>共 {{pageTotal||0}} 页</span>
+        </div>
+        <ul class="pagination" style="margin:0 auto;" data-page-click="show"></ul>
+    </nav>
+</div>
+

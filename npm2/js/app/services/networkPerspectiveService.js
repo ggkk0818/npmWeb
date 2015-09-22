@@ -68,6 +68,21 @@ function (angular, $, _, config) {
                     callback(null);
             });
         };
+        //开启协议点开详情
+        this.openServiceClientMetric = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'perspective/open/service/client/metric',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
         //使用的协议列表
         this.usageService = function (params, callback) {
             $http({

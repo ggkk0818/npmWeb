@@ -111,6 +111,10 @@
                 templateUrl: 'js/app/partials/warnCenter.html',
                 controller: 'WarnCenterCtrl'
             })
+            .when('/warn/protocol', {
+                templateUrl: 'js/app/partials/warnProtocol.html',
+                controller: 'WarnProtocolCtrl'
+            })
             .when('/network/perspective', {
                 templateUrl: 'js/app/partials/networkPerspective.html',
                 controller: 'NetworkPerspectiveCtrl'

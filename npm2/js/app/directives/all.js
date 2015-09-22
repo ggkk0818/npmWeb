@@ -8,5 +8,6 @@
     "./jqRangeSlider",
     "./networkPerspectiveChart",
     "./serverViewIpChart",
-    "./serverViewServiceChart"
+    "./serverViewServiceChart",
+    "./networkPerspectiveDetailChart"
 ], function () { });

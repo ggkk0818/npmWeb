@@ -10,5 +10,6 @@
     "./settingsWarn",
     "./settingsApp",
     "./flowPcap",
-    "./appPerspective"
+    "./appPerspective",
+    "./warnProtocol"
 ], function () { });

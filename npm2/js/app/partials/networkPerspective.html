@@ -124,15 +124,15 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div data-type="userResponseTime"></div>
-                                                    <p class="text-center">用户响应时间</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'userResponseTime', '用户响应时间')">用户响应时间</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="flowRatio"></div>
-                                                    <p class="text-center">流量速率</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'flowRatio', '流量速率')">流量速率</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="connection" style="height:120px;"></div>
-                                                    <p class="text-center">并发连接数</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'connection', '并发连接数')">并发连接数</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="connEstablishTime">
@@ -140,7 +140,7 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">平均连接建立时间</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'connEstablishTime', '平均连接建立时间')">平均连接建立时间</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="firstByteTime">
@@ -148,11 +148,11 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">平均第一个字节时间</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'firstByteTime', '平均第一个字节时间')">平均第一个字节时间</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="timeConnDuration"></div>
-                                                    <p class="text-center">连接持续时间</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'timeConnDuration', '连接持续时间')">连接持续时间</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="newConnSuccessCount">
@@ -160,11 +160,11 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">新建连接成功数</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'newConnSuccessCount', '新建连接成功数')">新建连接成功数</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="connRatio"></div>
-                                                    <p class="text-center">新建连接率</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'connRatio', '新建连接率')">新建连接率</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="connReqCount">
@@ -172,11 +172,11 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">新建连接请求数</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'connReqCount', '新建连接请求数')">新建连接请求数</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="connRequestRatio"></div>
-                                                    <p class="text-center">新建连接请求率</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'connRequestRatio', '新建连接请求率')">新建连接请求率</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="connFailingCount">
@@ -184,7 +184,7 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">新建连接失败数</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'connFailingCount', '新建连接失败数')">新建连接失败数</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="outTurnCount">
@@ -192,11 +192,11 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">流出交互个数</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'outTurnCount', '流出交互个数')">流出交互个数</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="outTurnRatio" style="height:120px;"></div>
-                                                    <p class="text-center">流出交互率</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'outTurnRatio', '流出交互率')">流出交互率</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="inTurnCount">
@@ -204,75 +204,75 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">流入交互个数</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'inTurnCount', '流入交互个数')">流入交互个数</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="inTurnRatio" style="height:120px;"></div>
-                                                    <p class="text-center">流入交互率</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'inTurnRatio', '流入交互率')">流入交互率</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="packet" style="height:120px;"></div>
-                                                    <p class="text-center">包传输率</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'packet', '包传输率')">包传输率</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="inPacketLossRatio"></div>
-                                                    <p class="text-center">丢包率（流入）</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'inPacketLossRatio', '丢包率（流入）')">丢包率（流入）</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="outPacketLossRatio"></div>
-                                                    <p class="text-center">丢包率（流出）</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'outPacketLossRatio', '丢包率（流出）')">丢包率（流出）</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="inPacketRetransRatio"></div>
-                                                    <p class="text-center">包重传率（流入）</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'inPacketRetransRatio', '包重传率（流入）')">包重传率（流入）</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="outPacketRetransRatio"></div>
-                                                    <p class="text-center">包重传率（流出）</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'outPacketRetransRatio', '包重传率（流出）')">包重传率（流出）</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="inRetransRatio"></div>
-                                                    <p class="text-center">重传率（流入）</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'inRetransRatio', '重传率（流入）')">重传率（流入）</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="outRetransRatio"></div>
-                                                    <p class="text-center">重传率（流出）</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'outRetransRatio', '重传率（流出）')">重传率（流出）</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="timeRetrans"></div>
-                                                    <p class="text-center">重传延时</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'timeRetrans', '重传延时')">重传延时</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="clientResetRatio" style="height:120px;"></div>
-                                                    <p class="text-center">重置率（客户端/流入）</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'clientResetRatio', '重置率（客户端/流入）')">重置率（客户端/流入）</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="serverResetRatio" style="height:120px;"></div>
-                                                    <p class="text-center">重置率（服务器/流出）</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'serverResetRatio', '重置率（服务器/流出）')">重置率（服务器/流出）</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="outNetPayloadTime"></div>
-                                                    <p class="text-center">净荷（流出）</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'outNetPayloadTime', '净荷（流出）')">净荷（流出）</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="inNetPayloadTime"></div>
-                                                    <p class="text-center">净荷（流入）</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'inNetPayloadTime', '净荷（流入）')">净荷（流入）</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="outNetPayloadTransTime"></div>
-                                                    <p class="text-center">净荷传输时间/往返时间（流出）</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'outNetPayloadTransTime', '净荷传输时间/往返时间（流出）')">净荷传输时间/往返时间（流出）</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="inNetPayloadTransTime"></div>
-                                                    <p class="text-center">净荷传输时间/往返时间（流入）</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'inNetPayloadTransTime', '净荷传输时间/往返时间（流入）')">净荷传输时间/往返时间（流入）</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="outTransTime"></div>
-                                                    <p class="text-center">数据传输时间（流出）</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'outTransTime', '数据传输时间（流出）')">数据传输时间（流出）</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div data-type="inTransTime"></div>
-                                                    <p class="text-center">数据传输时间（流入）</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'inTransTime', '数据传输时间（流入）')">数据传输时间（流入）</a>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <p class="text-center" data-type="serverResponseTime">
@@ -280,7 +280,7 @@
                                                             <span class="percent"></span>
                                                         </span>
                                                     </p>
-                                                    <p class="text-center">平均服务器响应时间</p>
+                                                    <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'serverResponseTime', '平均服务器响应时间')">平均服务器响应时间</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -491,6 +491,33 @@
             <div class="panel-heading">查询结果</div>
             <div class="panel-body" style="text-align:center;">
                 <span class="glyphicon glyphicon-warning-sign" aria-hidden="true" style="margin-right:5px;"></span>没有找到可以显示的结果
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal-->
+<div class="modal fade" id="openServiceDetailModal" tabindex="-1" role="dialog" aria-labelledby="openServiceDetailModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">{{openServiceDetailRecord ? openServiceDetailRecord.protocol + ":" + openServiceDetailRecord.port : ""}} {{openServiceDetailRecord.displayName}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid" ng-show="openServiceDetailRecord.clientMetric.length">
+                    <div class="row">
+                        <div class="col-md-6 network-perspective-open-service-detail-chart" ng-repeat="metric in openServiceDetailRecord.clientMetric">
+                            <div></div>
+                            <p class="text-center">{{metric.clientIp}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center" ng-show="!openServiceDetailRecord.clientMetric">
+                    <span class="glyphicon glyphicon-hourglass warn-center-loading" aria-hidden="true" style="margin-right:5px;"></span>正在加载...
+                </div>
+                <div class="text-center" ng-show="openServiceDetailRecord.clientMetric.length == 0">
+                    <span class="glyphicon glyphicon-warning-sign" aria-hidden="true" style="margin-right:5px;"></span>没有找到可以显示的结果
+                </div>
             </div>
         </div>
     </div>

@@ -63,7 +63,7 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <i class="fa fa-lightbulb-o fa-lg" style="color:red;margin-right:10px"></i>
-                                    {{record.group || record.ip}}
+                                    <a href="javascript:void(0);" ng-click="showNetworkPerspective(record.group || record.ip)">{{record.group || record.ip}}</a>
                                 </div>
                                 <div class="panel-body">
                                     <table class="table">
@@ -111,7 +111,7 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <i class="fa fa-lightbulb-o fa-lg" style="color:red;margin-right:10px"></i>
-                                    {{record.ip}}
+                                    <a href="javascript:void(0);" ng-click="showNetworkPerspective(record.ip)">{{record.ip}}</a>
                                     <p style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">
                                         在线时长：{{record.systemInfo.hasUpTimes ? (record.systemInfo.uptimeDays ? record.systemInfo.uptimeDays + "天" : "") + (record.systemInfo.uptimeHours ? record.systemInfo.uptimeHours + "小时" : "") + record.systemInfo.uptimeMins + "分钟" : "-"}};
                                         操作系统：<span data-toggle="tooltip" data-placement="bottom" title="{{record.systemInfo.os ? record.systemInfo.os + ' ' + record.systemInfo.osVersion : ''}}">{{record.systemInfo.os ? record.systemInfo.os + " " + record.systemInfo.osVersion : "-"}}</span>

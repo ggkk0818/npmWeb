@@ -334,6 +334,18 @@
             $scope.recordList = null;
             $scope.doQuery();
         });
+        //跳转到服务透视页
+        $scope.showNetworkPerspective = function (keyword) {
+            if (keyword == undefined)
+                return;
+            var params = {
+                keyword: keyword,
+                startDate: $scope.startDate,
+                startTime: $scope.startTime,
+                endTime: $scope.endTime
+            };
+            $location.path("/network/perspective").search(params);
+        };
 
         //窗口调整时更新图表大小
         var windowResize = function () {

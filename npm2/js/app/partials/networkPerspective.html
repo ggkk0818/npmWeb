@@ -283,6 +283,29 @@
                                                     <a class="text-center" href="javascript:void(0);" style="display:block;" ng-click="showOpenServiceClientMetric(service, 'serverResponseTime', '平均服务器响应时间')">平均服务器响应时间</a>
                                                 </div>
                                             </div>
+                                            <hr ng-show="service.metric.count.length || service.metric.avgDuration.length || service.metric.successRatio.length || service.metric.responseRatio.length || service.metric.code.length" />
+                                            <div class="row" ng-show="service.metric.count.length || service.metric.avgDuration.length || service.metric.successRatio.length || service.metric.responseRatio.length || service.metric.code.length">
+                                                <div class="col-md-4" ng-show="service.metric.count.length">
+                                                    <div data-type="count"></div>
+                                                    <p class="text-center">交易量</p>
+                                                </div>
+                                                <div class="col-md-4" ng-show="service.metric.avgDuration.length">
+                                                    <div data-type="avgDuration"></div>
+                                                    <p class="text-center">平均时延</p>
+                                                </div>
+                                                <div class="col-md-4" ng-show="service.metric.successRatio.length">
+                                                    <div data-type="successRatio"></div>
+                                                    <p class="text-center">成功率</p>
+                                                </div>
+                                                <div class="col-md-4" ng-show="service.metric.responseRatio.length">
+                                                    <div data-type="responseRatio"></div>
+                                                    <p class="text-center">响应率</p>
+                                                </div>
+                                                <div class="col-md-4" ng-show="service.metric.code.length">
+                                                    <div data-type="code" style="height:120px;"></div>
+                                                    <p class="text-center">返回状态码</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -506,7 +529,7 @@
             <div class="modal-body">
                 <div class="container-fluid" ng-show="openServiceDetailRecord.clientMetric.length">
                     <div class="row">
-                        <div class="col-md-6 network-perspective-open-service-detail-chart" ng-repeat="metric in openServiceDetailRecord.clientMetric">
+                        <div class="col-md-4 network-perspective-open-service-detail-chart" ng-repeat="metric in openServiceDetailRecord.clientMetric">
                             <div></div>
                             <p class="text-center">{{metric.clientIp}}</p>
                         </div>

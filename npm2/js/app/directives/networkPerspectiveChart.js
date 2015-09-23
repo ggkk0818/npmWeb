@@ -29,6 +29,10 @@ function (angular, app, _) {
                     { name: "outNetPayloadTransTime", tooltip: "ms" },//净荷传输时间（流出）
                     { name: "inTransTime", tooltip: "ms" },//数据传输时间（流入）
                     { name: "outTransTime", tooltip: "ms" },//数据传输时间（流出）
+                    { name: "count", tooltip: "交易" },//交易量
+                    { name: "avgDuration", tooltip: "ms" },//平均时延
+                    { name: "successRatio", tooltip: "%" },//成功率
+                    { name: "responseRatio", tooltip: "%" },//响应率
                 ];
                 var multiLineChartProp = [
                     //{ name: "transTime", props: ["outTransTime", "inTransTime"], tooltip: "ms", sum: true },//数据传输时间
@@ -60,6 +64,9 @@ function (angular, app, _) {
                     { name: "connReqCount", tooltip: "连接" },//连接请求个数
                     { name: "connFailingCount", tooltip: "连接" },//连接失败个数
                     { name: "serverResponseTime", tooltip: "ms" }//服务器响应时间
+                ];
+                var multiPieChartProp = [
+                    { name: "code", displayName: "返回状态码" },//返回状态码
                 ];
                 var init = function () {
                     if (!$scope.service || !$scope.service.metric)
@@ -315,6 +322,52 @@ function (angular, app, _) {
                                             };
                                         })(prop, $scope.service.metric[prop.name])
                                     });
+                            }
+                        }
+                        for (var index in multiPieChartProp) {
+                            var prop = multiPieChartProp[index];
+                            if (dataType == prop.name && $scope.service.metric[prop.name]) {
+                                var categoryData = [], chartData = [];
+                                for (var i = 0; i < $scope.service.metric[prop.name].length; i++) {
+                                    var d = $scope.service.metric[prop.name][i];
+                                    if ($scope.service.metric[prop.name].length > 5 && i >= 5) {
+                                        chartData[4].value += d.value || 0;
+                                    }
+                                    else {
+                                        categoryData.push(d.name);
+                                        chartData.push({ name: d.name, value: d.value || 0 });
+                                    }
+                                }
+                                if ($scope.service.metric[prop.name].length > 5) {
+                                    chartData[4].name = "其他";
+                                }
+                                $timeout((function (el, categoryData, chartData, prop) {
+                                    return function () {
+                                        echarts.init(el).setOption({
+                                            title: { show: false },
+                                            tooltip: {
+                                                trigger: 'item',
+                                                showDelay: 0,
+                                                formatter: "{a} <br/>{b} : {c} ({d}%)"
+                                            },
+                                            legend: {
+                                                show: false,
+                                                orient: 'vertical',
+                                                x: 'left',
+                                                data: categoryData
+                                            },
+                                            toolbox: { show: false },
+                                            calculable: true,
+                                            series: [{
+                                                name: prop.displayName,
+                                                type: 'pie',
+                                                radius: '55%',
+                                                center: ['50%', '60%'],
+                                                data: chartData
+                                            }]
+                                        }, true);
+                                    };
+                                })(el, categoryData, chartData, prop));
                             }
                         }
                         $el.data("dirty", false);

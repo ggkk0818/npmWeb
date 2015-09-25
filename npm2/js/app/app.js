@@ -27,6 +27,7 @@
     'jquery-scrollTo',
     'jquery-easypiechart',
     'jquery-viewport',
+    'jquery-autocomplete',
     'date-format',
     'numeral',
     'numeral-cn',

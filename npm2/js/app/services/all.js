@@ -7,5 +7,6 @@
     "./ipService",
     "./pcapService",
     "./configWarnProtocolService",
-    "./configAppService"
+    "./configAppService",
+    "./browserCheckService"
 ], function () { });

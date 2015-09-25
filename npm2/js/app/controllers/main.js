@@ -1,7 +1,7 @@
 ﻿define(['angular', 'lodash', 'jquery', 'services/all'], function (angular, _, $) {
     "use strict";
     var module = angular.module('app.controllers');
-    module.controller('MainCtrl', function ($rootScope, $scope, $route, $window, $location) {
+    module.controller('MainCtrl', function ($rootScope, $scope, $route, $window, $location, browserCheckService) {
         //初始化变量
         $scope.showFooter = true;
         //导航信息
@@ -71,5 +71,7 @@
             $.removeCookie("LOGIN_STATE");
             $window.location.href = "login.html";
         };
+        //检测浏览器类型，提示使用chrome
+        browserCheckService.check();
     });
 });

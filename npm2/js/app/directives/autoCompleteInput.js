@@ -16,12 +16,12 @@ function (angular, app, _) {
                         var ipSegmentArr = null, ipGroupArr = null;
                         var queryDone = function () {
                             var suggestions = [];
-                            if (ipSegmentArr && ipSegmentArr.length) {
-                                for (var i = 0; i < ipSegmentArr.length; i++) {
-                                    var record = ipSegmentArr[i];
-                                    suggestions.push({ value: record.ipSegment, data: { type: "网段" } });
-                                }
-                            }
+                            //if (ipSegmentArr && ipSegmentArr.length) {
+                            //    for (var i = 0; i < ipSegmentArr.length; i++) {
+                            //        var record = ipSegmentArr[i];
+                            //        suggestions.push({ value: record.ipSegment, data: { type: "网段" } });
+                            //    }
+                            //}
                             if (ipGroupArr && ipGroupArr.length) {
                                 for (var i = 0; i < ipGroupArr.length; i++) {
                                     var record = ipGroupArr[i];
@@ -36,21 +36,26 @@ function (angular, app, _) {
                             start: 0,
                             limit: 999
                         };
-                        networkOverviewService.ipSegment(params, function (data) {
-                            if (data && data.data) {
-                                ipSegmentArr = data.data;
-                            }
-                            queryDone();
-                        });
+                        if (query && query.length) {
+                            params.ipSegment = query;
+                            params.group = query;
+                        }
+                        //networkOverviewService.ipSegment(params, function (data) {
+                        //    if (data && data.data) {
+                        //        ipSegmentArr = data.data;
+                        //    }
+                        //    queryDone();
+                        //});
                         networkOverviewService.groupList(params, function (data) {
                             if (data && data.data) {
-                                ipSegmentArr = data.data;
+                                ipGroupArr = data.data;
                             }
                             queryDone();
                         });
                     },
                     onSelect: function (suggestion) {
                         //alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+                        elem.val(suggestion.value).trigger("change");
                     }
                 });
             }

@@ -14,7 +14,7 @@
         //表单数据
         $scope.startDateInput = new Date(dateTimeService.serverTime.getTime() - 30 * 60 * 1000).Format("yyyy-MM-dd");
         $scope.startTimeInput = new Date(dateTimeService.serverTime.getTime() - 30 * 60 * 1000).Format("hh:mm:ss");
-        $scope.durationInput = 10;
+        $scope.durationInput = 1;
         $scope.protocolInput = null;
         $scope.srcIpInput = null;
         $scope.srcPortInput = null;

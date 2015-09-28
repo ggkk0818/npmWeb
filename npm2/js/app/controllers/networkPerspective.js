@@ -101,27 +101,27 @@
                 start: 0,
                 limit: 999
             };
-            networkOverviewService.ipSegment(params, function (data) {
-                if (data && data.data) {
-                    $scope.ipSegmentList = data.data || [];
-                    if (!$scope.searchObj && $scope.ipSegmentList.length) {
-                        for (var i = 0; i < $scope.ipSegmentList.length; i++) {
-                            var segment = $scope.ipSegmentList[i];
-                            if ($scope.keyword == segment.ipSegment) {
-                                $scope.searchObj = segment;
-                                
-                                break;
-                            }
-                        }
-                        if ($scope.searchObj || $scope.groupList) {
-                            $scope.doQuery();
-                        }
-                    }
-                    else if (!$scope.searchObj && $scope.groupList) {
-                        $scope.doQuery();
-                    }
-                }
-            });
+            $scope.ipSegmentList = [];
+            //networkOverviewService.ipSegment(params, function (data) {
+            //    if (data && data.data) {
+            //        $scope.ipSegmentList = data.data || [];
+            //        if (!$scope.searchObj && $scope.ipSegmentList.length) {
+            //            for (var i = 0; i < $scope.ipSegmentList.length; i++) {
+            //                var segment = $scope.ipSegmentList[i];
+            //                if ($scope.keyword == segment.ipSegment) {
+            //                    $scope.searchObj = segment;
+            //                    break;
+            //                }
+            //            }
+            //            if ($scope.searchObj || $scope.groupList) {
+            //                $scope.doQuery();
+            //            }
+            //        }
+            //        else if (!$scope.searchObj && $scope.groupList) {
+            //            $scope.doQuery();
+            //        }
+            //    }
+            //});
             networkOverviewService.groupList(params, function (data) {
                 if (data && data.data) {
                     $scope.groupList = data.data || [];

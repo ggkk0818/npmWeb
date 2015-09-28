@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-4">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="IP" ng-model="keywordInput" ng-keypress="formKeypressHandler($event)" />
+                <input type="text" class="form-control auto-complete-input" placeholder="IP地址或IP组" ng-model="keywordInput" ng-keypress="formKeypressHandler($event)" />
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button" ng-click="search()">查询</button>
                 </span>
@@ -287,7 +287,7 @@
                                             <div class="row" ng-show="service.metric.count.length || service.metric.avgDuration.length || service.metric.successRatio.length || service.metric.responseRatio.length || service.metric.code.length">
                                                 <div class="col-md-4" ng-show="service.metric.count.length">
                                                     <div data-type="count"></div>
-                                                    <p class="text-center">交易量</p>
+                                                    <p class="text-center">应用会话数</p>
                                                 </div>
                                                 <div class="col-md-4" ng-show="service.metric.avgDuration.length">
                                                     <div data-type="avgDuration"></div>

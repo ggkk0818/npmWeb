@@ -9,5 +9,6 @@
     "./networkPerspectiveChart",
     "./serverViewIpChart",
     "./serverViewServiceChart",
-    "./networkPerspectiveDetailChart"
+    "./networkPerspectiveDetailChart",
+    "./autoCompleteInput"
 ], function () { });

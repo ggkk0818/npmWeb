@@ -42,7 +42,7 @@
                                     }
                                     chartData.push(data);
                                 }
-                                legendData.push("昨日", "今日");
+                                legendData.push("前日", "昨日");
                             }
                             if (record && record.critical_info) {
                                 var criticalArr = record.critical_info.split(",");

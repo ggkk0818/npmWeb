@@ -10,7 +10,7 @@
         $scope.startDate = null;
         $scope.startTime = null;
         $scope.endTime = null;
-        $scope.displayMode = $scope.DISPLAY_MODE[0];
+        $scope.displayMode = $scope.DISPLAY_MODE[1];
         //表单数据
         $scope.startDateInput = $scope.startDate = dateTimeService.serverTime.Format("yyyy-MM-dd");
         $scope.keywordInput = null;

@@ -24,10 +24,44 @@
         $scope.destMacInput = null;
         $scope.queryTypeInput = "equal";
 
+
+        $scope.FIELD_LIST = [
+            {
+                name: "协议",
+                field: "protocol",
+                opt: {displayName: "等于", name: "="},
+                type: "String",
+                inputValue: null
+            },
+            {name: "源IP", field: "srcIp", opt: {displayName: "等于", name: "="}, type: "String", inputValue: null},
+            {name: "源端口", field: "srcPort", opt: {displayName: "等于", name: "="}, type: "Int", inputValue: null},
+            {name: "目的IP", field: "dstIp", opt: {displayName: "等于", name: "="}, type: "String", inputValue: null},
+            {name: "目的端口", field: "dstPort", opt: {displayName: "等于", name: "="}, type: "Int", inputValue: null},
+            {name: "源MAC", field: "srcMac", opt: {displayName: "等于", name: "="}, type: "String", inputValue: null},
+            {name: "目的MAC", field: "dstMac", opt: {displayName: "等于", name: "="}, type: "String", inputValue: null}
+        ];
+
+        $scope.FIELD_OPT = [
+            {name: "等于", opts: "="}
+        ];
+
+        $scope.queryFieldList = {};
+
         // 分页参数
         $scope.pageNum = 1;
         $scope.pageTotal = 1;
         $scope.recordList = null;
+
+
+        //配置过滤器方法
+        $scope.addFilter = function (field) {
+            if (field)
+                $scope.queryFieldList[field.name] = field;
+        };
+        $scope.removeFilter = function (field) {
+            if (field)
+                delete $scope.queryFieldList[field.name];
+        };
 
 
         //获取查询参数
@@ -167,22 +201,34 @@
                 catch (e) {
                 }
             }
-            if ($scope.protocolInput)
-                params.proto = $scope.protocolInput;
-            if ($scope.srcIpInput)
-                params.srcIp = $scope.srcIpInput;
-            if ($scope.srcPortInput)
-                params.srcPort = $scope.srcPortInput;
-            if ($scope.destIpInput)
-                params.dstIp = $scope.destIpInput;
-            if ($scope.destPortInput)
-                params.dstPort = $scope.destPortInput;
-            if ($scope.srcMacInput)
-                params.srcMac = $scope.srcMacInput;
-            if ($scope.destMacInput)
-                params.dstMac = $scope.destMacInput;
-            if ($scope.queryTypeInput)
-                params.searchType = $scope.queryTypeInput;
+            for (var offset in $scope.FIELD_LIST) {
+                var field = $scope.FIELD_LIST[offset];
+                var field_name = field.field;
+                var field_value = field.inputValue;
+
+                if (field_name == "protocol" && field_value) {
+                    params.proto = field_value;
+
+                } else if (field_name == "srcIp" && field_value) {
+                    params.srcIp = field_value;
+
+                } else if (field_name == "srcPort" && field_value) {
+                    params.srcPort = field_value;
+
+                } else if (field_name == "dstIp" && field_value) {
+                    params.dstIp = field_value;
+
+                } else if (field_name == "dstPort" && field_value) {
+                    params.dstPort = field_value;
+
+                } else if (field_name == "srcMac" && field_value) {
+                    params.srcMac = field_value;
+
+                } else if (field_name == "dstMac" && field_value) {
+                    params.dstMac = field_value;
+
+                }
+            }
             $scope.isLoading = true;
             flowService.pcapSearch(params, function (data) {
                 if (data && data.packets) {
@@ -204,9 +250,18 @@
                 window.open("pcap/download?file=" + encodeURIComponent($scope.fileName));
         };
 
+        $scope.reset = function () {
+            $scope.queryFieldList = {};
+            $scope.startDateInput = new Date(dateTimeService.serverTime.getTime() - 30 * 60 * 1000).Format("yyyy-MM-dd");
+            $scope.startTimeInput = new Date(dateTimeService.serverTime.getTime() - 30 * 60 * 1000).Format("hh:mm:ss");
+            $scope.durationInput = 1;
+        };
+
         //获取url查询参数
         $scope.setSearchParams();
         if ($scope.startDateInput && $scope.startTimeInput)
             $scope.doQuery();
+
+
     });
 });

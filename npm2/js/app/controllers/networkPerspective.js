@@ -3,12 +3,14 @@
     var module = angular.module('app.controllers');
     module.controller('NetworkPerspectiveCtrl', function ($rootScope, $scope, $route, $interval, $location, $timeout, $window, dateTimeService, networkPerspectiveService, networkOverviewService) {
         //初始化变量
+        $scope.DISPLAY_MODE = ["sample", "full"];
         $scope.keyword = null;
         $scope.searchObj = null;
         $scope.recordList = null;
         $scope.startDate = null;
         $scope.startTime = null;
         $scope.endTime = null;
+        $scope.displayMode = $scope.DISPLAY_MODE[0];
         //表单数据
         $scope.startDateInput = $scope.startDate = dateTimeService.serverTime.Format("yyyy-MM-dd");
         $scope.keywordInput = null;
@@ -45,6 +47,9 @@
                 params.keyword = $scope.keyword;
             if ($scope.startDate)
                 params.startDate = $scope.startDate;
+            if ($scope.DISPLAY_MODE.length && $scope.displayMode != $scope.DISPLAY_MODE[0]) {
+                params.displayMode = $scope.displayMode;
+            }
             return params;
         };
         //从url获取查询参数设置变量
@@ -91,6 +96,9 @@
                         $scope.startTime = "00:00:00";
                     }
                 }
+            }
+            if (params.displayMode && $scope.DISPLAY_MODE.indexOf(params.displayMode.toLowerCase()) > -1) {
+                $scope.displayMode = params.displayMode.toLowerCase();
             }
         };
         //查询ip组和网段信息
@@ -465,6 +473,13 @@
                 $scope.startDateInput = $scope.startDate = dateTimeService.serverTime.Format("yyyy-MM-dd");
             }
             $scope.show();
+        };
+        //更改显示模式
+        $scope.setDisplayMode = function (mode) {
+            if (mode) {
+                $scope.displayMode = mode;
+                $scope.show();
+            }
         };
         //时间选择器事件
         $scope.$on("rangeSlideValuesChanged", function (e, $context, elem, event, data) {

@@ -8,5 +8,6 @@
     "./pcapService",
     "./configWarnProtocolService",
     "./configAppService",
-    "./browserCheckService"
+    "./browserCheckService",
+    "./loginStatusCheckInterceptor"
 ], function () { });

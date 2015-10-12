@@ -52,7 +52,7 @@ function (angular, app, _) {
                     { name: "outTurnRatio", tooltip: "交互/sec" }//流出交互率
                 ];
                 var multiColumnChartProp = [
-                    { name: "turnRatio", props: ["outTurnRatio", "inTurnRatio"], tooltip: "交互/sec", sum: true },//交互率
+                    //{ name: "turnRatio", props: ["outTurnRatio", "inTurnRatio"], tooltip: "交互/sec", sum: true },//交互率
                     //{ name: "resetRatio", props: ["clientResetRatio", "serverResetRatio"], tooltip: "个/sec", sum: true }//重置率
                 ];
                 var singlePieChartProp = [
@@ -66,7 +66,7 @@ function (angular, app, _) {
                     { name: "serverResponseTime", tooltip: "ms" }//服务器响应时间
                 ];
                 var multiPieChartProp = [
-                    { name: "code", displayName: "返回状态码" },//返回状态码
+                    { name: "code", displayName: "返回状态码", tooltip: "状态码" },//返回状态码
                 ];
                 var init = function () {
                     if (!$scope.service || !$scope.service.metric)
@@ -87,17 +87,56 @@ function (angular, app, _) {
                             dataType = $el.data("type");
                         if (!$el.data("dirty") || !$el.is(":in-viewport"))
                             return true;
-                        for (var index in singleLineChartProp) {
-                            var prop = singleLineChartProp[index];
-                            if (dataType == prop.name && $scope.service.metric[prop.name]) {
-                                var chartData = [];
-                                for (var i = 0; i < $scope.service.metric[prop.name].length; i++) {
-                                    if (!$scope.service.metric.time || i >= $scope.service.metric.time.length)
-                                        break;
-                                    chartData.push({ time: $scope.service.metric.time[i], value: $scope.service.metric[prop.name][i] });
+                        if ($scope.$parent.displayMode && $scope.$parent.displayMode == "full") {
+                            for (var index in singleLineChartProp) {
+                                var prop = singleLineChartProp[index];
+                                if (dataType == prop.name && $scope.service.metric[prop.name]) {
+                                    var chartData = [];
+                                    for (var i = 0; i < $scope.service.metric[prop.name].length; i++) {
+                                        if (!$scope.service.metric.time || i >= $scope.service.metric.time.length)
+                                            break;
+                                        chartData.push({ time: $scope.service.metric.time[i], value: $scope.service.metric[prop.name][i] });
+                                    }
+                                    MG.data_graphic({
+                                        data: chartData,
+                                        full_width: true,
+                                        height: 120,
+                                        right: 20,
+                                        top: 17,
+                                        mouseover: (function (prop) {
+                                            return function (d, i) {
+                                                //custom format the rollover text, show days
+                                                var str = (d.value || 0) + prop.tooltip + (d.time instanceof Date ? " " + d.time.Format("hh:mm:ss") : "");
+                                                $el.find("svg .mg-active-datapoint").html(str);
+                                            };
+                                        })(prop),
+                                        target: el,
+                                        x_accessor: 'time',
+                                        y_accessor: 'value'
+                                    });
+                                }
+                            }
+                            for (var index in multiLineChartProp) {
+                                var prop = multiLineChartProp[index],
+                                    chartDataArr = [];
+                                if (dataType != prop.name)
+                                    continue;
+                                if (prop.props) {
+                                    for (var j = 0; j < prop.props.length; j++) {
+                                        var chartData = [];
+                                        if ($scope.service.metric[prop.props[j]]) {
+                                            for (var i = 0; i < $scope.service.metric[prop.props[j]].length; i++) {
+                                                if (!$scope.service.metric.time || i >= $scope.service.metric.time.length)
+                                                    break;
+                                                chartData.push({ time: $scope.service.metric.time[i], value: $scope.service.metric[prop.props[j]][i] });
+                                            }
+                                        }
+                                        chartDataArr.push(chartData);
+                                    }
                                 }
                                 MG.data_graphic({
-                                    data: chartData,
+                                    legend: ['流出', '流入'],
+                                    data: chartDataArr,
                                     full_width: true,
                                     height: 120,
                                     right: 20,
@@ -114,50 +153,105 @@ function (angular, app, _) {
                                     y_accessor: 'value'
                                 });
                             }
-                        }
-                        for (var index in multiLineChartProp) {
-                            var prop = multiLineChartProp[index],
-                                chartDataArr = [];
-                            if (dataType != prop.name)
-                                continue;
-                            if (prop.props) {
-                                for (var j = 0; j < prop.props.length; j++) {
-                                    var chartData = [];
-                                    if ($scope.service.metric[prop.props[j]]) {
-                                        for (var i = 0; i < $scope.service.metric[prop.props[j]].length; i++) {
-                                            if (!$scope.service.metric.time || i >= $scope.service.metric.time.length)
-                                                break;
-                                            chartData.push({ time: $scope.service.metric.time[i], value: $scope.service.metric[prop.props[j]][i] });
-                                        }
+                            for (var index in simgleColumnChartProp) {
+                                var prop = simgleColumnChartProp[index];
+                                if (dataType == prop.name && $scope.service.metric[prop.name]) {
+                                    var categoryData = [];
+                                    for (var i = 0; i < $scope.service.metric.time.length; i++) {
+                                        categoryData.push($scope.service.metric.time[i].Format("hh:mm"));
                                     }
-                                    chartDataArr.push(chartData);
+                                    echarts.init(el).setOption({
+                                        title: { show: false },
+                                        tooltip: {
+                                            trigger: 'axis',
+                                            showDelay: 0,
+                                            transitionDuration: 0,
+                                            position: [120, 0],
+                                            padding: [0, 0, 0, 0],
+                                            backgroundColor: "rgba(255,255,255,1)",
+                                            textStyle: { color: "#333", align: "right" },
+                                            formatter: (function (prop) {
+                                                return function (params) {
+                                                    var str = null;
+                                                    if (params && params.length) {
+                                                        str = params[0].name + " ";
+                                                        for (var i = 0; i < params.length; i++) {
+                                                            var data = params[i];
+                                                            str += data.value + prop.tooltip;
+                                                        }
+                                                    }
+                                                    else {
+                                                        str = "暂无信息";
+                                                    }
+                                                    return str;
+                                                };
+                                            })(prop)
+                                        },
+                                        legend: { show: false, data: [prop.name] },
+                                        toolbox: { show: false },
+                                        dataZoom: { show: false },
+                                        grid: {
+                                            x: 40,
+                                            x2: 10,
+                                            y: 20,
+                                            y2: 40
+                                        },
+                                        xAxis: [{
+                                            type: 'category',
+                                            data: categoryData
+                                        }],
+                                        yAxis: [{
+                                            type: 'value'
+                                        }],
+                                        series: [{
+                                            name: prop.name,
+                                            type: "bar",
+                                            data: $scope.service.metric[prop.name]
+                                        }]
+                                    }, true);
+                                    //var chartData = [];
+                                    //for (var i = 0; i < $scope.service.metric[prop.name].length; i++) {
+                                    //    if (!$scope.service.metric.time || i >= $scope.service.metric.time.length)
+                                    //        break;
+                                    //    chartData.push({ date: $scope.service.metric.time[i], value: $scope.service.metric[prop.name][i] });
+                                    //}
+                                    //MG.data_graphic({
+                                    //    chart_type: 'histogram',
+                                    //    data: chartData,
+                                    //    full_width: true,
+                                    //    height: 120,
+                                    //    right: 20,
+                                    //    top: 17,
+                                    //    mouseover: (function (prop) {
+                                    //        return function (d, i) {
+                                    //            //custom format the rollover text, show days
+                                    //            var str = (d.value || 0) + prop.tooltip + (d.date instanceof Date ? " " + d.date.Format("hh:mm:ss") : "");
+                                    //            $el.find("svg .mg-active-datapoint").html(str);
+                                    //        };
+                                    //    })(prop),
+                                    //    target: el,
+                                    //    bar_margin: 0,
+                                    //    binned: true
+                                    //});
                                 }
                             }
-                            MG.data_graphic({
-                                legend: ['流出', '流入'],
-                                data: chartDataArr,
-                                full_width: true,
-                                height: 120,
-                                right: 20,
-                                top: 17,
-                                mouseover: (function (prop) {
-                                    return function (d, i) {
-                                        //custom format the rollover text, show days
-                                        var str = (d.value || 0) + prop.tooltip + (d.time instanceof Date ? " " + d.time.Format("hh:mm:ss") : "");
-                                        $el.find("svg .mg-active-datapoint").html(str);
-                                    };
-                                })(prop),
-                                target: el,
-                                x_accessor: 'time',
-                                y_accessor: 'value'
-                            });
-                        }
-                        for (var index in simgleColumnChartProp) {
-                            var prop = simgleColumnChartProp[index];
-                            if (dataType == prop.name && $scope.service.metric[prop.name]) {
-                                var categoryData = [];
+                            for (var index in multiColumnChartProp) {
+                                var prop = multiColumnChartProp[index],
+                                    categoryData = [],
+                                    chartDataArr = [];
+                                if (dataType != prop.name)
+                                    continue;
                                 for (var i = 0; i < $scope.service.metric.time.length; i++) {
                                     categoryData.push($scope.service.metric.time[i].Format("hh:mm"));
+                                }
+                                if (prop.props) {
+                                    for (var j = 0; j < prop.props.length; j++) {
+                                        chartDataArr.push({
+                                            name: prop.props[j],
+                                            type: "bar",
+                                            data: $scope.service.metric[prop.props[j]] || []
+                                        });
+                                    }
                                 }
                                 echarts.init(el).setOption({
                                     title: { show: false },
@@ -176,7 +270,7 @@ function (angular, app, _) {
                                                     str = params[0].name + " ";
                                                     for (var i = 0; i < params.length; i++) {
                                                         var data = params[i];
-                                                        str += data.value + prop.tooltip;
+                                                        str += (i == 0 ? "流出" : "流入") + ":" + data.value + prop.tooltip;
                                                     }
                                                 }
                                                 else {
@@ -186,7 +280,7 @@ function (angular, app, _) {
                                             };
                                         })(prop)
                                     },
-                                    legend: { show: false, data: [prop.name] },
+                                    legend: { show: false, data: prop.props },
                                     toolbox: { show: false },
                                     dataZoom: { show: false },
                                     grid: {
@@ -202,173 +296,152 @@ function (angular, app, _) {
                                     yAxis: [{
                                         type: 'value'
                                     }],
-                                    series: [{
-                                        name: prop.name,
-                                        type: "bar",
-                                        data: $scope.service.metric[prop.name]
-                                    }]
+                                    series: chartDataArr
                                 }, true);
-                                //var chartData = [];
-                                //for (var i = 0; i < $scope.service.metric[prop.name].length; i++) {
-                                //    if (!$scope.service.metric.time || i >= $scope.service.metric.time.length)
-                                //        break;
-                                //    chartData.push({ date: $scope.service.metric.time[i], value: $scope.service.metric[prop.name][i] });
-                                //}
-                                //MG.data_graphic({
-                                //    chart_type: 'histogram',
-                                //    data: chartData,
-                                //    full_width: true,
-                                //    height: 120,
-                                //    right: 20,
-                                //    top: 17,
-                                //    mouseover: (function (prop) {
-                                //        return function (d, i) {
-                                //            //custom format the rollover text, show days
-                                //            var str = (d.value || 0) + prop.tooltip + (d.date instanceof Date ? " " + d.date.Format("hh:mm:ss") : "");
-                                //            $el.find("svg .mg-active-datapoint").html(str);
-                                //        };
-                                //    })(prop),
-                                //    target: el,
-                                //    bar_margin: 0,
-                                //    binned: true
-                                //});
                             }
-                        }
-                        for (var index in multiColumnChartProp) {
-                            var prop = multiColumnChartProp[index],
-                                categoryData = [],
-                                chartDataArr = [];
-                            if (dataType != prop.name)
-                                continue;
-                            for (var i = 0; i < $scope.service.metric.time.length; i++) {
-                                categoryData.push($scope.service.metric.time[i].Format("hh:mm"));
-                            }
-                            if (prop.props) {
-                                for (var j = 0; j < prop.props.length; j++) {
-                                    chartDataArr.push({
-                                        name: prop.props[j],
-                                        type: "bar",
-                                        data: $scope.service.metric[prop.props[j]] || []
-                                    });
+                            for (var index in singlePieChartProp) {
+                                var prop = singlePieChartProp[index];
+                                if (dataType == prop.name && $scope.service.metric[prop.name]) {
+                                    $el.find(".chart")
+                                        .attr("data-percent", Math.round($scope.service.metric[prop.name]) || 0)
+                                        .easyPieChart({
+                                            easing: 'easeOutBounce',
+                                            lineWidth: '10',
+                                            scaleColor: true,
+                                            barColor: '#d9534f',
+                                            trackColor: '#B7ADAD',
+                                            onStep: (function (prop, val) {
+                                                return function (from, to, percent) {
+                                                    var str = null;
+                                                    if (isNaN(percent)) {
+                                                        str = val && val.length ? Math.round(val[0]) + prop.tooltip : "N/A";
+                                                    }
+                                                    else {
+                                                        str = Math.round(percent) + prop.tooltip;
+                                                    }
+                                                    $(this.el).find('.percent').text(str);
+                                                };
+                                            })(prop, $scope.service.metric[prop.name])
+                                        });
                                 }
                             }
-                            echarts.init(el).setOption({
-                                title: { show: false },
-                                tooltip: {
-                                    trigger: 'axis',
-                                    showDelay: 0,
-                                    transitionDuration: 0,
-                                    position: [120, 0],
-                                    padding: [0, 0, 0, 0],
-                                    backgroundColor: "rgba(255,255,255,1)",
-                                    textStyle: { color: "#333", align: "right" },
-                                    formatter: (function (prop) {
-                                        return function (params) {
+                            for (var index in multiPieChartProp) {
+                                var prop = multiPieChartProp[index];
+                                if (dataType == prop.name && $scope.service.metric[prop.name]) {
+                                    var categoryData = [], chartData = [];
+                                    for (var i = 0; i < $scope.service.metric[prop.name].length; i++) {
+                                        var d = $scope.service.metric[prop.name][i];
+                                        if ($scope.service.metric[prop.name].length > 5 && i >= 5) {
+                                            chartData[4].value += d.value || 0;
+                                        }
+                                        else {
+                                            categoryData.push(d.name);
+                                            chartData.push({ name: d.name, value: d.value || 0 });
+                                        }
+                                    }
+                                    if ($scope.service.metric[prop.name].length > 5) {
+                                        chartData[4].name = "其他";
+                                    }
+                                    $timeout((function (el, categoryData, chartData, prop) {
+                                        return function () {
+                                            echarts.init(el).setOption({
+                                                title: { show: false },
+                                                tooltip: {
+                                                    trigger: 'item',
+                                                    showDelay: 0,
+                                                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                                                },
+                                                legend: {
+                                                    show: false,
+                                                    orient: 'vertical',
+                                                    x: 'left',
+                                                    data: categoryData
+                                                },
+                                                toolbox: { show: false },
+                                                calculable: true,
+                                                series: [{
+                                                    name: prop.displayName,
+                                                    type: 'pie',
+                                                    radius: '55%',
+                                                    center: ['50%', '60%'],
+                                                    data: chartData
+                                                }]
+                                            }, true);
+                                        };
+                                    })(el, categoryData, chartData, prop));
+                                }
+                            }
+                        }
+                        else {
+                            var val = null, property = null;
+                            for (var index in singlePieChartProp) {
+                                var prop = singlePieChartProp[index];
+                                if (dataType == prop.name && $scope.service.metric[prop.name]) {
+                                    val = Math.round($scope.service.metric[prop.name]) || 0;
+                                    property = prop
+                                }
+                            }
+                            for (var index in multiPieChartProp) {
+                                var prop = multiPieChartProp[index];
+                                if (dataType == prop.name && $scope.service.metric[prop.name]) {
+                                    val = $scope.service.metric[prop.name].length;
+                                    property = prop
+                                }
+                            }
+                            if (val == null) {
+                                var arr = null;
+                                for (var index in singleLineChartProp) {
+                                    var prop = singleLineChartProp[index];
+                                    if (dataType == prop.name && $scope.service.metric[prop.name]) {
+                                        arr = $scope.service.metric[prop.name];
+                                        property = prop;
+                                    }
+                                }
+                                for (var index in simgleColumnChartProp) {
+                                    var prop = simgleColumnChartProp[index];
+                                    if (dataType == prop.name && $scope.service.metric[prop.name]) {
+                                        arr = $scope.service.metric[prop.name];
+                                        property = prop;
+                                    }
+                                }
+                                if (arr) {
+                                    var total = 0;
+                                    for (var i = 0; i < arr.length; i++) {
+                                        total += arr[i] || 0;
+                                    }
+                                    val = total / (arr.length || 1);
+                                }
+                            }
+                            if ($el.find(".chart").length == 0) {
+                                $el.append(
+                                    '<p class="text-center">'
+                                    + '<span class="chart">'
+                                    + '<span class="percent"></span>'
+                                    + '</span>'
+                                    + '</p>'
+                                    );
+                            }
+                            $el.find(".chart")
+                                .attr("data-percent", val || 0)
+                                .easyPieChart({
+                                    easing: 'easeOutBounce',
+                                    lineWidth: '10',
+                                    scaleColor: true,
+                                    barColor: '#d9534f',
+                                    trackColor: '#B7ADAD',
+                                    onStep: (function (prop, val) {
+                                        return function (from, to, percent) {
                                             var str = null;
-                                            if (params && params.length) {
-                                                str = params[0].name + " ";
-                                                for (var i = 0; i < params.length; i++) {
-                                                    var data = params[i];
-                                                    str += (i == 0 ? "流出" : "流入") + ":" + data.value + prop.tooltip;
-                                                }
+                                            if (isNaN(percent)) {
+                                                str = val ? val + (prop.tooltip.length > 1 ? "<br />" : "") + prop.tooltip : "N/A";
                                             }
                                             else {
-                                                str = "暂无信息";
+                                                str = percent.toFixed(2) + (prop.tooltip.length > 1 ? "<br />" : "") + prop.tooltip;
                                             }
-                                            return str;
+                                            $(this.el).find('.percent').html(str);
                                         };
-                                    })(prop)
-                                },
-                                legend: { show: false, data: prop.props },
-                                toolbox: { show: false },
-                                dataZoom: { show: false },
-                                grid: {
-                                    x: 40,
-                                    x2: 10,
-                                    y: 20,
-                                    y2: 40
-                                },
-                                xAxis: [{
-                                    type: 'category',
-                                    data: categoryData
-                                }],
-                                yAxis: [{
-                                    type: 'value'
-                                }],
-                                series: chartDataArr
-                            }, true);
-                        }
-                        for (var index in singlePieChartProp) {
-                            var prop = singlePieChartProp[index];
-                            if (dataType == prop.name && $scope.service.metric[prop.name]) {
-                                $el.find(".chart")
-                                    .attr("data-percent", Math.round($scope.service.metric[prop.name]) || 0)
-                                    .easyPieChart({
-                                        easing: 'easeOutBounce',
-                                        lineWidth: '10',
-                                        scaleColor: true,
-                                        barColor: '#d9534f',
-                                        trackColor: '#B7ADAD',
-                                        onStep: (function (prop, val) {
-                                            return function (from, to, percent) {
-                                                var str = null;
-                                                if (isNaN(percent)) {
-                                                    str = val && val.length ? Math.round(val[0]) + prop.tooltip : "N/A";
-                                                }
-                                                else {
-                                                    str = Math.round(percent) + prop.tooltip;
-                                                }
-                                                $(this.el).find('.percent').text(str);
-                                            };
-                                        })(prop, $scope.service.metric[prop.name])
-                                    });
-                            }
-                        }
-                        for (var index in multiPieChartProp) {
-                            var prop = multiPieChartProp[index];
-                            if (dataType == prop.name && $scope.service.metric[prop.name]) {
-                                var categoryData = [], chartData = [];
-                                for (var i = 0; i < $scope.service.metric[prop.name].length; i++) {
-                                    var d = $scope.service.metric[prop.name][i];
-                                    if ($scope.service.metric[prop.name].length > 5 && i >= 5) {
-                                        chartData[4].value += d.value || 0;
-                                    }
-                                    else {
-                                        categoryData.push(d.name);
-                                        chartData.push({ name: d.name, value: d.value || 0 });
-                                    }
-                                }
-                                if ($scope.service.metric[prop.name].length > 5) {
-                                    chartData[4].name = "其他";
-                                }
-                                $timeout((function (el, categoryData, chartData, prop) {
-                                    return function () {
-                                        echarts.init(el).setOption({
-                                            title: { show: false },
-                                            tooltip: {
-                                                trigger: 'item',
-                                                showDelay: 0,
-                                                formatter: "{a} <br/>{b} : {c} ({d}%)"
-                                            },
-                                            legend: {
-                                                show: false,
-                                                orient: 'vertical',
-                                                x: 'left',
-                                                data: categoryData
-                                            },
-                                            toolbox: { show: false },
-                                            calculable: true,
-                                            series: [{
-                                                name: prop.displayName,
-                                                type: 'pie',
-                                                radius: '55%',
-                                                center: ['50%', '60%'],
-                                                data: chartData
-                                            }]
-                                        }, true);
-                                    };
-                                })(el, categoryData, chartData, prop));
-                            }
+                                    })(property, val)
+                                });
                         }
                         $el.data("dirty", false);
                     });

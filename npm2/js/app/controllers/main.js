@@ -71,6 +71,13 @@
             $.removeCookie("LOGIN_STATE");
             $window.location.href = "login.html";
         };
+        //ajax登陆状态检测
+        $(document).ajaxComplete(function (event, xhr, settings) {
+            var respLocation = xhr.getResponseHeader("Location");
+            if (respLocation && respLocation.indexOf("login.html") == respLocation.length - 10) {
+                $window.location.href = "login.html";
+            }
+        });
         //检测浏览器类型，提示使用chrome
         browserCheckService.check();
     });

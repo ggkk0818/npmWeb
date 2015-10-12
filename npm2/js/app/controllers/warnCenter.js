@@ -5,9 +5,9 @@
         //初始化变量
         $scope.CURVE_TYPE = {
             0: { id: 0, name: "内网流量异常" },
-            1: { id: 1, name: "总流量波形异常" },
+            1: { id: 1, name: "实时流量异常检测" },
             2: { id: 2, name: "每日流量对比" },
-            3: { id: 3, name: "每日活跃ip对比" }
+            3: { id: 3, name: "每日活跃服务器ip对比" }
         };
         $scope.pageNum = 1;
         $scope.pageTotal = 1;

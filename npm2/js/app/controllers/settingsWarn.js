@@ -23,6 +23,7 @@
         //表单数据
         $scope.keywordInput = null;
         //弹出框变量
+        $scope.showFormError = false;
         $scope.currentRecord = null;
         $scope.periodInput = null;
         $scope.protocolInput = null;
@@ -101,8 +102,10 @@
         //保存ip添加对话框
         $scope.saveModal = function () {
             $scope.msg = null;
-            if (!$scope.saveForm.$valid || !$scope.periodInput) {
-                $scope.msg = "请填写配置信息";
+            $scope.showFormError = false;
+            if (!$scope.saveForm.$valid) {
+                //$scope.msg = "请填写配置信息";
+                $scope.showFormError = true;
                 return;
             }
             var params = {

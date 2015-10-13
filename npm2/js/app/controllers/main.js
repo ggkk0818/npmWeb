@@ -1,7 +1,7 @@
 ﻿define(['angular', 'lodash', 'jquery', 'services/all'], function (angular, _, $) {
     "use strict";
     var module = angular.module('app.controllers');
-    module.controller('MainCtrl', function ($rootScope, $scope, $route, $window, $location, browserCheckService) {
+    module.controller('MainCtrl', function ($rootScope, $scope, $route, $window, $location, browserCheckService, warningService) {
         //初始化变量
         $scope.showFooter = true;
         //导航信息
@@ -72,9 +72,18 @@
             $window.location.href = "login.html";
         };
         //ajax登陆状态检测
-        $(document).ajaxComplete(function (event, xhr, settings) {
-            var respLocation = xhr.getResponseHeader("Location");
-            if (respLocation && respLocation.indexOf("login.html") == respLocation.length - 10) {
+        $(document).ajaxSend(function (event, xhr, settings) {
+            if (!settings)
+                return;
+            if (!settings.headers)
+                settings.headers = {};
+            settings.headers["X-Requested-With"] = "XMLHttpRequest";
+        }).ajaxComplete(function (event, xhr, settings) {
+            if (xhr && xhr.status == 401) {
+                $window.location.href = "login.html";
+            }
+        }).ajaxError(function (event, xhr, settings) {
+            if (xhr && xhr.status == 401) {
                 $window.location.href = "login.html";
             }
         });

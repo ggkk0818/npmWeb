@@ -68,11 +68,14 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" name="saveForm">
-                    <div class="form-group form-group-sm">
+                    <div class="form-group form-group-sm" ng-class="{'has-warning':showFormError && !saveForm.appNameInput.$valid}">
                         <label class="col-sm-2 control-label">应用名称</label>
                         <div class="col-sm-10">
                             <input name="appNameInput" class="form-control" type="text" ng-model="appNameInput" ng-required="true" />
                         </div>
+                    </div>
+                    <div ng-show="showFormError && !saveForm.appNameInput.$valid">
+                        <p class="bg-warning" style="padding: 15px 15px 15px 100px;">请填写应用名称。</p>
                     </div>
                     <div class="form-group form-group-sm">
                         <label class="col-sm-2 control-label">IP</label>
@@ -80,17 +83,32 @@
                             <input name="ipInput" class="form-control" type="text" ng-model="ipInput" />
                         </div>
                     </div>
-                    <div class="form-group form-group-sm">
+                    <div class="form-group form-group-sm" ng-class="{'has-warning':showFormError && !saveForm.protocolInput.$valid}">
                         <label class="col-sm-2 control-label">协议</label>
                         <div class="col-sm-10">
-                            <input name="protocolInput" class="form-control" type="text" ng-model="protocolInput" ng-required="true" />
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuProtocol" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    {{protocolInput != null ? protocolInput : "请选择协议"}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuProtocol">
+                                    <li ng-repeat="protocol in PROTOCOL_LIST" ng-class="{'active':$parent.protocolInput==protocol}"><a href="javascript:void(0);" ng-click="$parent.protocolInput=protocol">{{protocol}}</a></li>
+                                </ul>
+                            </div>
+                            <input name="protocolInput" class="form-control hidden" type="text" ng-model="protocolInput" ng-required="true" />
                         </div>
                     </div>
-                    <div class="form-group form-group-sm">
+                    <div ng-show="showFormError && !saveForm.protocolInput.$valid">
+                        <p class="bg-warning" style="padding: 15px 15px 15px 100px;">请选择协议。</p>
+                    </div>
+                    <div class="form-group form-group-sm" ng-class="{'has-warning':showFormError && !saveForm.ruleInput.$valid}">
                         <label class="col-sm-2 control-label">规则</label>
                         <div class="col-sm-10">
                             <input name="ruleInput" class="form-control" type="text" ng-model="ruleInput" ng-required="true" />
                         </div>
+                    </div>
+                    <div ng-show="showFormError && !saveForm.ruleInput.$valid">
+                        <p class="bg-warning" style="padding: 15px 15px 15px 100px;">请填写规则。</p>
                     </div>
                     <div class="form-group form-group-sm">
                         <label class="col-sm-2 control-label">是否生效</label>

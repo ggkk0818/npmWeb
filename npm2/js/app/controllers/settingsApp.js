@@ -3,6 +3,7 @@
     var module = angular.module('app.controllers');
     module.controller('SettingsAppCtrl', function ($rootScope, $scope, $route, $timeout, $interval, $location, configAppService) {
         //初始化变量
+        $scope.PROTOCOL_LIST = ["http", "mysql"];
         $scope.pageNum = 1;
         $scope.pageTotal = 1;
         $scope.pageSize = 10;
@@ -12,6 +13,7 @@
         //表单数据
         $scope.keywordInput = null;
         //弹出框变量
+        $scope.showFormError = false;
         $scope.currentRecord = null;
         $scope.appNameInput = null;
         $scope.ipInput = null;
@@ -90,8 +92,10 @@
         //保存ip添加对话框
         $scope.saveModal = function () {
             $scope.msg = null;
+            $scope.showFormError = false;
             if (!$scope.saveForm.$valid) {
-                $scope.msg = "请填写配置信息";
+                //$scope.msg = "请填写配置信息";
+                $scope.showFormError = true;
                 return;
             }
             var params = {

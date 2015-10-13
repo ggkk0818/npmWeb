@@ -11,22 +11,22 @@ function (angular, $, _, config) {
         $httpProvider.interceptors.push(function ($q, $rootScope) {
             return {
                 request: function (config) {
+                    if (!config.headers)
+                        config.headers = {};
+                    config.headers["X-Requested-With"] = "XMLHttpRequest";
                     return config;
                 },
                 requestError: function (rejection) {
                     return rejection;
                 },
                 response: function (response) {
-                    if (response && response.headers("Location")) {
-                        var respLocation = response.headers("Location");
-                        if (respLocation && respLocation.indexOf("login.html") == respLocation.length - 10) {
-                            window.location.href = "login.html";
-                        }
-                    }
                     return response;
                 },
-                responseError: function (rejection) {
-                    return rejection;
+                responseError: function (response) {
+                    if (response && response.status == 401) {
+                        window.location.href = "login.html";
+                    }
+                    return response;
                 }
             };
         });

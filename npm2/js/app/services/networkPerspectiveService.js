@@ -8,6 +8,21 @@ function (angular, $, _, config) {
     'use strict';
     var module = angular.module('app.services');
     module.service('networkPerspectiveService', function ($http, $rootScope, $interval) {
+        //查询ip列表
+        this.ipList = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'perspective/ip/list',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
         //基础指标
         this.basic = function (params, callback) {
             $http({
@@ -43,6 +58,21 @@ function (angular, $, _, config) {
             $http({
                 method: 'GET',
                 url: 'perspective/open/service/metric',
+                params: params,
+                cache: false
+            }).success(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(data);
+            }).error(function (data, status, headers, config) {
+                if (typeof callback === "function")
+                    callback(null);
+            });
+        };
+        //开启协议统计信息列表
+        this.openServiceMetricList = function (params, callback) {
+            $http({
+                method: 'GET',
+                url: 'perspective/open/service/metric/list',
                 params: params,
                 cache: false
             }).success(function (data, status, headers, config) {

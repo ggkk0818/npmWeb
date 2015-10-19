@@ -6,6 +6,7 @@
     "./warnCenter",
     "./serverView",
     "./networkPerspective",
+    "./networkPerspectiveList",
     "./settings",
     "./settingsWarn",
     "./settingsApp",

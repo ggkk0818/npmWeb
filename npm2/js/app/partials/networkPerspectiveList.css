@@ -1,0 +1,23 @@
+﻿a.network-perspective-list-table-field{
+    position:relative;
+    display:block;
+    padding-left:20px;
+    margin-bottom:5px;
+    text-decoration:none;
+}
+a.network-perspective-list-table-field:hover{
+    background-color:#f6f6f6;
+}a.network-perspective-list-table-field .glyphicon{
+    position:absolute;
+    top:3px;
+    left:0;
+}
+a.network-perspective-list-table-field.disabled{
+    color:#333;
+}
+a.network-perspective-list-table-field.disabled:hover{
+    background-color:#f6f6f6;
+}
+a.network-perspective-list-table-field.disabled .glyphicon{
+    display:none;
+}

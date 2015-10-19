@@ -1,0 +1,97 @@
+﻿<div class="container con-view">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="input-group">
+                <input type="text" class="form-control auto-complete-input" placeholder="IP地址或IP组" ng-model="keywordInput" ng-keypress="formKeypressHandler($event)" />
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" ng-click="search()">查询</button>
+                </span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="btn-group" ng-if="false">
+                <button class="btn btn-default" type="button" ng-click="setDisplayMode('sample')" ng-class="{'active':displayMode=='sample'}">简易</button>
+                <button class="btn btn-default" type="button" ng-click="setDisplayMode('full')" ng-class="{'active':displayMode=='full'}">完整</button>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <ul class="nav  nav-pills pull-right">
+                <li ng-if="false">
+                    <button type="button" class="btn btn-sm  btn-primary">自动刷新</button>
+                </li>
+                <li>
+                    <input type="text" class="form-control datetime" data-date-format="yyyy-mm-dd" data-date-language="zh-CN" data-min-view="2" placeholder="日期" ng-model="startDateInput" ng-keypress="formKeypressHandler($event)">
+                </li>
+                <li>
+                    <button type="button" class="btn btn-sm  btn-primary" ng-click="search()">查询</button>
+                </li>
+                <li>
+                    <button type="button" class="btn btn-sm  btn-primary" ng-click="addDay(-1)" data-toggle="tooltip" data-placement="bottom" title="前一天">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="btn  btn-sm  btn-primary" ng-click="addDay()" data-toggle="tooltip" data-placement="bottom" title="现在">
+                        <span class=" glyphicon glyphicon-stop"></span>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="btn btn-sm  btn-primary" ng-click="addDay(1)" data-toggle="tooltip" data-placement="bottom" title="后一天">
+                        <span class=" glyphicon glyphicon-chevron-right"></span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row con-view">
+        <div class="col-md-12 ">
+            <div class="range-slider" data-type="date" data-min="{{::startDate}} 00:00:00" data-max="{{::startDate}} 23:59:59" data-start="{{::startDate + ' ' + startTime}}" data-end="{{::startDate + ' ' + endTime}}"></div>
+        </div>
+    </div>
+    <div class="row con-view">
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    显示的字段
+                    <div class="pull-right">
+                        <a href="javascript:void(0);" ng-click="toggleAllDisplayField(true)" title="显示全部"><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></a>
+                        <a href="javascript:void(0);" ng-click="toggleAllDisplayField(false)" title="隐藏全部"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <a href="javascript:void(0);" class="network-perspective-list-table-field" ng-repeat="field in FIELD_LIST" ng-class="{'disabled':!field.show}" ng-click="toggleDisplayField(field)">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        {{field.displayName}}
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9" style="overflow:auto;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width:20px;">&nbsp;</th>
+                        <th>服务</th>
+                        <th ng-repeat="field in FIELD_LIST" ng-show="field.show">{{field.displayName}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat-start="service in serviceList">
+                        <td>
+                            <a href="javascript:void(0);" ng-click="service.showDetail=!service.showDetail">
+                                <span class="glyphicon" aria-hidden="true" ng-class="{'glyphicon-minus':service.showDetail, 'glyphicon-plus':!service.showDetail}"></span>
+                            </a>
+                        </td>
+                        <td><a href="javascript:void(0);" ng-click="service.showDetail=!service.showDetail" style="text-decoration:none;">{{service.protocol + ":" + service.port}}</a></td>
+                        <td ng-repeat="field in FIELD_LIST" ng-show="field.show">{{service[field.name]}}</td>
+                    </tr>
+                    <tr ng-repeat-end ng-repeat="record in service.recordList" ng-show="service.showDetail">
+                        <td>&nbsp;</td>
+                        <td><a href="javascript:void(0);" ng-click="showPerspectiveDetail(record)">{{record.ip}}</a></td>
+                        <td ng-repeat="field in FIELD_LIST" ng-show="field.show">{{record[field.name]}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

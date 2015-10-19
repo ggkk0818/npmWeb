@@ -120,6 +120,10 @@
                 templateUrl: 'js/app/partials/networkPerspective.html',
                 controller: 'NetworkPerspectiveCtrl'
             })
+            .when('/network/perspective/list', {
+                templateUrl: 'js/app/partials/networkPerspectiveList.html',
+                controller: 'NetworkPerspectiveListCtrl'
+            })
             .when('/app/perspective', {
                 templateUrl: 'js/app/partials/appPerspective.html',
                 controller: 'AppPerspectiveCtrl'

@@ -76,9 +76,13 @@
     };
     app.config(function ($routeProvider, $controllerProvider, $compileProvider, $filterProvider, $provide) {
         $routeProvider
+            //.when('/', {
+            //    templateUrl: 'js/app/partials/index.html',
+            //    controller: 'IndexCtrl'
+            //})
             .when('/', {
-                templateUrl: 'js/app/partials/index.html',
-                controller: 'IndexCtrl'
+                templateUrl: 'js/app/partials/networkPerspectiveList.html',
+                controller: 'NetworkPerspectiveListCtrl'
             })
             .when('/settings/group', {
                 templateUrl: 'js/app/partials/settings.html',

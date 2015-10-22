@@ -48,7 +48,7 @@
             <div class="range-slider" data-type="date" data-min="{{::startDate}} 00:00:00" data-max="{{::startDate}} 23:59:59" data-start="{{::startDate + ' ' + startTime}}" data-end="{{::startDate + ' ' + endTime}}"></div>
         </div>
     </div>
-    <div class="row con-view">
+    <div class="row con-view" ng-hide="serviceList==null">
         <div class="col-md-3">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -92,6 +92,16 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div class="row con-view" ng-show="serviceList==null">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">查询结果</div>
+                <div class="panel-body" style="text-align:center;">
+                    <span class="glyphicon glyphicon-warning-sign" aria-hidden="true" style="margin-right:5px;"></span>没有找到可以显示的结果
+                </div>
+            </div>
         </div>
     </div>
 </div>
